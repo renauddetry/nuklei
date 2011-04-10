@@ -150,6 +150,7 @@ pre.fragment {
 	overflow: auto;
 	word-wrap: break-word;
 	line-height: 125%;
+	font-size:  90%;
 }
 
 div.ah {
@@ -809,9 +810,12 @@ dl.bug
 #titlearea
 {
 	padding: 0px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	margin: 0px;
 	width: 100%;
 	border-bottom: 1px solid #5373B4;
+	text-align: center;
 }
 
 .image
