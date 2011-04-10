@@ -1,0 +1,61 @@
+
+* STL inheritance *
+
+The interface of vectors (KernelCollection, ...) would be simplified by
+inheriting from std::vector. However, std::vector does not have a
+virtual destructor; it is thus dangerous to inherit from it.
+
+Additionally, Boost serialization is much more simple with a 
+member variable.
+
+* Linear Algebra *
+
+Because LA needs to be efficient:
+
+- A "virtual" interface wrapping Wm4 is not an option
+  (procedures need to be inlined).
+
+- Inheriting from the Wm4 classes is not so good. Class herarchies
+  slow down instance construction, and even with "return value
+  optimization", unnecessary copies inevitably happen between the
+  base class and the derived class.
+
+All in all, free functions operating on Wm4 data (Wm4::Vector,
+Wm4::Quaternion, ...) is the best option.
+
+* Kernels *
+
+Kernels need to be fast, and practical.
+
+In the current implementation, everything below kernels is statically
+typed and inline. Above kernels, polymorphic classes are ok.
+
+The Kernel is at the meeting point of polymorphic and generic
+programming paradigms. Each kernel (se3, r3xs2p, r3) has a complete
+statically typed, statically linked interface, with copy
+semantics. The `base' kernel is a polymorphic wrapper, with
+dynamically linked and typed procedures.  The
+template implementation_prototype binds the polymorphic interface to
+static implementations; implementation_prototype is no more than a
+CRTP trick to avoid clutter in derived kernels.
+
+Impact on performances in KernelCollection::evaluationAt, on typical
+data:
+
+KernelCollection::evaluationAt with the static kernel::XXX::eval is 8
+times faster than the virtual call to kernel::base::eval.
+
+* polymorphic kc: considerably simpler than metaprogramming
+
+* different types of contrib
+
+* things in detail:: shouldn't be used
+
+* If you don't understand a comment below, write me to clarify it.
+
+* NEVER import std. As phrased in http://www.parashift.com/c++-faq-lite/coding-standards.html#faq-27.5 , get over it and type std::. Use std even for the symbols which are also in :: (use std::cos() instead of ::cos()).
+
+* 
+
+
+

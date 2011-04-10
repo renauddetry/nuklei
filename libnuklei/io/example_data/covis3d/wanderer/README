@@ -1,0 +1,18 @@
+Visualize input with
+
+  yawan opening_bridge04.wanderer
+
+(then type r and z multiple times)
+
+Pose estimation:
+
+export NUKLEI_LOG_LEVEL=5
+# Pose estimation:
+mdfh_util pe --inplace inplace_object.xml \
+             --left_image traffic_signs02.left.jpg \
+             --opencv_calib mdcs2.opencv_calib \
+             opening_bridge04.wanderer traffic_signs02.wanderer
+# 2D visu:
+display inplace_object.ppm
+# 3D visu:
+yawan inplace_object.xml traffic_signs02.wanderer
