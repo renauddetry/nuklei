@@ -1,0 +1,24 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@defgroup organization Code Organization
+
+
+Nuklei is organized in the following directories:
+
+- <tt>/</tt>
+  - <tt>build_scripts/</tt>
+  - <tt>contrib/</tt> Libraries that contribute to Nuklei functionalities. These libraries should only be used in <em>implementation</em> files. The headers contained in this directory will not be installed.
+  - <tt>doc_generated/</tt>
+  - <tt>doc_src/</tt>
+  - <tt>libnuklei/</tt> The nuklei library source code
+    - <tt>contrib/</tt> Libraries contributing to Nuklei functionalities. These libraries can be used in both header files and implementation files. The headers contained in this directory will be installed.
+    - <tt>base/</tt> Base Nuklei functions and classes.
+    - <tt>io/</tt> Input/Output.
+    - <tt>kernel/</tt> Kernel implementations.
+  - <tt>scons.build/</tt> Code built products.
+  - <tt>tools/</tt> Tools that rely on libnuklei.
+
+
+*/

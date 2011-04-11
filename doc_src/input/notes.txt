@@ -1,0 +1,9 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@defgroup notes Notes
+
+@section notes_coding_style Coding Style
+
+*/

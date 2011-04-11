@@ -1,0 +1,15 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@defgroup programming_paradigm Programming Paradigm
+
+Nuklei is written in generic and polymorphic C++. Generic code (i.e., templates) is flexible and fast (a lot of inlining). Unfortunately, generic code can quickly become obscure. Generic programming also restricts the range of programmers who will be comfortable with the code.
+
+Parts of Nuklei where performance is an issue are written in generic code. This includes kernels and all their methods, which have to be inlinable. 
+In parts of the code where performance is not an issue, Nuklei is written in an object-oriented/polymorphic style (i.e., virtual inheritance).
+
+Kernels are at the meeting point of polymorphic and generic programming paradigms. Each kernel (se3, r3xs2p, r3) has a complete, statically typed, statically linked interface, with copy semantics. The nuklei::kernel::base class is a polymorphic wrapper, with dynamically linked and typed procedures.  The template nuklei::kernel::implementation_prototype binds the polymorphic interface to static implementations. nuklei::kernel::implementation_prototype is no more than a CRTP trick to avoid clutter in derived kernels.
+
+
+*/
