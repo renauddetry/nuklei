@@ -18,7 +18,9 @@
 
 namespace nuklei {
   
-  // See implementation notes in Hierarhies3D/IMPLEMENTATION.
+  /**
+   * @brief Namespace containing kernel definitions.
+   */
   namespace kernel
   {
     class se3;
@@ -26,6 +28,9 @@ namespace nuklei {
     
     //const bitfield_t EXACT = (1 << 0);
     
+    /**
+     * @brief Base kernel class. See @ref programming_paradigm 
+     */
     class base
     {
     public:

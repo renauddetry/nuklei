@@ -7,7 +7,7 @@
 
 #include <gsl/gsl_math.h>
 
-#include <nuklei/math.h>
+#include <nuklei/Math.h>
 
 namespace nuklei
 {

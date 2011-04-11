@@ -615,6 +615,7 @@ INPUT                  = libnuklei/base \
                          libnuklei/io \
                          doc_src/index.txt \
                          doc_src/install.txt \
+                         doc_src/organization.txt \
                          doc_src/faq.txt \
                          doc_src/notes.txt
 

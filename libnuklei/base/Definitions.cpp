@@ -11,7 +11,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <nuklei/Common.h>
-#include <nuklei/math.h>
+#include <nuklei/Math.h>
 
 namespace nuklei {
   

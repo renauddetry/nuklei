@@ -1,4 +1,1 @@
-scons.build
-doc_generated
-nuklei-darwin.conf
-nuklei.xcodeproj
+*.pyc

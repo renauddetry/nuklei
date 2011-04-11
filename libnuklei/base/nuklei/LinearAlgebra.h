@@ -12,7 +12,7 @@
 #include <nuklei/Random.h>
 #include <nuklei/BoostSerialization.h>
 #include <nuklei/Common.h>
-#include <nuklei/math.h>
+#include <nuklei/Math.h>
 
 namespace nuklei {
 
