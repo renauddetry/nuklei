@@ -198,9 +198,10 @@ if not conf.CheckPKG('IlmBase') or \
    not conf.CheckPKG('OpenEXR') or \
    not conf.CheckCXXHeader('OpenEXR/IlmBaseConfig.h') or \
    not conf.CheckCXXHeader('OpenEXR/ImfVersion.h'):
-  print 'Warning: OpenEXR IlmBase, IlmImf) is not supported.'
-  print 'The library will compile, but the use of EXR input files is disabled.'
-  print '** For more information, refer to the INSTALL document **'
+  pass
+  #print 'Warning: OpenEXR (IlmBase, IlmImf) is not supported.'
+  #print 'The library will compile, but the use of EXR input files is disabled.'
+  #print '** For more information, refer to the INSTALL document **'
 else:
   # IlmBase
   ilmbasedict = conf.env.ParseFlags("!pkg-config --cflags --libs IlmBase")

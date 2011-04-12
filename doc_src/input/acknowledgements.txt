@@ -1,0 +1,15 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@defgroup ack Acknowledgements
+
+Nuklei relies on the following libraries:
+- Boost
+- GSL
+- The math module of the <a href="http://www.geometrictools.com/">Wild Magic library
+- <a href="http://trsl.sf.net">TRSL</a>.
+
+Packages for the latter two a missing in most Linux distributions. To ease deployment, Wild Magic and TRSL are bundled with Nuklei.
+
+*/

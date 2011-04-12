@@ -4,7 +4,10 @@
 
 @mainpage
 
-<center><a href="http://nuklei.sourceforge.net/">http://nuklei.sourceforge.net/</a></center>
+<b>Homepage:</b> <a href="http://nuklei.sourceforge.net/">http://nuklei.sourceforge.net/</a>
+
+<b>Project page:</b> <a href="http://sourceforge.net/projects/nuklei/">http://sourceforge.net/projects/nuklei/</a>
+
 
 Nuklei is a C++ library that implements kernel functions and kernel density estimation for SE(3) data. Nuklei also provides tools for manipulating SE(3) transformations and point clouds.
 

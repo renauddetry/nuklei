@@ -10,6 +10,6 @@ Nuklei are written in generic C++, while other parts are written in object-orien
 Parts of Nuklei where performance is an issue are written in generic code. This includes kernels and all their subroutines, which have to be inlinable. 
 In parts of the code where performance is not an issue, Nuklei is written in an object-oriented/polymorphic style (i.e., virtual inheritance).
 
-Kernels are at the meeting point of polymorphic and generic programming paradigms. Each kernel (kernel::se3, kernel::r3xs2p, kernel::r3) has a complete, statically bound interface, with copy semantics. The nuklei::kernel::base class is a polymorphic wrapper, with dynamically bound procedures.  The template nuklei::kernel::implementation_prototype binds the polymorphic wrapper to static implementations. nuklei::kernel::implementation_prototype follows the CRTP trick to avoid clutter in derived kernels.
+Kernels are at the meeting point of polymorphic and generic programming paradigms. Each kernel (kernel::se3, kernel::r3xs2p, kernel::r3) has a statically bound interface, with copy semantics. The nuklei::kernel::base class is a polymorphic wrapper, with dynamically bound procedures.  The template nuklei::kernel::implementation_prototype binds the polymorphic wrapper to static implementations. nuklei::kernel::implementation_prototype follows the CRTP trick to avoid clutter in derived kernels.
 
 */
