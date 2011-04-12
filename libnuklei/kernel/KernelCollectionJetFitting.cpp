@@ -55,7 +55,7 @@ namespace nuklei
     size_t d_monge = 4;
 
     if (in_points.size() != 16+1)
-      return DifferentialProperties();
+      return boost::tuple<Matrix3, Vector3, coord_t>();
     
     Monge_form monge_form;
     Monge_via_jet_fitting monge_fit;
@@ -67,7 +67,6 @@ namespace nuklei
 //         << "pca_eigen_vals and associated pca_eigen_vecs :"  << std::endl <<
 //            "first eval: " << monge_fit.pca_basis(0).first << "; first evec: " << monge_fit.pca_basis(0).second)
 
-    DifferentialProperties dp;
     
     Matrix3 eigenVectors;
     Vector3 eigenValues;

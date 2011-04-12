@@ -4,16 +4,11 @@
 
 @mainpage
 
+Nuklei is a C++ library that implements kernel functions and kernel density estimation for SE(3) data. Nuklei also provides tools for manipulating SE(3) transformations and point clouds.
+
 <b>Homepage:</b> <a href="http://nuklei.sourceforge.net/">http://nuklei.sourceforge.net/</a>
 
 <b>Project page:</b> <a href="http://sourceforge.net/projects/nuklei/">http://sourceforge.net/projects/nuklei/</a>
-
-
-Nuklei is a C++ library that implements kernel functions and kernel density estimation for SE(3) data. Nuklei also provides tools for manipulating SE(3) transformations and point clouds.
-
-@section index_license License
-
-Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a> (GPL). Nuklei will continue to be distributed under these terms as long as dependencies on the GNU Scientific Library (GSL) exist. Once all GSL dependencies are removed, Nuklei will be distributed under a BSD-like license.
 
 @section News
 
@@ -21,6 +16,23 @@ Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copylef
 <dt>2011-04-10</dt>
 <dd>Initial release of Nuklei! The code is usable but largely undocumented. Documentation will follow shortly.</dd>
 </dl>
+
+@section index_get Get Nuklei
+
+The source code is available from our version control server:
+@verbatim
+git clone git://nuklei.git.sourceforge.net/gitroot/nuklei/nuklei
+@endverbatim
+
+For more info, see @ref install "the install page".
+
+@section index_doc Documentation
+
+To get started, take a look at the <em>Modules</em> and <em>Classes</em> tabs.
+
+@section index_license License
+
+Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a> (GPL). Nuklei will continue to be distributed under these terms as long as dependencies on the GNU Scientific Library (GSL) exist. Once all GSL dependencies are removed, Nuklei will be distributed under a BSD-like license.
 
 
 @section index_author Authors

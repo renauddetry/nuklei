@@ -140,6 +140,13 @@ print 'Install prefix currently set to `' + blue + \
 print 'C++ compiler currently set to `' + blue + \
       env['CXX'] + defColor + '\'.'
 
+if not env['EnableGPL']:
+  print red + "GPL code cannot be disabled (yet)." + defColor
+  Exit(1)
+if env['EnableQPL'] and env['EnableGPL']:
+  print red + "Warning: GPL and QPL are incompatible. Programs built with these settings break both GPL and QPL terms." + defColor
+
+
 opts.Save(conf_file, env)
 
 Help(opts.GenerateHelpText(env))
