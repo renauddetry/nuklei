@@ -613,12 +613,13 @@ WARN_LOGFILE           =
 INPUT                  = libnuklei/base \
                          libnuklei/kernel \
                          libnuklei/io \
-                         doc_src/index.txt \
-                         doc_src/install.txt \
-                         doc_src/organization.txt \
-                         doc_src/programming_paradigm.txt \
-                         doc_src/faq.txt \
-                         doc_src/notes.txt
+                         doc_src/input/index.txt \
+                         doc_src/input/install.txt \
+                         doc_src/input/organization.txt \
+                         doc_src/input/programming_paradigm.txt \
+                         doc_src/input/coding_guidelines.txt \
+                         doc_src/input/faq.txt \
+                         doc_src/input/notes.txt
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

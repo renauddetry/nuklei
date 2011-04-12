@@ -8,6 +8,8 @@ build:
 install:
 	./scons.py install
 
+push:
+	git push origin master
 doc:
 	doxygen doc_src/Doxyfile
 	cp LICENSE.txt doc_generated/html
