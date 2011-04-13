@@ -14,7 +14,7 @@ Please read the following sections carefully before committing new code to the r
 
 - Avoid importing namespaces in implementation files. Imports within the body of a function are ok, but avoiding them is better.
 
-- Include directives: use brackets (<tt>#include @<lib/header.h@></tt> instead of <tt>#include @"lib/header.h@"</tt>).
+- Include directives: use brackets (<tt>@#include @<lib/header.h@></tt> instead of <tt>@#include @"lib/header.h@"</tt>).
 
 - No dynamic memory allocation (<tt>new Object()</tt>) unless within a smart pointer.
 

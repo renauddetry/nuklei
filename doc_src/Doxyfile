@@ -618,6 +618,7 @@ INPUT                  = libnuklei/base \
                          doc_src/input/organization.txt \
                          doc_src/input/programming_paradigm.txt \
                          doc_src/input/coding_guidelines.txt \
+                         doc_src/input/kernel.txt \
                          doc_src/input/faq.txt \
                          doc_src/input/notes.txt
 
@@ -1129,7 +1130,7 @@ FORMULA_TRANSPARENT    = YES
 # output. When enabled you also need to install MathJax separately and
 # configure the path to it using the MATHJAX_RELPATH option.
 
-USE_MATHJAX            = NO
+USE_MATHJAX            = YES
 
 # When MathJax is enabled you need to specify the location relative to the
 # HTML output directory using the MATHJAX_RELPATH option. The destination
@@ -1140,7 +1141,7 @@ USE_MATHJAX            = NO
 # MathJax, but it is strongly recommended to install a local copy of MathJax
 # before deployment.
 
-MATHJAX_RELPATH        = http://www.mathjax.org/mathjax
+MATHJAX_RELPATH        = http://www.mathjax.org/mathjax/
 
 # When the SEARCHENGINE tag is enabled doxygen will generate a search box
 # for the HTML output. The underlying search engine uses javascript

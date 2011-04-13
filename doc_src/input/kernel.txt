@@ -1,0 +1,9 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@defgroup kernel Kernels, kernel density estimation, kernel regression
+
+In Nuklei, a kernel is a function @f$\mathcal K(x,y) : D\times D \rightarrow \mathbb R@f$.
+
+*/

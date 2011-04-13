@@ -16,6 +16,12 @@ doc:
 	mkdir -p doc_generated/html/doc_src
 	cp doc_src/nuklei_logo.jpg doc_generated/html/doc_src
 
+test:
+	cp nuklei-darwin.conf /tmp/
+	./scons.py CXX=g++ gpl=yes qpl=yes
+	./scons.py CXX=clang++ gpl=yes qpl=no
+	cp /tmp/nuklei-darwin.conf .
+
 publish: doc
 	ssh renauddetry,nuklei@shell.sourceforge.net create
 	rsync -rl --delete --delete-excluded doc_generated/html/ renauddetry@shell.sourceforge.net:/home/project-web/nuklei/htdocs
