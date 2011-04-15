@@ -2,8 +2,18 @@
 
 /**
 
+@ingroup using
 @defgroup kernel Kernels, kernel density estimation, kernel regression
 
-In Nuklei, a kernel is a function @f$\mathcal K(x,y) : D\times D \rightarrow \mathbb R@f$.
+In Nuklei, a kernel is a function that provides a measure of similarity between its arguments. Nuklei provides kernels for elements that belong to
+- the Special Euclidean Group @f$ SE(3) @f$ (i.e., 3D rigid body transformations),
+- @f$ \mathbb R^3 \times S^2 @f$ (i.e., the product of @f$ \mathbb R^3 @f$ and the space of 2DOF orientations,
+- @f$ \mathbb R^3 @f$.
+
+We denote a kernel by @f[\mathcal K(x,y) : D\times D \rightarrow \mathbb R,@f] where @f$ D @f$ is either @f$ SE(3) @f$, @f$ \mathbb R^3 \times S^2 @f$, or @f$ \mathbb R^3 @f$.
+
+In machine learning and statistics, kernels are used, e.g., for <a href="http://en.wikipedia.org/wiki/Kernel_density_estimation">density estimation</a> or for <a href="http://en.wikipedia.org/wiki/Kernel_regression">regression</a>.
+
+Nuklei was initially written with kernel density estimation in mind. 
 
 */

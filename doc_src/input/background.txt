@@ -1,0 +1,197 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@ingroup using
+@defgroup background Background
+
+Nuklei was initially designed to model the spatial distribution of vision and grasp-related parameters with density functions. This section reviews the theory behind density estimation and integration particularized to the function domains we worked with. This section also discusses details related to a computer implementation where appropriate.
+
+Nuklei was designed to model the spatial distribution of object and gripper poses -- 3DOF position and 3DOF orientation -- and the distribution of short edge segments or surface patches -- 3DOF position and 2DOF orientation.
+
+@section background_param Parametrization
+
+Three-DOF positions are naturally parametrized with @f$ \mathbb R^3 @f$ points. Two-DOF orientations are parametrized with 3D unit vectors. The set of 3D unit vectors forms the 2-sphere @f$ S^2 @f$. As  we consider edge orientations and surface normals as axial data (a surface normal @f$ v @f$ is equivalent to @f$ -v @f$), each 2DOF orientation is represented by exactly two unit vectors of @f$ S^2 @f$. 
+
+Three-DOF orientations, i.e., rotations around the origin of @f$ \mathbb R^3 @f$, form the rotation group. As 3DOF rotations can be uniquely parametrized by special orthogonal matrices, the rotation group is often referred to as the special orthogonal group @f$ SO(3) @f$. The text below follows this convention.
+
+There exist multiple representations of 3DOF orientations, such as rotation matrices, Euler angles, or unit quaternions. Unit quaternions form the @f$ 3 @f$-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
+@f[
+q = \left(\cos\frac\alpha 2, v_x\sin\frac\alpha 2, v_y\sin\frac\alpha 2, v_z\sin\frac\alpha 2 \right).
+@f]
+Because a rotation of @f$ \alpha @f$ radians about @f$ v @f$ is equivalent to a rotation of @f$ -\alpha @f$ about @f$ -v @f$, @f$ q @f$ and @f$ -q @f$ correspond to the same rotation. Consequently, unit quaternions form a double cover of @f$ SO(3) @f$ -- every rotation exactly corresponds to two unit quaternions.
+
+We parametrize 3DOF orientations with unit quaternions. Quaternions offer a clear formalism for the definition of position-orientation densities (see below). From a numerical viewpoint, they are stable and free of singularities. Finally, unit quaternions allow for the definition of a rotation metric that roughly reflects our intuitive notion of a distance between rotations. The distance between two rotations @f$ \theta @f$ and @f$ \theta' @f$ is defined as the angle of the 3D rotation that maps @f$ \theta @f$ onto @f$ \theta' @f$ \cite{kuffner2004a}. This metric can be easily and efficiently computed using unit quaternions as twice the shortest path between @f$ \theta @f$ and @f$ \theta' @f$ on the @f$ 3 @f$--sphere,
+@f[
+\textrm{d}\left(\theta, \theta'\right) = 2\arccos\left|\theta ^\top \theta'\right|,
+@f]
+where @f$ \theta^\top \theta' @f$ is the inner (dot) product of @f$ \theta @f$ and @f$ \theta' @f$. In this expression, we take the absolute value @f$ |\theta ^\top \theta'| @f$ to take into account the double cover issue mentioned above.
+
+Our models rely on density functions defined on @f$ \mathbb R^3\times S^2 @f$ and @f$ \mathbb R^3\times SO(3) @f$. The latter is generally called the special Euclidean group @f$ SE(3) @f$. The next section details the definition of density functions on @f$ \mathbb R^3\times S^2 @f$ and @f$ SE(3) @f$.
+
+@section background_npde Nonparametric Density Estimation
+
+
+
+
+<em>Density estimation</em> generally refers to the problem of estimating the value of a density function from a set of random samples drawn from it. Density estimation methods can loosely be divided into two classes: parametric or nonparametric. Parametric methods model a density with a set of heavily parametrized kernels. The number of kernels is generally smaller than the number density samples available for computing the model. The price to pay for the smaller number of kernels is the substantial effort required to tune their parameters. The most famous parametric model is the Gaussian mixture, which is generally constructed by tuning the mean and covariance matrix of each Gaussian kernel with the Expectation-Maximization algorithm \cite{dempster1977a,alpaydin2004a}.
+
+Nonparametric methods represent a density simply with the samples drawn from it. The probabilistic density in a region of space is given by the local density of the samples in that region. A density can be estimated by simple methods such as histograms, or more sophisticated methods like kernel density estimation \cite{silverman1986a}. Kernel density estimation (KDE) works by assigning a kernel function to each observation; the density is computed by summing all kernels (see \fig\ref{fig:kde1d}). By contrast to parametric methods, these kernels are relatively simple, generally involving a single parameter defining an isotropic variance. Hence, compared to classical parametric methods, KDE uses a larger number of simpler kernels.
+
+<!--
+\begin{figure}
+\centering
+\includetexgraphics[.9\linewidth]{../../presentations/2010-02-23--interview_tuebingen/vector/kde1d}
+\caption{Kernel estimation (blue) of a density observed through 6 samples (green). The dashed red lines illustrate the gaussian kernels associated to each sample. The estimate is obtained by summing all kernels. To form a proper density, the function represented by the blue line should be normalized by dividing it by 6.}
+
+\end{figure}
+-->
+
+In this work, densities are modeled nonparametrically with KDE. This choice is primarily motivated by the structure of the position--orientation domains on which they are defined: Capturing pertinent position-orientation correlations within a single parametric function is very complex, while these correlations can easily be captured by a large number of simple kernels. Also, the nonparametric approach eliminates problems like mixture fitting, choosing a number of components, or having to make assumptions concerning density shape (e.g.\ normality). Kernel density estimation is thus ideal for modeling the highly multi-modal densities we are dealing with.
+
+A density @f$ d(x) @f$ is encoded by a set of observations @f$ \hat x_{i} @f$ drawn from it, which we will refer to as <em>particles</em>. Density values are estimated with KDE, by representing the contribution of the @f$ i^\textrm{th} @f$ particle with a local kernel function @f$ \mathcal K\left(\cdot ; \hat x_i, \sigma\right) @f$ centered on @f$ \hat x_i @f$. The kernel function is generally symmetric with respect to its center point; the amplitude of its spread around the center point is controlled by a bandwidth parameter @f$ \sigma @f$. For conciseness, particles are often weighted, which allows one to denote, e.g., a pair of identical particles by a single particle of double mass. In the following, the weight associated to a particle @f$ \hat x_{i} @f$ is denoted by @f$ w_{i} @f$.
+
+KDE estimates the value of a continuous density @f$ d @f$ at an arbitrary point @f$ x @f$ as the weighted sum of the evaluation of all kernels at @f$ x @f$, i.e.,
+@f[
+d(x) \simeq \sum_{i=1}^n w_i \mathcal K\left(x ; \hat x_i, \sigma\right),
+@f]
+where @f$ n @f$ is the number of particles encoding @f$ d @f$.
+Random variates from the density are generated as follows:
+- First, a particle @f$ \hat x_i @f$ is selected by drawing @f$ i @f$ from
+@f[
+P(i = \ell) \propto w_{\ell}.
+@f] (This effectively gives a higher chance to particles with a larger weight.)
+- Then, a random variate @f$ x @f$ is generated by sampling from the kernel @f$ \mathcal K\left(x ; \hat x_i, \sigma\right) @f$ associated to @f$ \hat x_i @f$.
+
+
+@subsection background_npde_se3 Defining Densities on \( SE(3) \)
+
+In order to define densities on @f$ SE(3) @f$, a position-orientation kernel is required. We denote the separation of kernel parameters into position and orientation by 
+@f{align}{
+x = (\lambda, \theta)&\qquad x\in SE(3),\quad \lambda\in\mathbb R^3,\quad \theta\in SO(3),\\
+\mu = (\mu_t, \mu_r)&\qquad \mu \in SE(3),\quad \mu_t \in \mathbb R^3,\quad \mu_r \in SO(3),\\
+\sigma = (\sigma_t, \sigma_r)&\qquad \sigma_t, \sigma_r \in\mathbb R_+.
+@f}
+The kernel we use is defined with
+@f[
+\mathcal K\left(x ; \mu, \sigma\right) = \mathcal L\left(\lambda ; \mu_t, \sigma_t\right) \mathcal O\left(\theta ; \mu_r, \sigma_r\right),
+@f]
+where @f$ \mu @f$ is the kernel mean point, @f$ \sigma @f$ is the kernel bandwidth, @f$ \mathcal L @f$ is an isotropic location kernel defined on @f$ \mathbb R^3 @f$, and @f$ \mathcal O @f$ is an isotropic orientation kernel defined on @f$ SO(3) @f$.
+
+
+For @f$ \mathbb R^3 @f$, we can simply use a trivariate isotropic Gaussian kernel
+@f[
+\mathcal L\left(\lambda; \mu_t, \Sigma_t\right) = C_g(\Sigma_t)  e^{-\frac{1}{2}( \lambda - \mu_t)^\top \Sigma_t^{-1} (\lambda - \mu_t)},
+@f]
+where @f$ C_g(\cdot) @f$ is a normalizing factor and @f$ \Sigma_t = \sigma_t^2 \mathbf{I} @f$. The definition of the orientation kernel @f$ \mathcal O @f$ is based on the von Mises--Fisher distribution on the 3-sphere in @f$ \mathbb R^4 @f$ \cite{fisher1953a}. The von Mises--Fisher distribution is a Gaussian-like distribution on @f$ S^3 @f$. It is defined as
+@f[
+\mathcal F\left(\theta ; \mu_r, \sigma_r\right) = C_4(\sigma_r)e^{\sigma_r \; \mu_r^T \theta},
+@f]
+where @f$ C_4(\sigma_r) @f$ is a normalizing factor, @f$ \theta @f$ and @f$ \mu_r @f$ are unit quaternions, and @f$ \mu_r^T \theta @f$ is a dot product. Because unit quaternions form a double cover of the rotation group, @f$ \mathcal O @f$ has to verify @f$ \mathcal O\left(q ; \mu_r, \sigma_r\right) = \mathcal O\left(-q ; \mu_r, \sigma_r\right) @f$ for all unit quaternions @f$ q @f$. We thus define @f$ \mathcal O @f$ as a pair of antipodal von Mises--Fisher distributions \cite{sudderth2006a},
+@f[
+\mathcal O\left(\theta ; \mu_r, \sigma_r\right) =  \frac {\mathcal F\left( \theta ; \mu_r, \sigma_r \right) + \mathcal F \left(\theta; -\mu_r, \sigma_r\right)}2.
+@f]
+We note that the von Mises--Fisher distribution \eqref{eq:vonmises_fisher} involves the same dot product as the rotation metric defined above \eqref{eq:quaternion_metric}. The dot product @f$ \mu_r^\top \theta @f$ is equal to @f$ 1 @f$ when @f$ \mu_r = \theta @f$. The dot product decreases as @f$ \theta @f$ moves further away from @f$ \mu_r @f$, to reach @f$ 0 @f$ when @f$ \theta @f$ is a @f$ 180^\circ @f$ rotation away from @f$ \mu_r @f$. In this range of values, the von Mises--Fisher kernel thus varies between @f$ C_4(\sigma_r)e^{\sigma_r} @f$ and @f$ C_4(\sigma_r) @f$. While @f$ e^{\sigma_r} @f$ grows rapidly with @f$ \sigma_r @f$, @f$ C_4(\sigma_r) @f$ rapidly becomes very small. This makes the computation of @f$ \mathcal{F} @f$ numerically difficult. A robust approximation of @f$ \mathcal{F} @f$ can be obtained with 
+@f[
+\mathcal F \left(\theta ; \mu_r, \sigma_r\right) \simeq e^{\sigma_r \; \mu_r^T \theta + C_4'(\sigma_r)},
+@f]
+where @f$ C_4'(\sigma_r) @f$ approximates the logarithm of @f$ C_4(\sigma_r) @f$ \cite{abramowitz1965a,elkan2006a}. However, since @f$ \sigma_r @f$ is common to all kernels forming a density, using
+@f[
+\mathcal{\tilde F} \left(\theta ; \mu_r, \sigma_r\right) = e^{- \sigma_r\left(1-\mu_r^T \theta\right)}
+@f]
+instead of @f$ \mathcal{F} @f$ in the expression of @f$ \mathcal O @f$ \eqref{eq:Theta} will yield density estimates equal to @f$ d @f$ \eqref{eq:d} up to a multiplicative factor, while allowing for efficient and robust numerical computation. This alternative will be preferred in all situations where @f$ d @f$ need not integrate to one.
+
+@subsection background_npde_r3xs2 Defining Densities on \( \mathbb R^3\times S^2 \)
+
+
+Turning to densities defined on @f$ \mathbb R^3\times S^2 @f$, let us define
+@f{align}{
+x = (\lambda, \theta)&\qquad x\in \mathbb R^3\times S^2, \quad \lambda\in\mathbb R^3, \quad \theta\in S^2,\\
+\mu = (\mu_t, \mu_r)&\qquad \mu \in \mathbb R^3\times S^2,\quad \mu_t \in \mathbb R^3,\quad \mu_r \in S^2,\\
+\sigma = (\sigma_t, \sigma_r)&\qquad \sigma_t, \sigma_r \in\mathbb R_+.
+@f}
+The @f$ \mathbb R^3\times S^2 @f$ kernel is defined as
+@f[
+\mathcal K_3\left(x ;\mu, \sigma \right) = \mathcal N\left(\lambda ; \mu_t, \sigma_t\right) \mathcal O\left(\theta ; \mu_r, \sigma_r\right),
+@f]
+where @f$ \mathcal{\Theta_3} @f$ is a mixture of two antipodal @f$ S^2 @f$ von Mises--Fisher distributions, i.e.,
+@f{align}{
+\mathcal O_3\left(\theta ; \mu_r, \sigma_r\right) &=  \frac {\mathcal F_3\left(\theta ; \mu_r, \sigma_r \right) + \mathcal F_3\left(\theta ; -\mu_r, \sigma_r\right) }2,\\
+\mathcal F_3\left(\theta ; \mu_r, \sigma_r\right) &= C_3(\sigma_r)e^{\sigma_r \; \mu_r^T \theta}.
+@f}
+In the expression above, @f$ C_3(\sigma_r) @f$ is a normalizing factor, which can be written as
+@f[
+\frac{\sigma_r}{2\pi\left(e^\sigma_r-e^{-\sigma_r}\right)}.
+@f]
+@f$ \mathcal{F_3} @f$ can thus be written as
+@f[
+\mathcal F_3\left(\theta ; \mu_r, \sigma_r\right) = \frac{\sigma_r}{2\pi\left(1-e^{-2\sigma_r}\right)} e^{-\sigma_r\left(1-\mu_r^T\theta\right)},
+@f]
+which is easy to numerically evaluate. As for @f$ SE(3) @f$ densities, when @f$ d @f$ need not integrate to one, the normalizing constant can be ignored.
+
+@subsection background_npde_eval_simu Evaluation and Simulation
+
+As the kernels @f$ \mathcal{K} @f$ and @f$ \mathcal{K_3} @f$ factorize to position and orientation factors, they are simulated by drawing samples from their position and orientation components independently. Efficient simulation methods are available for both normal distributions \cite{box1958a} and von Mises--Fisher distributions \cite{wood1994a}. The bandwidths @f$ \sigma_t @f$ and @f$ \sigma_r @f$ are computed by ad-hoc methods that depend on the application; these methods are discussed in Chapter \ref{sec:visu} and Chapter \ref{sec:grasp}.
+
+From an algorithmic viewpoint, density evaluation is linear in the number of particles @f$ n @f$ supporting the density.  Asymptotically logarithmic evaluation can theoretically be achieved with @f$ kd @f$-trees and slightly modified kernels: Considering for instance @f$ SE(3) @f$ densities and the notation introduced above (\ref{eq:separation_x}--\ref{eq:kernel_in_se3}), let us define a truncated kernel @f$ \mathcal{K'} @f$ as
+@f[
+\mathcal K'\left(x ; \mu, \sigma\right) =
+\begin{cases} \mathcal K\left(x ; \mu, \sigma\right) &\textrm{ if } \textrm{d}\left(\lambda, \mu_t\right) < \lambda_\ell \textrm{ and } \textrm{d}\left(\theta, \mu_r\right) < \theta_\ell,\\
+0 &\textrm{ else,}
+\end{cases}
+@f]
+where @f$ \lambda_\ell @f$ and @f$ \theta_\ell @f$ are fixed position and orientation thresholds. The value at @f$ \left(\lambda, \theta\right) @f$ of a density modeled with @f$ \mathcal{K'} @f$ only depends on particles whose distance to @f$ \left(\lambda, \theta\right) @f$ is smaller than @f$ \lambda_\ell @f$ in the position domain, and smaller than @f$ \theta_\ell @f$ in the orientation domain. These particles can theoretically be accessed in near-logarithmic time with a @f$ kd @f$-tree.
+
+
+However, traversing a @f$ kd @f$-tree is computationally more expensive than traversing a sequence. Hence, @f$ kd @f$-trees only become profitable for @f$ n @f$ larger than a certain threshold. In the case of our 5DOF or 6DOF domains and sets of @f$ 500 @f$--@f$ 2000 @f$ particles, we have observed best performances when organizing particle positions in a @f$ kd @f$-tree, while keeping orientations unstructured. Density evaluation is always sub-linear in the number of particles, and it approaches a logarithmic behavior as @f$ n @f$ increases.
+
+
+
+@subsection background_npde_resamp Resampling
+
+In the next chapters, certain operations on densities will yield very large particle sets. When the number of particles supporting a density becomes prohibitively high, a sample set of @f$ n @f$ elements will be drawn and replace the original representation. This process will be referred to as <em>resampling</em>. For efficient implementation, <em>systematic sampling</em> \cite{douc2005a} can be used to select @f$ n @f$ kernels from the distribution defined in Eq.\ \ref{eq:select_particle}. In the following, @f$ n @f$ will generally denote the number of particles per density.
+
+
+
+
+
+@section background_integ Integration
+
+
+
+The models presented in the next chapters make extensive use of approximate integration of density functions. In this work, approximate integration is generally carried out through Monte Carlo integration, which is briefly introduced below. The remainder of the section then details the convolution of @f$ SE(3) @f$ and @f$ \mathbb R^3\times S^2 @f$ densities, as this operation is instrumental in the models of the next chapters.
+
+@subsection background_integ_mci Monte Carlo Integration
+
+Integrals over @f$ SE(3) @f$ and @f$ \mathbb R^3\times S^2 @f$ are solved numerically with Monte Carlo methods. Monte Carlo integration is based on random exploration of the integration domain. By contrast to classical numerical integration algorithms that consider integrand values at points defined by a rigid grid, Monte Carlo integration explores the integration domain randomly.
+
+Integrating the product of two density functions @f$ f(x) @f$ and @f$ g(x) @f$ defined on the same domain is performed by drawing random variates from @f$ g @f$ and averaging the values of @f$ f @f$ at these points \cite{caflisch1998a}% chiuso2000a
+@f[
+\int f(x)g(x) \textrm{d} x \simeq \frac 1n \sum_{i=1}^n f(x_i) \quad \textrm{where} \quad x_i \sim g(x).
+@f]
+
+@subsection background_integ_cc Cross-Correlation
+
+Chapter \ref{sec:visu} and Chapter \ref{sec:gen} make extensive use of density convolutions. An in-depth description of their approximate computation is given below.
+
+Let @f$ f @f$ and @f$ g @f$ be two density functions with domain @f$ D @f$, where @f$ D @f$ is either @f$ SE(3) @f$ or @f$ \mathbb R^3\times S^2 @f$. Let also
+@f[
+t_x(y) : D\rightarrow D
+@f]
+denote the rigid transformation of @f$ y @f$ by @f$ x @f$, with @f$ y\in D @f$ and @f$ x\in SE(3) @f$. The @f$ SE(3) @f$ cross-correlation of @f$ f @f$ and @f$ g @f$ is written as
+@f[
+c(x) = \int f\left(y\right) g(t_{x}\left(y\right)) \mathrm{d}y.
+@f]
+As both @f$ f @f$ and @f$ g @f$ have unit integrals, Fubini's theorem guarantees that @f$ c @f$ also integrates to one.
+
+The cross-correlation of @f$ f @f$ and @f$ g @f$ is approximated with Monte Carlo integration as
+@f[
+c(x) \simeq \frac 1n \sum_{\ell=1}^n g(t_{x}(y_\ell)) \quad \textrm{where} \quad y_\ell \sim  f(y).
+@f]
+Sampling from @f$ c(x) @f$ can be achieved by simulating @f$ h(x) = g(t_{x}(y_f)) @f$, where @f$ y_f\sim f(y) @f$. The simulation of @f$ h(x) @f$ depends on the domain @f$ D @f$ on which @f$ f @f$ and @f$ g @f$ are defined. We first consider the case @f$ D = SE(3) @f$. In this case, drawing a sample from @f$ h(x) @f$ amounts to computing the (unique) transformation @f$ x_* @f$ that maps @f$ y_f @f$ onto @f$ y_g @f$, where @f$ y_g\sim g(y) @f$. When @f$ D = R^3\times S^2 @f$, the transformation between @f$ y_f @f$ and @f$ y_g @f$ is not unique anymore; sampling @f$ h(x) @f$ is done by selecting one transformation from a uniform distribution on the transformations that map @f$ y_f @f$ onto @f$ y_g @f$.
+
+
+
+
+
+*/

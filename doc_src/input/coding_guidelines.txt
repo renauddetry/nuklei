@@ -2,6 +2,7 @@
 
 /**
 
+@ingroup devel
 @defgroup coding_guidelines Coding Guidelines
 
 Please read the following sections carefully before committing new code to the repository.

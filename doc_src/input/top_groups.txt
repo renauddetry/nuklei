@@ -1,0 +1,8 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@defgroup using Using Nuklei
+@defgroup devel Contributing to Nuklei
+
+*/

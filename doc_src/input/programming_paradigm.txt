@@ -2,6 +2,7 @@
 
 /**
 
+@ingroup using
 @defgroup programming_paradigm Programming Paradigms
 
 Nuklei's code follows two distinct programming paradigms. Parts of 

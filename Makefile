@@ -24,4 +24,4 @@ test:
 
 publish: doc
 	ssh renauddetry,nuklei@shell.sourceforge.net create
-	rsync -rl --delete --delete-excluded doc_generated/html/ renauddetry@shell.sourceforge.net:/home/project-web/nuklei/htdocs
+	rsync -rl --delete --delete-excluded doc_generated/html/ renauddetry@shell.sourceforge.net:/home/project-web/nuklei/htdocs/doxygen
