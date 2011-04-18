@@ -4,13 +4,17 @@
 
 @mainpage
 
+<img style="text-align: center;" alt="Logo" src="doc_src/nuklei_logo.jpg">
+
+@section index_overview Overview
+
 Nuklei is a C++ library that implements kernel functions and kernel density estimation for @f$SE(3)@f$ data. Nuklei also provides tools for manipulating @f$SE(3)@f$ transformations, and for manipulating point clouds.
 
 <b>Homepage:</b> <a href="http://nuklei.sourceforge.net/">http://nuklei.sourceforge.net/</a>
 
 <b>Project page:</b> <a href="http://sourceforge.net/projects/nuklei/">http://sourceforge.net/projects/nuklei/</a>
 
-@section News
+@section index_news News
 
 <dl>
 <dt>2011-04-10</dt>

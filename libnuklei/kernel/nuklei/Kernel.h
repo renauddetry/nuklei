@@ -29,17 +29,35 @@ namespace nuklei {
     //const bitfield_t EXACT = (1 << 0);
     
     /**
-     * @brief Base kernel class. See @ref programming_paradigm 
+     * @brief Polymorphic kernel class.
+     *
+     * This class serves as an abstract base for kernels defined on
+     * various subspaces of @f$ SE(3) @f$. See @ref kernels for a
+     * discussion of what a kernel is. See @ref programming_paradigm
+     * for an overview and motivation of the kernel class hierarchy.
      */
     class base
     {
     public:
       
+      /**
+       * @brief std::auto_ptr for this class. 
+       */
       typedef std::auto_ptr< kernel::base > ptr;
       
+      /**
+       * @brief Explicit query of a kernel's type. See @ref type for more info.
+       */
       typedef enum { R3 = 0, R3XS2, R3XS2P, SE3, UNKNOWN } Type;
+      /**
+       * @brief Explicit query of a kernel's type. See @ref type for more info.
+       */
       static const Type defaultType = SE3;
+      /**
+       * @brief Explicit query of a kernel's type. See @ref type for more info.
+       */
       static const std::string TypeNames[];
+      /** @} */
       
     protected:
       base() : w_(1.), flag1_(0), bitfield_(0) {}
@@ -65,34 +83,96 @@ namespace nuklei {
       
       virtual void assertConsistency() const = 0;
       
+      /**
+       * @brief Calls polyPrint
+       */
       friend std::ostream& operator<<(std::ostream &out, const kernel::base &k);
+      /**
+       * @brief Prints the kernel parameters to the provided stream.
+       *
+       * The purpose of this method is debugging. It shouldn't be used
+       * for serialization.
+       */
       virtual std::ostream& polyPrint(std::ostream &out) const = 0;
       
+      /**
+       * @brief Weight-based kernel comparator.
+       */
       bool operator<(const kernel::base& k) const { return w_ < k.w_; }
+      /**
+       * @brief Weight-based kernel comparator.
+       */
       bool operator>(const kernel::base& k) const { return w_ > k.w_; }
       
+      /**
+       * @brief Clone the kernel.
+       */
       virtual base::ptr clone() const = 0;
+      /**
+       * @brief Create a new kernel of the same type.
+       */
       virtual base::ptr create() const = 0;
       
+      /**
+       * @brief Get the location component of the kernel.
+       */
       virtual Vector3 getLoc() const = 0;
+      /**
+       * @brief Set the location component of the kernel.
+       */
       virtual void setLoc(const Vector3 &v) = 0;
       
+      /**
+       * @brief Get the location bandwidth.
+       */
       virtual coord_t getLocH() const = 0;
+      /**
+       * @brief Set the location bandwidth.
+       */
       virtual void setLocH(const coord_t h) = 0;
+      /**
+       * @brief Get the orientation bandwidth.
+       */
       virtual coord_t getOriH() const = 0;
+      /**
+       * @brief Set the orientation bandwidth.
+       */
       virtual void setOriH(const coord_t h) = 0;
       
+      /**
+       * @brief Get the "kernel type", i.e., its domain of definition.
+       */
       virtual Type polyType() const = 0;
       
+      /**
+       * @brief Evaluate the kernel at the location/orientation of @p k.
+       */
       virtual coord_t polyEval(const base &k) const = 0;
+      /**
+       * @brief Distance (from the origin) at which the value of the kernel becomes zero.
+       */
       virtual coord_t polyCutPoint() const = 0;
+      /**
+       * @brief Get a sample from the kernel.
+       */
       virtual base::ptr polySample() const = 0;
-      // Take a sample from the kernel. If the kernel/sample belong to a subspace
-      // of SE(3), make the sample SE(3) by
-      // selecting random values for the extra DOFs.
+      /**
+       * @brief Get an @f$ SE(3) @f$ sample from the kernel.
+       *
+       * Take a sample from the kernel. If the kernel is defined on a
+       * subspace of @f$ SE(3) @f$, make the sample @f$ SE(3) @f$ by
+       * selecting random values from a uniform distribution for the
+       * extra DOFs.
+       */
       virtual std::auto_ptr<kernel::se3> polySe3Sample() const = 0;
-      // If the kernel belongs to a subspace
-      // of SE(3), make an SE(3) kernel from it by filling the remaining DOFs with random values.
+      /**
+       * @brief Get an @f$ SE(3) @f$ version of the kernel.
+       *
+       * Take a sample from the kernel. If the kernel is defined on a
+       * subspace of @f$ SE(3) @f$, make it @f$ SE(3) @f$ by
+       * selecting random values from a uniform distribution for the
+       * extra DOFs.
+       */
       virtual std::auto_ptr<kernel::se3> polySe3Proj() const = 0;
       
       virtual base::ptr polyProjectedOn(const kernel::se3& k) const = 0;

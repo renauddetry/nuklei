@@ -1,0 +1,10 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+/**
+
+@ingroup using
+@defgroup type Type Queries
+
+Functions defined in @ref Types.h facilitate the (de)serialization of enum labels, here refered to as <em>types</em>.
+
+*/
