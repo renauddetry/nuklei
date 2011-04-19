@@ -16,6 +16,9 @@
 
 namespace nuklei {
 
+  /**
+   * @brief Namespace containing linear algebra functions (and some other functions).
+   */
   namespace la {
 
     inline
@@ -387,114 +390,144 @@ namespace nuklei {
     
     Vector3 project(const Plane3& plane, const Vector3& point);
     
-    /**
-     * z = R y + t
-     * Z = R Y
-     */
-
-    inline Vector3 transform(const Vector3& t,
-                             const Matrix3& R,
-                             const Vector3& y)
-      {
-        return R*y + t;
-      }
-
-    inline Vector3 transform(const Vector3& t,
-                             const Quaternion& R,
-                             const Vector3& y)
-      {
-        return R.Rotate(y) + t;
-      }
-
-    inline void transform(Vector3& z, Matrix3& Z,
-                          const Vector3& t, const Matrix3& R,
-                          const Vector3& y, const Matrix3& Y)
-      {
-        z = transform(t, R, y);
-        Z = R*Y;
-      }
-
-    inline void transform(Vector3& z, Quaternion& Z,
-                          const Vector3& t, const Quaternion& R,
-                          const Vector3& y, const Quaternion& Y)
-      {
-        z = transform(t, R, y);
-        Z = R*Y;
-      }
-
-    inline void transform(Vector3& z, Vector3& zz,
-                          const Vector3& t, const Matrix3& R,
-                          const Vector3& y, const Vector3& yy)
-      {
-        z = transform(t, R, y);
-        zz = transform(Vector3::ZERO, R, yy);
-      }
-
-    inline void transform(Vector3& z, Vector3& zz,
-                          const Vector3& t, const Quaternion& R,
-                          const Vector3& y, const Vector3& yy)
-      {
-        z = transform(t, R, y);
-        zz = transform(Vector3::ZERO, R, yy);
-      }
-
-
-    /**
-     * y = X^T (z-x)
-     * Y = X^T Z
-     */
-
-    inline Vector3 project(const Vector3& o,
-                           const Matrix3& B,
-                           const Vector3& z)
-      {
-        return B.Transpose() * (z-o);
-      }
-
-    inline Vector3 project(const Vector3& o,
-                           const Quaternion& B,
-                           const Vector3& z)
-      {
-        return B.Conjugate().Rotate(z-o);
-      }
     
-    inline void project(Vector3& y, Matrix3& Y,
-                        const Vector3& o, const Matrix3& B,
-                        const Vector3& z, const Matrix3& Z)
-      {
-        y = project(o, B, z);
-        Y = B.TransposeTimes(Z);
-      }
-
-    inline void project(Vector3& y, Quaternion& Y,
-                        const Vector3& o, const Quaternion& B,
-                        const Vector3& z, const Quaternion& Z)
-      {
-        y = project(o, B, z);
-        Y = B.Conjugate() * Z;
-      }
-
-    inline void project(Vector3& y, Vector3& yy,
-                        const Vector3& o, const Matrix3& B,
-                        const Vector3& z, const Vector3& zz)
-      {
-        y = project(o, B, z);
-        yy = project(Vector3::ZERO, B, zz);
-      }
-
-    inline void project(Vector3& y, Vector3& yy,
-                        const Vector3& o, const Quaternion& B,
-                        const Vector3& z, const Vector3& zz)
-      {
-        y = project(o, B, z);
-        yy = project(Vector3::ZERO, B, zz);
-      }
+    /**
+     * @addtogroup matrix_transfo
+     * @{
+     */
+    
 
     /**
-     * x = z - X y
-     * X = Z Y^T
+     * @brief Returns @f$ Xy + x @f$.
      */
+    inline Vector3 transform(const Vector3& x,
+                             const Matrix3& X,
+                             const Vector3& y)
+    {
+      return X*y + x;
+    }
+    
+    /**
+     * @brief Returns @f$ Xy + x @f$.
+     */
+    inline Vector3 transform(const Vector3& x,
+                             const Quaternion& X,
+                             const Vector3& y)
+    {
+      return X.Rotate(y) + x;
+    }
+    
+    /**
+     * @brief @f$ z = X y + x,  Z = X Y @f$.
+     */
+    inline void transform(Vector3& z, Matrix3& Z,
+                          const Vector3& x, const Matrix3& X,
+                          const Vector3& y, const Matrix3& Y)
+    {
+      z = transform(x, X, y);
+      Z = X*Y;
+    }
+    
+    /**
+     * @brief @f$ z = X y + x,  Z = X Y @f$.
+     */
+    inline void transform(Vector3& z, Quaternion& Z,
+                          const Vector3& x, const Quaternion& X,
+                          const Vector3& y, const Quaternion& Y)
+    {
+      z = transform(x, X, y);
+      Z = X*Y;
+    }
+    
+    /**
+     * @brief @f$ z = X y + x,  Z = X Y @f$.
+     */
+    inline void transform(Vector3& z, Vector3& Z,
+                          const Vector3& x, const Matrix3& X,
+                          const Vector3& y, const Vector3& Y)
+    {
+      z = transform(x, X, y);
+      Z = transform(Vector3::ZERO, X, Y);
+    }
+    
+    /**
+     * @brief @f$ z = X y + x,  Z = X Y @f$.
+     */
+    inline void transform(Vector3& z, Vector3& Z,
+                          const Vector3& x, const Quaternion& X,
+                          const Vector3& y, const Vector3& Y)
+    {
+      z = transform(x, X, y);
+      Z = transform(Vector3::ZERO, X, Y);
+    }
 
+    /**
+     * @brief Returns @f$ X^T (z-x) @f$.
+     */
+    inline Vector3 project(const Vector3& x,
+                           const Matrix3& X,
+                           const Vector3& z)
+    {
+      return X.Transpose() * (z-x);
+    }
+    
+    /**
+     * @brief Returns @f$ X^T (z-x) @f$.
+     */
+    inline Vector3 project(const Vector3& x,
+                           const Quaternion& X,
+                           const Vector3& z)
+    {
+      return X.Conjugate().Rotate(z-x);
+    }
+    
+    /**
+     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
+     */
+    inline void project(Vector3& y, Matrix3& Y,
+                        const Vector3& x, const Matrix3& X,
+                        const Vector3& z, const Matrix3& Z)
+    {
+      y = project(x, X, z);
+      Y = X.TransposeTimes(Z);
+    }
+    
+    /**
+     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
+     */
+    inline void project(Vector3& y, Quaternion& Y,
+                        const Vector3& x, const Quaternion& X,
+                        const Vector3& z, const Quaternion& Z)
+    {
+      y = project(x, X, z);
+      Y = X.Conjugate() * Z;
+    }
+    
+    /**
+     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
+     */
+    inline void project(Vector3& y, Vector3& Y,
+                        const Vector3& x, const Matrix3& X,
+                        const Vector3& z, const Vector3& Z)
+    {
+      y = project(x, X, z);
+      Y = project(Vector3::ZERO, X, Z);
+    }
+    
+    /**
+     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
+     */
+    inline void project(Vector3& y, Vector3& Y,
+                        const Vector3& x, const Quaternion& X,
+                        const Vector3& z, const Vector3& Z)
+    {
+      y = project(x, X, z);
+      Y = project(Vector3::ZERO, X, Z);
+    }
+    
+    /**
+     * @brief @f$ x = z - Z Y^T y, X = Z Y^T @f$
+     */
     inline void transfoTo(Vector3& x, Matrix3& X,
                           const Vector3& y, const Matrix3& Y,
                           const Vector3& z, const Matrix3& Z)
@@ -503,6 +536,9 @@ namespace nuklei {
         x = z - X*y;
       }
 
+    /**
+     * @brief @f$ x = z - Z Y^T y, X = Z Y^T @f$
+     */
     inline void transfoTo(Vector3& x, Quaternion& X,
                           const Vector3& y, const Quaternion& Y,
                           const Vector3& z, const Quaternion& Z)
@@ -511,6 +547,10 @@ namespace nuklei {
         x = z - X.Rotate(y);
       }
 
+    /**
+     * @}
+     */
+    
     template<class R> void fromAngleAxisString(R &r, const std::string &angleAxis)
     {
       coord_t angle;

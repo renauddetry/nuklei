@@ -2,9 +2,31 @@
 
 /**
 
-@ingroup using
+@ingroup using_code
 @defgroup type Type Queries
 
-Functions defined in @ref Types.h facilitate the (de)serialization of enum labels, here refered to as <em>types</em>.
+Functions defined in @ref Types.h facilitate the (de)serialization of enum labels, here refered to as <em>types</em>. This is useful, e.g., when reading/writing the type of an object to a file.
+
+In order to afford the functions defined above, a class @p MyClass needs to define the following members:
+@code
+class MyClass
+{
+public:
+  typedef enum { TYPE1, TYPE2, UNKNOWN } Type;
+  static const Type defaultType = TYPE1;
+  static const std::string TypeNames[];
+};
+
+// (The following line should be put in an implementation file (a .cpp file):
+const std::string MyClass::TypeNames[] = { "type1", "type2", "unknown" }; 
+@endcode
+
+Then, an expression such as
+@code
+nameFromType(MyClass::TYPE1)
+@endcode
+will return the string @p "type1".
+
+Examples of classes implementing this interface: nuklei::kernel::base, nuklei::Observation, nuklei::Color.
 
 */

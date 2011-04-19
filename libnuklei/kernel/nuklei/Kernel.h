@@ -175,10 +175,25 @@ namespace nuklei {
        */
       virtual std::auto_ptr<kernel::se3> polySe3Proj() const = 0;
       
-      virtual base::ptr polyProjectedOn(const kernel::se3& k) const = 0;
+      /**
+       * @addtogroup matrix_transfo
+       * @{
+       */
+      /**
+       * @brief Transforms @p *this with @p k and returns the result. (See @ref matrix_transfo.)
+       */
       virtual base::ptr polyTransformedWith(const kernel::se3& k) const = 0;
+      /**
+       * @brief Transforms @p *this with @p k and sets @p *this to the result. (See @ref matrix_transfo.)
+       */
       virtual void polyMakeTransformWith(const kernel::se3& k) = 0;
-      
+      /**
+       * @brief Projects @p *this onto @p k and returns the result. (See @ref matrix_transfo.)
+       */
+      virtual base::ptr polyProjectedOn(const kernel::se3& k) const = 0;
+      /**
+       * @}
+       */
       virtual base::ptr linearInterpolation(const kernel::base& k,
                                             const coord_t x = .5) const = 0;
       virtual void updateWidth(const kernel::base& k,

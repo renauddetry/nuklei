@@ -3,7 +3,7 @@
 /**
 
 @ingroup using
-@defgroup matrix_transfo Matrix Transformation
+@defgroup matrix_transfo Operations on Poses
 
 
 Let us consider three @f$ SE(3) @f$ rigid transformations, denoted by @f$ (x,X) @f$, @f$ (y,Y) @f$, and @f$ (z,Z) @f$, where lowercase variables denote translations, and uppercase letters denote rotations. Variables @f$ x @f$, @f$ y @f$, and @f$ z @f$ are thus three-vectors, while @f$ X @f$, @f$ Y @f$, and @f$ Z @f$ are 3D rotations encoded as rotation matrices.
@@ -20,17 +20,16 @@ x &= z - ZY^Ty & X &= ZY^T &\textrm{(3)}
 @f}
 Each of the three rearrangements above define a way of combining two @f$ SE(3)  @f$ elements into a third   @f$ SE(3) @f$ element.
 
-In the rest of the doc, and in the code, we read the first operation
+In the first operation
 @f[ z = Xy+x \qquad Z=XY @f]
-as &ldquo;@f$ (z,Z) @f$ is the transformed of @f$ (y,Y) @f$ by @f$ (x,X) @f$&rdquo;. Note that in the litterature, both this operation and an @f$ SE(3) @f$ element are called a <em>transformation</em>, as an @f$ SE(3) @f$ element is the transformed of the origin by itself.
+we say that @f$ (y,Y) @f$ is <em>transformed</em> by @f$ (x,X) @f$ to produce @f$ (z,Z) @f$.
 
-The second operation
+In
 @f[ y = X^T(z-x) \qquad Y=X^TZ @f]
-is read as &ldquo;@f$ (y,Y) @f$ is the projection of @f$ (z,Z) @f$ onto @f$ (x,X) @f$&rdquo;, as @f$ (y,Y) @f$ is the projection of @f$ (z,Z) @f$ in the coordinate system defined by @f$ (x,X) @f$.
+@f$ (z,Z) @f$ is <em>projected</em> onto @f$ (x,X) @f$ to produce @f$ (y,Y) @f$ (@f$ (y,Y) @f$ is the projection of @f$ (z,Z) @f$ in the coordinate system defined by @f$ (x,X) @f$).
 
-For lack of a better name, the third operation
+The last operation
 @f[ x = z - ZY^Ty \qquad X = ZY^T @f]
-is read as &ldquo;@f$ (x,X) @f$ is the transformation from @f$ (y,Y) @f$ to @f$ (z,Z) @f$&rdquo;, as @f$ (x,X) @f$ is the transformation that applies @f$ (y,Y) @f$ onto @f$ (z,Z) @f$
-
+computes @f$ (x,X) @f$ which is the transformation that applies @f$ (y,Y) @f$ onto @f$ (z,Z) @f$.
 
 */
