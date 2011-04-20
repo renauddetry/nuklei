@@ -5,7 +5,7 @@
 @ingroup using_code
 @defgroup type Type Queries
 
-Functions defined in @ref Types.h facilitate the (de)serialization of enum labels, here refered to as <em>types</em>. This is useful, e.g., when reading/writing the type of an object to a file.
+@brief Functions defined in @ref Types.h facilitate the (de)serialization of enum labels, here refered to as <em>types</em>. This is useful, e.g., when reading/writing the type of an object to a file.
 
 In order to afford the functions defined above, a class @p MyClass needs to define the following members:
 @code

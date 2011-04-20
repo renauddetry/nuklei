@@ -38,6 +38,9 @@ namespace nuklei {
    *
    * Example usage: NUKLEI_THROW("int i is equal to " << i);
    *
+   * Note that if a function throws, calling it is slow. Do not throw from
+   * functions that are supposed to execute fast.
+   *
    * Do not use from within a destructor!
    */
 # define NUKLEI_THROW(x) \
@@ -51,6 +54,11 @@ throw nuklei::Error(oss.str()); \
    * @brief Throws an Error if expression is not true.
    *
    * Example usage: NUKLEI_ASSERT(i != 0);
+   *
+   * Note that if a function throws, calling it is slow. Do not throw from
+   * functions that are supposed to execute fast.
+   *
+   * For functions that have to go fast, use NUKLEI_FAST_ASSERT instead.
    *
    * Do not use from within a destructor!
    */

@@ -4,7 +4,11 @@
 
 @defgroup using Using Nuklei
 
+This group contains documentation useful for working with Nuklei (as opposed to contributing to Nuklei).
+
 @defgroup devel Contributing to Nuklei
+
+This group contains documentation useful for contributing to Nuklei.
 
 */
 

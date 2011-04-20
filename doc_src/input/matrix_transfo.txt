@@ -5,6 +5,7 @@
 @ingroup using
 @defgroup matrix_transfo Operations on Poses
 
+@brief This page introduces vocabulary for referring to operations on @f$ SE(3) @f$ poses (also called @f$ SE(3) @f$ transformations).
 
 Let us consider three @f$ SE(3) @f$ rigid transformations, denoted by @f$ (x,X) @f$, @f$ (y,Y) @f$, and @f$ (z,Z) @f$, where lowercase variables denote translations, and uppercase letters denote rotations. Variables @f$ x @f$, @f$ y @f$, and @f$ z @f$ are thus three-vectors, while @f$ X @f$, @f$ Y @f$, and @f$ Z @f$ are 3D rotations encoded as rotation matrices.
 

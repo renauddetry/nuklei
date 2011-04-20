@@ -32,7 +32,7 @@ For more info, see @ref install "the install page".
 
 @section index_doc Documentation
 
-To get started, take a look at the <em>Modules</em> and <em>Classes</em> tabs.
+To get started, take a look at the <a href="modules.html">Modules</a> page.
 
 @section index_license License
 
@@ -41,7 +41,7 @@ Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copylef
 
 @section index_author Authors
 
-Nuklei is developped by Renaud Detry.
+Nuklei is developped by <a href="http://www.csc.kth.se/~detryr/">Renaud Detry</a>.
 
 
 */

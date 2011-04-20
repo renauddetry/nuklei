@@ -3,7 +3,7 @@
 /**
 
 @ingroup using
-@defgroup kernel Kernels, kernel density estimation, kernel regression
+@defgroup kernels Kernels, kernel density estimation, kernel regression
 
 In Nuklei, a kernel is a function that provides a measure of similarity between its arguments. Nuklei provides kernels for elements that belong to
 - the Special Euclidean Group @f$ SE(3) @f$ (i.e., 3D rigid body transformations),

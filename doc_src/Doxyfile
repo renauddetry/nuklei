@@ -614,8 +614,8 @@ INPUT                  = libnuklei/base \
                          libnuklei/kernel \
                          libnuklei/io \
                          doc_src/input/index.txt \
-                         doc_src/input/top_groups.txt \
                          doc_src/input/install.txt \
+                         doc_src/input/top_groups.txt \
                          doc_src/input/background.txt \
                          doc_src/input/kernel.txt \
                          doc_src/input/matrix_transfo.txt \
@@ -623,6 +623,7 @@ INPUT                  = libnuklei/base \
                          doc_src/input/type.txt \
                          doc_src/input/organization.txt \
                          doc_src/input/coding_guidelines.txt \
+                         doc_src/input/acknowledgements.txt \
                          doc_src/input/faq.txt
 
 # This tag can be used to specify the character encoding of the source files
