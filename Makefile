@@ -15,6 +15,7 @@ doc:
 	cp LICENSE.txt doc_generated/html
 	mkdir -p doc_generated/html/doc_src
 	cp doc_src/nuklei_logo.jpg doc_generated/html/doc_src
+	cp doc_src/images/kde1d.png doc_generated/html/
 
 test:
 	cp nuklei-darwin.conf /tmp/

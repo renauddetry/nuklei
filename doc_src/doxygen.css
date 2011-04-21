@@ -8,17 +8,17 @@ body, table, div, p, dl {
 /* @group Heading Levels */
 
 h1 {
-	font-size: 150%;
+	font-size: 180%;
 }
 
 .title {
-	font-size: 150%;
+	font-size: 180%;
 	font-weight: bold;
 	margin: 10px 2px;
 }
 
 h2 {
-	font-size: 135%;
+	font-size: 150%;
 }
 
 h3 {

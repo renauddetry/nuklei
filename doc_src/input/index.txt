@@ -34,6 +34,8 @@ For more info, see @ref install "the install page".
 
 To get started, take a look at the <a href="modules.html">Modules</a> page.
 
+The @ref background section introduces the mathematical concepts implemented in Nuklei (density estimation, kernels, 6D poses,  quaternions, ...). This is a good starting point for those who are discovering Nuklei.
+
 @section index_license License
 
 Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a> (GPL). Nuklei will continue to be distributed under these terms as long as dependencies on the GNU Scientific Library (GSL) exist. Once all GSL dependencies are removed, Nuklei will be distributed under a BSD-like license.

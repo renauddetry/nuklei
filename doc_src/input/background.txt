@@ -5,29 +5,36 @@
 @ingroup using
 @defgroup background Background
 
-Nuklei was initially designed to model the spatial distribution of vision and grasp-related parameters with density functions. This section reviews the theory behind density estimation and integration particularized to the function domains we worked with. This section also discusses details related to a computer implementation where appropriate.
+Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This section reviews the theory behind density estimation and density integrals particularized to the function domains we worked with. This section also discusses details related to this computer implementation where appropriate.
 
-Nuklei was designed to model the spatial distribution of object and gripper poses &mdash; 3DOF position and 3DOF orientation &mdash; and the distribution of short edge segments or surface patches &mdash; 3DOF position and 2DOF orientation.
 
 @section background_param Parametrization
 
-Three-DOF positions are naturally parametrized with @f$ \mathbb R^3 @f$ points. Two-DOF orientations are parametrized with 3D unit vectors. The set of 3D unit vectors forms the 2-sphere @f$ S^2 @f$. As  we consider edge orientations and surface normals as axial data (a surface normal @f$ v @f$ is equivalent to @f$ -v @f$), each 2DOF orientation is represented by exactly two unit vectors of @f$ S^2 @f$. 
-
-Three-DOF orientations, i.e., rotations around the origin of @f$ \mathbb R^3 @f$, form the rotation group. As 3DOF rotations can be uniquely parametrized by special orthogonal matrices, the rotation group is often referred to as the special orthogonal group @f$ SO(3) @f$. The text below follows this convention.
-
-There exist multiple representations of 3DOF orientations, such as rotation matrices, Euler angles, or unit quaternions. Unit quaternions form the @f$ 3 @f$-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
+The domains for which Nuklei currently provides modeling tools are
+- The group of 6D poses. A 6D pose, also referred to as <em>transformation</em>, is composed of a 3D position and a 3D orientation . The group of 6D poses is referred to as the <a href="http://en.wikipedia.org/wiki/Euclidean_group">Special Euclidean group</a>. It is denoted by @f[ SE(3) = \mathbb R^3 \times SO(3), @f] where <a href="http://en.wikipedia.org/wiki/Rotation_group">@f$SO(3)@f$</a> is the group of 3D rotations, and @f$ \times @f$ denotes a semidirect product. Poses are parametrized by a pair composed of a 3D position and a 3D orientation. Orientations can be <a href="http://en.wikipedia.org/wiki/Rotation_representation">parametrized in multiple ways</a>, e.g., with rotation matrices, Euler angles, or unit quaternions. We parametrize 3DOF orientations with unit quaternions. Unit quaternions form the 3-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
 @f[
 q = \left(\cos\frac\alpha 2, v_x\sin\frac\alpha 2, v_y\sin\frac\alpha 2, v_z\sin\frac\alpha 2 \right).
 @f]
-Because a rotation of @f$ \alpha @f$ radians about @f$ v @f$ is equivalent to a rotation of @f$ -\alpha @f$ about @f$ -v @f$, @f$ q @f$ and @f$ -q @f$ correspond to the same rotation. Consequently, unit quaternions form a double cover of @f$ SO(3) @f$ &mdash; every rotation exactly corresponds to two unit quaternions.
-
-We parametrize 3DOF orientations with unit quaternions. Quaternions offer a clear formalism for the definition of position-orientation densities (see below). From a numerical viewpoint, they are stable and free of singularities. Finally, unit quaternions allow for the definition of a rotation metric that roughly reflects our intuitive notion of a distance between rotations. The distance between two rotations @f$ \theta @f$ and @f$ \theta' @f$ is defined as <a href="http://dx.doi.org/10.1109%2fROBOT.2004.1308895">the angle of the 3D rotation that maps @f$ \theta @f$ onto @f$ \theta' @f$</a>. This metric can be easily and efficiently computed using unit quaternions as twice the shortest path between @f$ \theta @f$ and @f$ \theta' @f$ on the @f$ 3 @f$&mdash;sphere,
+Because a rotation of @f$ \alpha @f$ radians about @f$ v @f$ is equivalent to a rotation of @f$ -\alpha @f$ about @f$ -v @f$, @f$ q @f$ and @f$ -q @f$ correspond to the same rotation. Consequently, unit quaternions form a double cover of @f$ SO(3) @f$ &mdash; every rotation exactly corresponds to two unit quaternions. Quaternions offer a clear formalism for the definition of position-orientation densities (see below). From a numerical viewpoint, they are stable and free of singularities. Finally, unit quaternions allow for the definition of a rotation metric that roughly reflects our intuitive notion of a distance between rotations. The distance between two rotations @f$ \theta @f$ and @f$ \theta' @f$ is defined as <a href="http://dx.doi.org/10.1109%2fROBOT.2004.1308895">the angle of the 3D rotation that maps @f$ \theta @f$ onto @f$ \theta' @f$</a>. This metric can be easily and efficiently computed using unit quaternions as twice the shortest path between @f$ \theta @f$ and @f$ \theta' @f$ on the @f$ 3 @f$&mdash;sphere,
 @f[
 \textrm{d}\left(\theta, \theta'\right) = 2\arccos\left|\theta ^\top \theta'\right|,
 @f]
 where @f$ \theta^\top \theta' @f$ is the inner (dot) product of @f$ \theta @f$ and @f$ \theta' @f$. In this expression, we take the absolute value @f$ |\theta ^\top \theta'| @f$ to take into account the double cover issue mentioned above.
 
-Our models rely on density functions defined on @f$ \mathbb R^3\times S^2 @f$ and @f$ \mathbb R^3\times SO(3) @f$. The latter is generally called the special Euclidean group @f$ SE(3) @f$. The next section details the definition of density functions on @f$ \mathbb R^3\times S^2 @f$ and @f$ SE(3) @f$.
+- The space of the pairs composed of a 3DOF position and a 2DOF orientation (a vector orientation in 3D). A 2DOF orientation is parametrized with a 3D unit vector. The set of 3D unit vectors forms the <a href="http://en.wikipedia.org/wiki/N-sphere">2-sphere @f$S^2@f$</a>. The space of the pairs composed of a 3DOF position and a 2DOF orientation is denoted by 
+@f[\mathbb R^3 \times S^2. @f]
+
+- The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are also parametrized with 3D unit vectors. In this case, an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
+@f[\mathbb R^3 \times S^2_p. @f]
+
+- The group of 3D positions, @f$ \mathbb R^3 @f$.
+
+<!-- Two-DOF orientations (which belong to @f$ S^2 @f$) are parametrized with 3D unit vectors. The set of 3D unit vectors forms the 2-sphere @f$ S^2 @f$. As  we consider edge orientations and surface normals as axial data (a surface normal @f$ v @f$ is equivalent to @f$ -v @f$), each 2DOF orientation is represented by exactly two unit vectors of @f$ S^2 @f$.
+
+Three-DOF orientations, i.e., rotations around the origin of @f$ \mathbb R^3 @f$, form the rotation group. As 3DOF rotations can be uniquely parametrized by special orthogonal matrices, the rotation group is often referred to as the special orthogonal group @f$ SO(3) @f$. The text below follows this convention. -->
+
+
+
 
 @section background_npde Nonparametric Density Estimation
 
@@ -38,16 +45,12 @@ Our models rely on density functions defined on @f$ \mathbb R^3\times S^2 @f$ an
 
 Nonparametric methods represent a density simply with the samples drawn from it. The probabilistic density in a region of space is given by the local density of the samples in that region. A density can be estimated by simple methods such as histograms, or more sophisticated methods like <a href="http://en.wikipedia.org/wiki/Kernel_density_estimation">kernel density estimation</a>. Kernel density estimation (KDE) works by assigning a kernel function to each observation; the density is computed by summing all kernels. By contrast to parametric methods, these kernels are relatively simple, generally involving a single parameter defining an isotropic variance. Hence, compared to classical parametric methods, KDE uses a larger number of simpler kernels.
 
-<!--
-\begin{figure}
-\centering
-\includetexgraphics[.9\linewidth]{../../presentations/2010-02-23--interview_tuebingen/vector/kde1d}
-\caption{Kernel estimation (blue) of a density observed through 6 samples (green). The dashed red lines illustrate the gaussian kernels associated to each sample. The estimate is obtained by summing all kernels. To form a proper density, the function represented by the blue line should be normalized by dividing it by 6.}
+<table align="center" width="620px">
+<tr><td><img style="text-align: center;" src="kde1d.png" /></td></tr>
+<tr><td>Kernel estimation (blue) of a density observed through 6 samples (green). The dashed red lines illustrate the gaussian kernels associated to each sample. The estimate is obtained by summing all kernels. To form a proper density, the function represented by the blue line should be normalized by dividing it by 6.</td></tr>
+</table>
 
-\end{figure}
--->
-
-In this work, densities are modeled nonparametrically with KDE. This choice is primarily motivated by the structure of the position&mdash;orientation domains on which they are defined: Capturing pertinent position-orientation correlations within a single parametric function is very complex, while these correlations can easily be captured by a large number of simple kernels. Also, the nonparametric approach eliminates problems like mixture fitting, choosing a number of components, or having to make assumptions concerning density shape (e.g.\ normality). Kernel density estimation is thus ideal for modeling the highly multi-modal densities we are dealing with.
+In this work, densities are modeled nonparametrically with KDE. This choice is primarily motivated by the structure of the position&mdash;orientation domains on which they are defined: Capturing pertinent position-orientation correlations within a single parametric function is very complex, while these correlations can easily be captured by a large number of simple kernels. Also, the nonparametric approach eliminates problems like mixture fitting, choosing a number of components, or having to make assumptions concerning density shape (e.g.\ normality).
 
 A density @f$ d(x) @f$ is encoded by a set of observations @f$ \hat x_{i} @f$ drawn from it, which we will refer to as <em>particles</em>. Density values are estimated with KDE, by representing the contribution of the @f$ i^\textrm{th} @f$ particle with a local kernel function @f$ \mathcal K\left(\cdot ; \hat x_i, \sigma\right) @f$ centered on @f$ \hat x_i @f$. The kernel function is generally symmetric with respect to its center point; the amplitude of its spread around the center point is controlled by a bandwidth parameter @f$ \sigma @f$. For conciseness, particles are often weighted, which allows one to denote, e.g., a pair of identical particles by a single particle of double mass. In the following, the weight associated to a particle @f$ \hat x_{i} @f$ is denoted by @f$ w_{i} @f$.
 

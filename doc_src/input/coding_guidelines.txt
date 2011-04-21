@@ -9,13 +9,20 @@ Please read the following sections carefully before committing new code to the r
 
 @section coding_guidelines_conv Conventions
 
-- <b>Never</b> import the <tt>std</tt> namespace. As phrased in <a href="http://www.parashift.com/c++-faq-lite/coding-standards.html#faq-27.5">c++-faq-lite</a>, one should get over it and type <tt>std::</tt> :-). Use <tt>std::</tt> even for the symbols which are both in std:: and in the global namespace (e.g., use <tt>std::cos()</tt> instead of <tt>cos()</tt>).
+- <b>Never</b> import the <tt>std</tt> namespace. As phrased in <a href="http://www.parashift.com/c++-faq-lite/coding-standards.html#faq-27.5">c++-faq-lite</a>, one should <em>get over it and type <tt>std::</tt></em> &nbsp; :-). Use <tt>std::</tt> even for the symbols which are both in <tt>std::</tt> and in the global namespace (e.g., use <tt>std::cos()</tt> instead of <tt>cos()</tt>).
 
 - <b>Never</b> import any namespace in a header file.
 
-- Avoid importing namespaces in implementation files. Imports within the body of a function are ok, but avoiding them is better.
+- Avoid importing namespaces directly into the top namespace in implementation files. Imports within the body of a function are ok, but avoiding them is better.
 
-- Include directives: use brackets (<tt>@#include @<lib/header.h@></tt> instead of <tt>@#include @"lib/header.h@"</tt>).
+- Use "bracket" include directives, i.e., use
+@code
+#include <lib/header.h>
+@endcode
+instead of
+@code
+#include "lib/header.h"
+@endcode
 
 - No dynamic memory allocation (<tt>new Object()</tt>) unless within a smart pointer.
 
@@ -63,5 +70,11 @@ struct C
   int i_;
 };
 @endcode
+
+@section coding_well Writing Good C++
+
+C++ provides the programmer with a lot of freedom, which brings flexibility, but also danger.
+
+In research, many of us (including me) learn C++ on-the-job. Unfortunately, C++ is not easy to learn that way, as it allows one to write strange constructs that compile but that will run differently than expected. An extremely valuable source for avoiding sneaky bugs is the <a href="http://www.parashift.com/c++-faq-lite/">c++-faq</a>. It's perfect for us: it doesn't teach C++ from zero, instead it draws attention onto all the pesky subtleties that are difficult to catch when learning on-the-job.
 
 */

@@ -29,12 +29,19 @@ namespace nuklei {
     //const bitfield_t EXACT = (1 << 0);
     
     /**
+     * @ingroup kernels
      * @brief Polymorphic kernel class.
      *
      * This class serves as an abstract base for kernels defined on
      * various subspaces of @f$ SE(3) @f$. See @ref kernels for a
      * discussion of what a kernel is. See @ref programming_paradigm
      * for an overview and motivation of the kernel class hierarchy.
+     *
+     * As explained in @ref programming_paradigm, this class is a
+     * polymorphic wrapper around statically-linked kernel classes
+     * (kernel::se3, kernel::r3xs2, kernel::r3xs2p, kernel::r3). The
+     * names of the methods of this class that have a direct
+     * equivalent in the statically-linked kernel start with @p poly.
      */
     class base
     {
@@ -394,6 +401,9 @@ namespace nuklei {
       implementation_prototype() {};
     };
     
+    /**
+     * @ingroup kernels
+     */
     class se3 : public implementation_prototype<se3>
     {
     public:
@@ -460,6 +470,9 @@ namespace nuklei {
       }
     };
     
+    /**
+     * @ingroup kernels
+     */
     template<class OriGrp>
     class r3xs2_base : public implementation_prototype< r3xs2_base<OriGrp> >
     {
@@ -534,9 +547,18 @@ namespace nuklei {
       }
     };
     
+    /**
+     * @ingroup kernels
+     */
     typedef r3xs2_base<groupS::s2> r3xs2;
+    /**
+     * @ingroup kernels
+     */
     typedef r3xs2_base<groupS::s2p> r3xs2p;
     
+    /**
+     * @ingroup kernels
+     */
     class r3 : public implementation_prototype<r3>
     {
     public:

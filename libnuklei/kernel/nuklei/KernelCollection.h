@@ -35,9 +35,9 @@
 namespace nuklei {
 
   /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
+   * @ingroup kernels
    *
-   * speak about helper structures
+   * Todo: Speak about helper structures
    */
   class KernelCollection
     {
