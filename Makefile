@@ -19,8 +19,8 @@ doc:
 
 test:
 	cp nuklei-darwin.conf /tmp/
-	./scons.py CXX=g++ gpl=yes qpl=yes
-	./scons.py CXX=clang++ gpl=yes qpl=no
+	./scons.py CXX=g++ gpl=yes qpl=yes use_opencv=yes
+	./scons.py CXX=clang++ gpl=yes qpl=no use_opencv=no
 	cp /tmp/nuklei-darwin.conf .
 
 publish: doc

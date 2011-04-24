@@ -35,10 +35,10 @@ namespace nuklei {
   void CrdObservation::setWeight(weight_t weight)
   {
     NUKLEI_TRACE_BEGIN();
-    k_.w_ = weight;
+    k_.setWeight(weight);
     NUKLEI_TRACE_END();
   }
-  weight_t CrdObservation::getWeight() const { return k_.w_; }
+  weight_t CrdObservation::getWeight() const { return k_.getWeight(); }
 
   const Color& CrdObservation::getColor() const
   {

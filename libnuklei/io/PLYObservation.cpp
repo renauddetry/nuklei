@@ -34,10 +34,10 @@ namespace nuklei {
   void PLYObservation::setWeight(weight_t weight)
   {
     NUKLEI_TRACE_BEGIN();
-    k_.w_ = weight;
+    k_.setWeight(weight);
     NUKLEI_TRACE_END();
   }
-  weight_t PLYObservation::getWeight() const { return k_.w_; }
+  weight_t PLYObservation::getWeight() const { return k_.getWeight(); }
     
   const Color& PLYObservation::getColor() const
   {

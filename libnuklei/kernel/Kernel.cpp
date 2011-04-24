@@ -125,6 +125,7 @@ namespace nuklei
       i.loc_ = (1-x) * loc_ + x * k.loc_;
       Quaternion q = k.ori_;
       if (ori_.Dot(q) < 0) q = - q;
+      //fixme: this should use slerp.
       i.ori_ = (1-x) * ori_ + x * q;
       i.ori_.Normalize();
       return i;

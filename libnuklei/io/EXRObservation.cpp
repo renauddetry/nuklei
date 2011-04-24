@@ -36,10 +36,10 @@ namespace nuklei {
   void EXRObservation::setWeight(weight_t weight)
   {
     NUKLEI_TRACE_BEGIN();
-    k_.w_ = weight;
+    k_.setWeight(weight);
     NUKLEI_TRACE_END();
   }
-  weight_t EXRObservation::getWeight() const { return k_.w_; }
+  weight_t EXRObservation::getWeight() const { return k_.getWeight(); }
     
   const Color& EXRObservation::getColor() const
   {

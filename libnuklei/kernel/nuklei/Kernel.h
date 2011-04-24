@@ -37,11 +37,8 @@ namespace nuklei {
      * discussion of what a kernel is. See @ref programming_paradigm
      * for an overview and motivation of the kernel class hierarchy.
      *
-     * As explained in @ref programming_paradigm, this class is a
-     * polymorphic wrapper around statically-linked kernel classes
-     * (kernel::se3, kernel::r3xs2, kernel::r3xs2p, kernel::r3). The
-     * names of the methods of this class that have a direct
-     * equivalent in the statically-linked kernel start with @p poly.
+     * See @ref programming_paradigm for an explanation of why some of
+     * the methods begin with @p poly.
      */
     class base
     {
@@ -187,26 +184,55 @@ namespace nuklei {
        * @{
        */
       /**
-       * @brief Transforms @p *this with @p k and returns the result. (See @ref matrix_transfo.)
+       * @brief Transforms @p *this with @p k and returns the
+       * result. (See @ref matrix_transfo.)
        */
       virtual base::ptr polyTransformedWith(const kernel::se3& k) const = 0;
       /**
-       * @brief Transforms @p *this with @p k and sets @p *this to the result. (See @ref matrix_transfo.)
+       * @brief Transforms @p *this with @p k and sets @p *this to the
+       * result. (See @ref matrix_transfo.)
        */
       virtual void polyMakeTransformWith(const kernel::se3& k) = 0;
       /**
-       * @brief Projects @p *this onto @p k and returns the result. (See @ref matrix_transfo.)
+       * @brief Projects @p *this onto @p k and returns the
+       * result. (See @ref matrix_transfo.)
        */
       virtual base::ptr polyProjectedOn(const kernel::se3& k) const = 0;
       /**
        * @}
        */
+      /**
+       * @brief Interpolates between @p *this and @k.
+       *
+       * For @p x = 0, this function returns @p *this. If @p x = 1, it
+       * returns @p k. For orientation, interpolation is done in
+       * Euclidean space. Slerp should be used instead. To be fixed
+       * soon.
+       */
       virtual base::ptr linearInterpolation(const kernel::base& k,
                                             const coord_t x = .5) const = 0;
+      /**
+       * @brief Used internally.
+       */
       virtual void updateWidth(const kernel::base& k,
                                const coord_t x = .5) = 0;
+      /**
+       * @brief Returns a std::pair containing the distance in
+       * position and orientation between @p *this and @p k.
+       */
       virtual coord_pair distanceTo(const kernel::base& k) const = 0;
       
+      /**
+       * @brief Weight accessor for this class. The accessor is used
+       * internally. Normal Nuklei users will generally not need it.
+       *
+       * Example:
+       * @code
+       * WeightAccessor wa;
+       * kernel::base& k = ...
+       * wa(k) == k.getWeight() // true
+       * @endcode
+       */
       struct WeightAccessor
       {
         weight_t operator() (const base& k) const
@@ -215,7 +241,13 @@ namespace nuklei {
         { return k->w_; }
       };
       
+      /**
+       * @brief Returns this kernel's weight.
+       */
       weight_t getWeight() const { return w_; }
+      /**
+       * @brief Sets this kernel's weight.
+       */
       void setWeight(const weight_t w) { w_ = w; }
       
       bool hasDescriptor() const { return desc_.get() != NULL; }
@@ -233,7 +265,9 @@ namespace nuklei {
       { bitfield_ &= ~flag; }
       bool getFlag(bitfield_t flag) const
       { return (bitfield_ & flag) != 0; }
-      
+
+    protected:
+
       // The byte-size of this structure *must* be a multiple of 8.
       // 32-bit Count:
       //    vtable ptr: 4;
@@ -256,7 +290,6 @@ namespace nuklei {
       int flag1_;
       bitfield_t bitfield_;
       
-    private:
       std::auto_ptr<Descriptor> desc_;
       
       friend class boost::serialization::access;
@@ -549,10 +582,12 @@ namespace nuklei {
     
     /**
      * @ingroup kernels
+     * @brief @f$ \mathbb R^3 \times S^2 @f$
      */
     typedef r3xs2_base<groupS::s2> r3xs2;
     /**
      * @ingroup kernels
+     * @brief @f$ \mathbb R^3 \times S^2_p @f$
      */
     typedef r3xs2_base<groupS::s2p> r3xs2p;
     

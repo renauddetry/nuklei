@@ -205,7 +205,7 @@ namespace nuklei {
       w += i->getWeight();
     }
     
-    moments->w_ = w / size();
+    moments->setWeight(w / size());
     return moments;
     NUKLEI_TRACE_END();
   }

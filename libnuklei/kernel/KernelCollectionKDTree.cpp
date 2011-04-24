@@ -83,7 +83,7 @@ namespace nuklei {
         cvalue = densityPoint.eval(evalPoint);
         if (strategy == MAX_EVAL) value = std::max(value, cvalue);
         else if (strategy == SUM_EVAL) value += cvalue;
-        else if (strategy == WEIGHTED_SUM_EVAL) value += cvalue * densityPoint.w_;
+        else if (strategy == WEIGHTED_SUM_EVAL) value += cvalue * densityPoint.getWeight();
         else NUKLEI_ASSERT(false);
       }
     }
@@ -97,7 +97,7 @@ namespace nuklei {
         cvalue = densityPoint.eval(evalPoint);
         if (strategy == MAX_EVAL) value = std::max(value, cvalue);
         else if (strategy == SUM_EVAL) value += cvalue;
-        else if (strategy == WEIGHTED_SUM_EVAL) value += cvalue * densityPoint.w_;
+        else if (strategy == WEIGHTED_SUM_EVAL) value += cvalue * densityPoint.getWeight();
         else NUKLEI_ASSERT(false);
       }
     }
