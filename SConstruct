@@ -362,7 +362,6 @@ SConscript('build_scripts/SConscheck.py',
 env = conf.Finish()
 
 env.Append(CPPDEFINES = [ ('BUILDTYPE', "\\\"" + env['BuildType'] + "\\\"") ])
-env['PkgCCflags'] += " -DBUILDTYPE=\\\"" + env['BuildType'] + "\\\""
 
 # darwin specific stuff
 if env['PLATFORM'] == 'darwin':
