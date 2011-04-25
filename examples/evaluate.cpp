@@ -3,21 +3,15 @@
 // accompanying file LICENSE.txt or copy at
 // http://www.gnu.org/copyleft/gpl.html)
 
-/** @file */
-
 #include <tclap/CmdLine.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
 
 int main(int argc, char ** argv)
 {
-  using namespace nuklei;
+  // Parse command line arguments
 
-  NUKLEI_TRACE_BEGIN();
-
-  /* Parse command line arguments */
-
-  TCLAP::CmdLine cmd(INFOSTRING + "Density evaluation example.");
+  TCLAP::CmdLine cmd(nuklei::INFOSTRING + "Density evaluation example.");
 
   TCLAP::ValueArg<std::string> densityArg
     ("d", "density",
@@ -33,29 +27,31 @@ int main(int argc, char ** argv)
      "ignored.",
      true, "", "filename", cmd);
 
-  TCLAP::ValueArg<coord_t> locWidthArg
+  TCLAP::ValueArg<double> locWidthArg
   ("l", "loc_width",
    "Location width.",
    false, -1, "float", cmd);
   
-  TCLAP::ValueArg<coord_t> oriWidthArg
+  TCLAP::ValueArg<double> oriWidthArg
   ("o", "ori_width",
    "Orientation width.",
    false, -1, "float", cmd);
 
   cmd.parse( argc, argv );
 
-  KernelCollection density, points;
+  // Read-in data
+  
+  nuklei::KernelCollection density, points;
 
   {
-    std::auto_ptr<ObservationReader> reader =
-    ObservationReader::createReader(densityArg.getValue());
-    readObservations(*reader, density);
+    std::auto_ptr<nuklei::ObservationReader> reader =
+    nuklei::ObservationReader::createReader(densityArg.getValue());
+    nuklei::readObservations(*reader, density);
   }
   {
-    std::auto_ptr<ObservationReader> reader =
-    ObservationReader::createReader(pointsArg.getValue());
-    readObservations(*reader, points);
+    std::auto_ptr<nuklei::ObservationReader> reader =
+    nuklei::ObservationReader::createReader(pointsArg.getValue());
+    nuklei::readObservations(*reader, points);
   }
   
   density.normalizeWeights();
@@ -67,13 +63,11 @@ int main(int argc, char ** argv)
   if (oriWidthArg.getValue() > 0)
     density.setKernelOriH(locWidthArg.getValue());
   
-  for (KernelCollection::const_iterator i = points.begin();
+  for (nuklei::KernelCollection::const_iterator i = points.begin();
        i != points.end(); ++i)
   {
     std::cout << density.evaluationAt(*i) << std::endl;
   }
   
   return 0;
-  
-  NUKLEI_TRACE_END();
 }
