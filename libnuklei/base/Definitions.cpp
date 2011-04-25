@@ -18,11 +18,9 @@ namespace nuklei {
   const std::string INFOSTRING = 
   std::string("Built on " __DATE__ " at " __TIME__) +
   " with `" + BUILDTYPE + "' flags.\n"
-  "This application is part of the "
-  "Multidimensional Features Hierarchies framework. "
+  "This application is part of Nuklei http://nuklei.sourceforge.net/\n"
   "For more information, please contact one of the following:\n"
-  "Renaud.Detry@ULg.ac.be, "
-  "Justus.Piater@ULg.ac.be.\n";
+  "detryr@kth.se\n";
     
   template<typename T>
   static T initConst(const char *envVar, T def)
@@ -47,33 +45,13 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
   
   const coord_t FLOATTOL = 1e-12;
   
-  defConst(coord_t, ROTATION_STDEV, .2);
   defConst(coord_t, OBSERVATION_ORIENTATION_STDEV, .4);
   defConst(coord_t, OBSERVATION_LOCATION_STDEV, 12);
-  defConst(bool, OBSERVATION_COMPUTE_LOC_DIFF, false);
 
   // Default precision in text files.
   const int PRECISION = std::numeric_limits<double>::digits10 + 2;
-  
-  defConst(unsigned, N_PRIMITIVE_FEATURES, 1);
-  defConst(unsigned, SPATIAL_CLUSTERING, 0);
-  defConst(double, CLUSTER_SOFT_ASSIGN_THRESHOLD, .2);
-  defConst(double, CLUSTER_CLUSTER_CREATE_THRESHOLD, .33);
-  defConst(bool, LEARNING_ASSIGN_CLOSEST, true);
-
-  defConst(unsigned, REFINE_SIZE, 500);
-  defConst(unsigned, N_PASS, 100);
-  defConst(unsigned, N_PRIMARY_PASS, 2);
-  defConst(double, PROPOSAL_SIZE_FACTOR, 5);
-  defConst(bool, MCMC_NBP, 0);
-  defConst(unsigned, MCMC_NBP_N_CHAINS, 2);
-  
+    
   defConst(bool, KDTREE_DENSITY_EVAL, true);
-
-  const coord_t LOCSTDEVMIN = .1;
-  const coord_t ORISTDEVMIN = .04;
-
-  defConst(weight_t, WHITE_NOISE_POWER, 1e-4);
 
   defConst(unsigned int, KDE_KTH_NEAREST_NEIGHBOR, 8);
   

@@ -24,58 +24,30 @@ namespace nuklei {
 
 /* --- Types --- */
 
+  // Coordinates, weights, appearances (colors), ...
   typedef double coord_t;
   typedef std::pair<coord_t, coord_t> coord_pair;
-  
-  // Used in Appearance.
-  // KMeans takes vectors of doubles.
-  // Mind it if changing the next line.
   typedef double appear_t;
-
   typedef double weight_t;
-  
   typedef unsigned int bitfield_t;
-
   typedef unsigned int id_t;
 
   /* --- Constants & default values --- */
 
   // Constants are defined in a cpp file to prevent
-  // re-compilation of the whole project at each modif.
+  // re-compilation of the whole project at each modif of the default value.
 
   extern const coord_t FLOATTOL;
 
   extern const std::string INFOSTRING;
 
-  // Variance for rotations until KDE is done.
-  extern const coord_t ROTATION_STDEV;
   extern const coord_t OBSERVATION_ORIENTATION_STDEV;
   extern const coord_t OBSERVATION_LOCATION_STDEV;
-
-  extern const bool OBSERVATION_COMPUTE_LOC_DIFF;
 
   // Default precision in text files.
   extern const int PRECISION;
 
-  extern const unsigned N_PRIMITIVE_FEATURES;
-  extern const unsigned SPATIAL_CLUSTERING;
-  extern const double CLUSTER_SOFT_ASSIGN_THRESHOLD;
-  extern const double CLUSTER_CLUSTER_CREATE_THRESHOLD;
-  extern const bool LEARNING_ASSIGN_CLOSEST;
-  
-  extern const unsigned N_PASS;
-  extern const unsigned N_PRIMARY_PASS;
-  extern const unsigned REFINE_SIZE;
-  extern const double PROPOSAL_SIZE_FACTOR;
-  extern const bool MCMC_NBP;
-  extern const unsigned MCMC_NBP_N_CHAINS;
-
   extern const bool KDTREE_DENSITY_EVAL;
-
-  extern const coord_t LOCSTDEVMIN;
-  extern const coord_t ORISTDEVMIN;
-
-  extern const weight_t WHITE_NOISE_POWER;
 
   extern const unsigned int KDE_KTH_NEAREST_NEIGHBOR;
 
