@@ -10,7 +10,7 @@
 #include <sys/resource.h>
 #include <boost/tuple/tuple.hpp>
 
-#include "tclap/CmdLine.h"
+#include <tclap/CmdLine.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/SerializedKernelObservationIO.h>
 #include <nuklei/ObservationIO.h>
