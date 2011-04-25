@@ -30,3 +30,14 @@ product = env.Program(source = sources, target = target)
 env.Install(dir = '$BinInstallDir', source = product)
 env.Alias(target_name, [ target ])
 
+## sample ################
+env = origEnv.Clone()
+
+sources = [ 'sample.cpp' ]
+
+target_name = 'nuklei_example_sample'
+target  = os.path.join(env['BinDir'], target_name)
+product = env.Program(source = sources, target = target)
+env.Install(dir = '$BinInstallDir', source = product)
+env.Alias(target_name, [ target ])
+

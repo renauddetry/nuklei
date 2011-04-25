@@ -23,7 +23,7 @@ Nuklei is a C++ library that implements kernel functions and kernel density esti
 
 @section index_get Get Nuklei
 
-The source code is available from our version control server:
+The source code is available from the Sourceforge version control server:
 @verbatim
 git clone git://nuklei.git.sourceforge.net/gitroot/nuklei/nuklei
 @endverbatim
@@ -51,5 +51,6 @@ Nuklei is developped by <a href="http://www.csc.kth.se/~detryr/">Renaud Detry</a
 /**
 
 @example evaluate.cpp
+@example sample.cpp
 
 */

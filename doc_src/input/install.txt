@@ -10,7 +10,7 @@ Before installing, carefully read the licensing terms.
 
 @section install_download Obtaining the Source Code
 
-There is no periodical release. Source code is only available from our version control server:
+There is no periodical release. The source code is only available from the Sourceforge version control server:
 @verbatim
 git clone git://nuklei.git.sourceforge.net/gitroot/nuklei/nuklei
 @endverbatim
