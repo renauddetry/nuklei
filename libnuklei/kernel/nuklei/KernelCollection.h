@@ -36,6 +36,9 @@ namespace nuklei {
 
   /**
    * @ingroup kernels
+   * @brief This class acts as a vector-like container for kernels. It also
+   * provides methods related to the density function modeled by the kernels it
+   * contains.
    *
    * Todo: Speak about helper structures
    */
@@ -94,9 +97,21 @@ namespace nuklei {
 
       // Container-related methods
 
+      /**
+       * @brief Resets the class to its initial state.
+       */
       void clear();
+      /**
+       * @brief Adds a copy of @p f.
+       */
       void add(const kernel::base &f);
+      /**
+       * @brief Adds a copy of the kernels contained in @p kv.
+       */
       void add(const KernelCollection &kv);
+      /**
+       * @brief Replaces the @p idx'th kernel with a copy of @p k.
+       */
       void replace(const size_t idx, const kernel::base &k);
       kernel::base::Type kernelType() const;
 
@@ -109,7 +124,25 @@ namespace nuklei {
       typedef nuklei_trsl::ppfilter_iterator<
         is_picked, const_iterator> const_sample_iterator;
       
+      /**
+       * @brief Returns an iterator that iterates through @p sampleSize kernels.
+       *
+       * The probability that a given kernel is chosen is proportional
+       * to its weight. <b>This iterator does not return a sample of
+       * the density, it returns a sample of the kernels. To get
+       * samples from the density, the returned kernels need to be
+       * sampled exactly once each.</b>
+       */
       sample_iterator sampleBegin(size_t sampleSize);
+      /**
+       * @brief Returns an iterator that iterates through @p sampleSize kernels.
+       *
+       * The probability that a given kernel is chosen is proportional
+       * to its weight. <b>This iterator does not return a sample of
+       * the density, it returns a sample of the kernels. To get
+       * samples from the density, the returned kernels need to be
+       * sampled exactly once each.</b>
+       */
       const_sample_iterator sampleBegin(size_t sampleSize) const;
 
       typedef nuklei_trsl::reorder_iterator<iterator> sort_iterator;
@@ -120,10 +153,30 @@ namespace nuklei {
       
       // Particle-related methods
 
+      /**
+       * @brief Computes the total weight of the kernels, and the
+       * maximum kernel width.
+       *
+       * Necessary for methods such as KernelCollection::sampleBegin
+       * or KernelCollection::evaluationAt which require these
+       * statistics. If a method such as KernelCollection::sampleBegin
+       * is called at a point where kernel statistics are not
+       * available, an exception will be thrown.
+       */
       void computeKernelStatistics();
+      /**
+       * @brief Returns the sum of kernel weights.
+       */
       weight_t totalWeight() const;
       coord_t maxLocCutPoint() const;
+      /**
+       * @brief Divides all weights by the total weight.
+       */
       void normalizeWeights();
+      /**
+       * @brief Sets all weights to @f$ 1 / t @f$, where @f$ t @f$ is
+       * the total weight of the collection.
+       */
       void uniformizeWeights();
 
       // Statistical moments
