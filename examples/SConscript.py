@@ -22,7 +22,7 @@ origEnv.Prepend(LIBS = [ 'nuklei' ])
 ## evaluate ################
 env = origEnv.Clone()
 
-sources = [ 'evaluate.cpp' ]
+sources = [ 'nuklei_example_evaluate.cpp' ]
 
 target_name = 'nuklei_example_evaluate'
 target  = os.path.join(env['BinDir'], target_name)
@@ -33,7 +33,7 @@ env.Alias(target_name, [ target ])
 ## sample ################
 env = origEnv.Clone()
 
-sources = [ 'sample.cpp' ]
+sources = [ 'nuklei_example_sample.cpp' ]
 
 target_name = 'nuklei_example_sample'
 target  = os.path.join(env['BinDir'], target_name)

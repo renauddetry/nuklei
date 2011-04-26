@@ -5,7 +5,7 @@
 // This example demonstrates how Nulkei can be used to sample a density.
 // This example can be compiled with
 //
-//   g++ `pkg-config --cflags --libs nuklei` -O3 \
+//   g++ `pkg-config --cflags --libs nuklei` -O3
 //       nuklei_example_sample.cpp -o nuklei_example_sample
 //
 // (It may be necessary to add paths to Boost or GSL by adding
@@ -40,12 +40,7 @@ int main(int argc, char ** argv)
   
   nuklei::KernelCollection density, samples;
 
-  {
-    std::auto_ptr<nuklei::ObservationReader> reader =
-      nuklei::ObservationReader::createReader(densityFilename);
-    nuklei::readObservations(*reader, density);
-    // The reader is automatically destroyed when exiting this scope.
-  }
+  nuklei::readObservations(densityFilename, density);
   
   density.setKernelLocH(locH);
   density.setKernelOriH(oriH);
@@ -84,10 +79,7 @@ int main(int argc, char ** argv)
   // Write the samples to disk: //
   // -------------------------- //
 
-  nuklei::NukleiWriter writer(samplesFilename);
-  writer.init();
-  nuklei::writeObservations(writer, samples);
-  writer.writeBuffer();
+  nuklei::writeObservations(samplesFilename, samples);
 
   return 0;
 }

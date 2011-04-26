@@ -116,10 +116,23 @@ namespace nuklei {
 
       // Iterators
 
+      /**
+       * @brief Used internally.
+       */
       typedef nuklei_trsl::is_picked_systematic<
         kernel::base, weight_t, kernel::base::WeightAccessor> is_picked;
+      /**
+       * @brief Sample Iterator type.
+       *
+       * See KernelCollection::sampleBegin.
+       */
       typedef nuklei_trsl::ppfilter_iterator<
         is_picked, iterator> sample_iterator;
+      /**
+       * @brief Sample Iterator type.
+       *
+       * See KernelCollection::sampleBegin.
+       */
       typedef nuklei_trsl::ppfilter_iterator<
         is_picked, const_iterator> const_sample_iterator;
       
@@ -144,10 +157,28 @@ namespace nuklei {
        */
       const_sample_iterator sampleBegin(size_t sampleSize) const;
 
+      /**
+       * @brief Sort Iterator type.
+       *
+       * See KernelCollection::sortBegin.
+       */
       typedef nuklei_trsl::reorder_iterator<iterator> sort_iterator;
+      /**
+       * @brief Sort Iterator type.
+       *
+       * See KernelCollection::sortBegin.
+       */
       typedef nuklei_trsl::reorder_iterator<const_iterator> const_sort_iterator;
       
+      /**
+       * @brief Returns an iterator that iterates through the @p sortSize
+       * kernels of highest weight, in order of decreasing weight.
+       */
       sort_iterator sortBegin(size_t sortSize);
+      /**
+       * @brief Returns an iterator that iterates through the @p sortSize
+       * kernels of highest weight, in order of decreasing weight.
+       */
       const_sort_iterator sortBegin(size_t sortSize) const;
       
       // Particle-related methods

@@ -5,7 +5,7 @@
 // This example demonstrates how Nulkei can be used to estimate a density at
 // a given point.
 //
-//   g++ `pkg-config --cflags --libs nuklei` -O3 \
+//   g++ `pkg-config --cflags --libs nuklei` -O3
 //       nuklei_example_evaluate.cpp -o nuklei_example_evaluate
 //
 // (It may be necessary to add paths to Boost or GSL by adding
@@ -37,17 +37,8 @@ int main(int argc, char ** argv)
   
   nuklei::KernelCollection density, points;
 
-  {
-    std::auto_ptr<nuklei::ObservationReader> reader =
-    nuklei::ObservationReader::createReader(densityFilename);
-    nuklei::readObservations(*reader, density);
-    // The reader is automatically destroyed when exiting this scope.
-  }
-  {
-    std::auto_ptr<nuklei::ObservationReader> reader =
-    nuklei::ObservationReader::createReader(pointsFilename);
-    nuklei::readObservations(*reader, points);
-  }
+  nuklei::readObservations(densityFilename, density);
+  nuklei::readObservations(pointsFilename, points);
   
   density.setKernelLocH(locH);
   density.setKernelOriH(oriH);

@@ -346,10 +346,25 @@ namespace nuklei {
   {
     r.readObservations(kc);
   }
+  
+  void readObservations(const std::string &s, KernelCollection &kc)
+  {
+    std::auto_ptr<ObservationReader> reader =
+      ObservationReader::createReader(s);
+    readObservations(*reader, kc);
+  }
 
   void writeObservations(ObservationWriter &w, const KernelCollection &kc)
   {
     w.writeObservations(kc);
   }
   
+  void writeObservations(const std::string &s, const KernelCollection &kc,
+                         const Observation::Type &t)
+  {
+    std::auto_ptr<ObservationWriter> writer =
+      ObservationWriter::createWriter(s, t);
+    nuklei::writeObservations(*writer, kc);
+    writer->writeBuffer();
+  }
 }

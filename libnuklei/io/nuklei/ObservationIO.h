@@ -90,6 +90,7 @@ namespace nuklei {
   std::ostream& operator<<(std::ostream &out, const ObservationReader::Counter &c);
 
   void readObservations(ObservationReader& r, KernelCollection &kc);
+  void readObservations(const std::string &s, KernelCollection &kc);
   
   /**
    * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
@@ -115,6 +116,8 @@ namespace nuklei {
     };
 
   void writeObservations(ObservationWriter &w, const KernelCollection &kc);  
+  void writeObservations(const std::string &s, const KernelCollection &kc,
+                         const Observation::Type &t = Observation::NUKLEI);  
 }
 
 #endif
