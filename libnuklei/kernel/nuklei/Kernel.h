@@ -201,7 +201,7 @@ namespace nuklei {
        * @}
        */
       /**
-       * @brief Interpolates between @p *this and @k.
+       * @brief Interpolates between @p *this and @p k.
        *
        * For @p x = 0, this function returns @p *this. If @p x = 1, it
        * returns @p k. For orientation, interpolation is done in

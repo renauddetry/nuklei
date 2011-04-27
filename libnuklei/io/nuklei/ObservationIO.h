@@ -26,7 +26,10 @@ namespace nuklei {
 
 
   /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
+   * @brief Base class for kernel reader and point reader classes.
+   *
+   * This class also provides methods for reading a file with automatic type
+   * detection.
    */
   class ObservationReader : boost::noncopyable
     {
@@ -89,11 +92,25 @@ namespace nuklei {
 
   std::ostream& operator<<(std::ostream &out, const ObservationReader::Counter &c);
 
+  /**
+   * @brief Reads the data available from the reader @p r and stores it into @p
+   * kc.
+   */
   void readObservations(ObservationReader& r, KernelCollection &kc);
+  /**
+   * @brief Reads the file @p s (with automatic type detection) and stores the
+   * read data into @p kc.
+   */
   void readObservations(const std::string &s, KernelCollection &kc);
+  /**
+   * @brief Reads the file @p s (with automatic type detection) and stores the
+   * read data into @p kc. @p t is set to the format of the file @p s.
+   */
+  void readObservations(const std::string &s, KernelCollection &kc,
+                        Observation::Type& t);
   
   /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
+   * @brief Base class for kernel writer and point writer classes.
    */
   class ObservationWriter : boost::noncopyable
     {
@@ -115,7 +132,13 @@ namespace nuklei {
 
     };
 
+  /**
+   * @brief Writes the content of @p kc using the provided writer @p w.
+   */
   void writeObservations(ObservationWriter &w, const KernelCollection &kc);  
+  /**
+   * @brief Writes the content of @p kc to file @p s, using file format @p t.
+   */
   void writeObservations(const std::string &s, const KernelCollection &kc,
                          const Observation::Type &t = Observation::NUKLEI);  
 }

@@ -2,14 +2,16 @@
 // Distributed under the GNU General Public License. (See accompanying file
 // LICENSE.txt or copy at http://www.gnu.org/copyleft/gpl.html)
 
-// This example demonstrates how Nulkei can be used to estimate a density at
-// a given point.
+// This example demonstrates how Nulkei can be used to estimate a density
+// function at a given point.
+//
+// This example can be compiled with
 //
 //   g++ `pkg-config --cflags --libs nuklei` -O3
 //       nuklei_example_evaluate.cpp -o nuklei_example_evaluate
 //
-// (It may be necessary to add paths to Boost or GSL by adding
-// $CPPFLAGS $CXXFLAGS $LDFLAGS to this compilation command)
+// (It may be necessary to add -I/path/to/boost/include -L/path/to/boost/lib if
+// Boost doesn't reside at a standard place.)
 
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
@@ -20,11 +22,10 @@ int main(int argc, char ** argv)
   // Parameters: //
   // ----------- //
   
-  // File containing a set of points that represent a density
+  // Set of datapoints that represent a density
   std::string densityFilename = "data/density1.txt";
   
-  // File containing a set of points at which the density will
-  // be evaluated
+  // Set of points at which the density will be evaluated
   std::string pointsFilename = "data/points1.txt";
   
   // Kernel widths, for position and orientation:
@@ -40,23 +41,23 @@ int main(int argc, char ** argv)
   nuklei::readObservations(densityFilename, density);
   nuklei::readObservations(pointsFilename, points);
   
-  density.setKernelLocH(locH);
-  density.setKernelOriH(oriH);
-
   // ------------------------------- //
   // Prepare density for evaluation: //
   // ------------------------------- //
+
+  density.setKernelLocH(locH);
+  density.setKernelOriH(oriH);
   
   density.normalizeWeights();
   density.computeKernelStatistics();
   density.buildKdTree();
   
-  // At this point, density should not be modified anymore.  (Modifying it will
+  // At this point, "density" should not be modified anymore. (Modifying it will
   // destroy the kd-tree, and the kernel statistics.)
   
-  // ----------------- //
-  // Evaluate density: //
-  // ----------------- //
+  // --------------------- //
+  // Evaluate the density: //
+  // --------------------- //
   
   for (nuklei::KernelCollection::const_iterator i = points.begin();
        i != points.end(); ++i)

@@ -21,6 +21,16 @@ Nuklei is a C++ library that implements kernel functions and kernel density esti
 <dd>Initial release of Nuklei! The code is usable but largely undocumented. Documentation will follow shortly.</dd>
 </dl>
 
+@section index_highlights Highlights
+
+Nuklei includes implementations of efficient algorithms for:
+- Evaluating and simulating Gaussian distributions and von Mises-Fisher distributions.
+- Evaluating and simulating arbitrary @f$ SE(3) @f$ distributions with kernel density estimation.
+- (Coming soon: kernel logistic regression.)
+- Reading, writing, transforming clouds of @f$ SE(3) @f$ points.
+
+Potential applications of  @f$ SE(3) @f$ density models:  robot position and orientation (navigation), object pose (pose estimation), gripper pose (grasping).
+
 @section index_get Get Nuklei
 
 The source code is available from the Sourceforge version control server:
@@ -39,6 +49,29 @@ The @ref background section introduces the mathematical concepts implemented in 
 @section index_license License
 
 Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a> (GPL). Nuklei will continue to be distributed under these terms as long as dependencies on the GNU Scientific Library (GSL) exist. Once all GSL dependencies are removed, Nuklei will be distributed under a BSD-like license.
+
+If the code is used for research purposes, I would appreciate that you cite the following publications:
+- R. Detry, D. Kraft, O. Kroemer, L. Bodenhagen, J. Peters, N. Krüger and J. Piater, Learning Grasp Affordance Densities. In Paladyn. Journal of Behavioral Robotics, 2011.
+@verbatim
+@article{detry2011a,
+Author = {R. Detry and D. Kraft and O. Kroemer and L. Bodenhagen and J. Peters and N. Krüger and J. Piater},
+Journal = {Paladyn.\ Journal of Behavioral Robotics},
+Note = {accepted},
+Title = {Learning Grasp Affordance Densities},
+Year = {2011}}
+@endverbatim
+- R. Detry and J. Piater, Continuous Surface-point Distributions for 3D Object Pose Estimation and Recognition. In Asian Conference on Computer Vision, pages 572–585, 2010.
+@verbatim
+@inproceedings{detry2010c,
+Author = {Renaud Detry and Justus Piater},
+Booktitle = {Asian Conference on Computer Vision},
+Doi = {10.1007/978-3-642-19318-7_45},
+Pages = {572--585},
+Title = {Continuous Surface-point Distributions for {3D} Object Pose Estimation and Recognition},
+Year = {2010}}
+@endverbatim
+
+I will be happy to hear from projects that make use of Nuklei, and if desired participate and provide support to these projects. If your project uses Nuklei, <a href="http://www.csc.kth.se/~detryr/">please let me know!</a>.
 
 
 @section index_author Authors

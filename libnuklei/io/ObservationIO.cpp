@@ -349,8 +349,16 @@ namespace nuklei {
   
   void readObservations(const std::string &s, KernelCollection &kc)
   {
+    Observation::Type t;
+    readObservations(s, kc, t);
+  }
+
+  void readObservations(const std::string &s, KernelCollection &kc,
+                        Observation::Type& t)
+  {
     std::auto_ptr<ObservationReader> reader =
       ObservationReader::createReader(s);
+    t = reader->type();
     readObservations(*reader, kc);
   }
 
