@@ -132,7 +132,7 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     totalWeight_ = 0;
     maxLocCutPoint_ = 0;
-    for (const_iterator i = begin(); i != end(); i++)
+    for (Container::const_iterator i = kernels_.begin(); i != kernels_.end(); i++)
     {
       *totalWeight_ += i->getWeight();
       *maxLocCutPoint_ = std::max(*maxLocCutPoint_, i->polyCutPoint());
