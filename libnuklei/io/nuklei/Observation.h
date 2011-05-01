@@ -20,8 +20,8 @@ namespace nuklei {
   class Observation
     {
     public:
-      typedef enum { COVIS3D, OSUTXT, PLY, RIF, CRD, SERIAL, BUILTINVTK, NUKLEI, EXR, UNKNOWN } Type;
-      static const Type defaultType = COVIS3D;
+      typedef enum { SERIAL, NUKLEI, COVIS3D, OSUTXT, PLY, RIF, CRD, BUILTINVTK, TXT, EXR, UNKNOWN } Type;
+      static const Type defaultType = SERIAL;
       static const std::string TypeNames[];
 
       virtual ~Observation() {}

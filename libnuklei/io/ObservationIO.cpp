@@ -15,6 +15,7 @@
 #include <nuklei/BuiltinVTKObservationIO.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/EXRObservationIO.h>
+#include <nuklei/TXTObservationIO.h>
 
 namespace nuklei {
 
@@ -181,6 +182,13 @@ namespace nuklei {
       errorsCat += "\n" + std::string(e.what());
     }
 
+    try {
+      reader = createReader(arg, Observation::TXT);
+      return reader;
+    } catch (ObservationIOError &e) {
+      errorsCat += "\n" + std::string(e.what());
+    }
+
     throw ObservationIOError
       ("Error loading observations with automatic type detection. "
        "Maybe the filename `" + arg + "' is incorrect. "
@@ -241,6 +249,11 @@ namespace nuklei {
       case Observation::BUILTINVTK:
       {
         reader.reset(new BuiltinVTKReader(arg));
+        break;
+      }
+      case Observation::TXT:
+      {
+        reader.reset(new TxtReader(arg));
         break;
       }
       default:
@@ -329,6 +342,11 @@ namespace nuklei {
       {
         NUKLEI_THROW("Not implemented.");
         //writer.reset(new OsuTxtWriter(arg));
+        break;
+      }
+      case Observation::TXT:
+      {
+        writer.reset(new TxtWriter(arg));
         break;
       }
       default:
