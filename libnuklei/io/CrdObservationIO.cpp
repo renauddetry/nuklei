@@ -50,7 +50,12 @@ namespace nuklei {
           throw ObservationIOError("Input does not look like CRD (file read error).");
         syncpc = true;
       }
-      count = numify<int>(firstline);
+      try {
+        count = numify<int>(firstline);        
+      } catch (BadStrNumConversion &e)
+      {
+        throw ObservationIOError("Input does not look like CRD (no point count).");
+      }
       if (!(count >= 0))
         throw ObservationIOError("Input does not look like CRD (no point count).");
     }

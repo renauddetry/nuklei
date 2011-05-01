@@ -87,7 +87,6 @@ namespace nuklei {
   void KernelWriter::writeBuffer()
   {
     NUKLEI_TRACE_BEGIN();
-    kc_.normalizeWeights();
     Serial::writeObject(kc_, observationFileName_);
     NUKLEI_TRACE_END();
   }

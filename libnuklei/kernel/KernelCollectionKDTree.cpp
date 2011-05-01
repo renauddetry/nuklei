@@ -55,8 +55,10 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
     
-    NUKLEI_ASSERT(KernelType().type() == kernelType_);
-    NUKLEI_ASSERT(kernelType_ == k.polyType());
+    NUKLEI_ASSERT(size() > 0);
+    
+    NUKLEI_ASSERT(KernelType().type() == *kernelType_);
+    NUKLEI_ASSERT(*kernelType_ == k.polyType());
     
     coord_t value = 0;
     if (KDTREE_DENSITY_EVAL && size() > 1000)

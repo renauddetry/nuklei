@@ -78,11 +78,8 @@ int kde(int argc, char ** argv)
 
   NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
 
-  std::auto_ptr<ObservationReader> reader =
-    ObservationReader::createReader(inFileArg.getValue());
-
   KernelCollection kc;
-  readObservations(*reader, kc);
+  readObservations(inFileArg.getValue(), kc);
   
   coord_pair w(0,0);
   
@@ -113,10 +110,7 @@ int kde(int argc, char ** argv)
   std::cout << "Median loc width: " << w.first << "\n" <<
     "Median ori width: " << w.second << std::endl;
   
-  KernelWriter writer(outFileArg.getValue());
-  writer.init();
-  writeObservations(writer, kc);
-  writer.writeBuffer();
+  writeObservations(outFileArg.getValue(), kc);
 
   return 0;
   

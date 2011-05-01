@@ -58,8 +58,6 @@ namespace nuklei {
       kc.add(*o->getKernel());
     }
     
-    if (NORMALIZE_DENSITIES)
-      kc.normalizeWeights();
     NUKLEI_TRACE_END();
   }
 
