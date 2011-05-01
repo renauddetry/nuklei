@@ -32,8 +32,8 @@ int main(int argc, char ** argv)
   int nSamples = 10;
   
   // Kernel widths, for position and orientation:
-  double locH = 20; // in the same unit as the datapoints supporting the density
-  double oriH = .2; // in radians
+  double locH = 40; // in the same unit as the datapoints supporting the density
+  double oriH = .4; // in radians
   
   // ------------- //
   // Read-in data: //
@@ -50,8 +50,8 @@ int main(int argc, char ** argv)
   density.setKernelLocH(locH);
   density.setKernelOriH(oriH);
   
-  density.normalizeWeights();
   density.computeKernelStatistics();
+  density.normalizeWeights();
   
   // At this point, "density" should not be modified anymore. (Modifying it will
   // destroy the kernel statistics.)
@@ -63,7 +63,11 @@ int main(int argc, char ** argv)
   // The `sample_iterator' iterates through `nSamples' datapoints supporting the
   // density. The probability that a given datapoint is chosen is proportional to
   // its weight.
-  nuklei::KernelCollection::const_sample_iterator i = density.sampleBegin(nSamples);
+  // Note that as_const forces calling
+  // KernelCollection::sampleBegin()const. Without as_const, it is
+  // KernelCollection::sampleBegin() that is called, which invalidates helper
+  // strucutures.
+  nuklei::KernelCollection::const_sample_iterator i = as_const(density).sampleBegin(nSamples);
   
   for (; i != i.end(); ++i) // note i.end() instead of density.end()
   {

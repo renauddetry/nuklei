@@ -29,8 +29,8 @@ int main(int argc, char ** argv)
   std::string pointsFilename = "data/points2.txt";
   
   // Kernel widths, for position and orientation:
-  double locH = 20; // in the same unit as the datapoints forming the density
-  double oriH = .2; // in radians
+  double locH = 40; // in the same unit as the datapoints forming the density
+  double oriH = .4; // in radians
   
   // ------------- //
   // Read-in data: //
@@ -48,11 +48,8 @@ int main(int argc, char ** argv)
   density.setKernelLocH(locH);
   density.setKernelOriH(oriH);
   
-  density.computeKernelStatistics();
-  std::cout << "coucou" << std::endl;
   density.normalizeWeights();
   density.buildKdTree();
-  
   
   // At this point, "density" should not be modified anymore. (Modifying it will
   // destroy the kd-tree, and the kernel statistics.)
