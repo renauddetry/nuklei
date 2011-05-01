@@ -99,8 +99,11 @@ namespace nuklei {
   KernelCollection::sample_iterator
   KernelCollection::sampleBegin(size_t sampleSize)
   {
-    invalidateHelperStructures();        
+    // First create predicate
     is_picked predicate(sampleSize, totalWeight());
+    // Then invalidate helper structures, as the user may use the iterator
+    // to change the data.
+    invalidateHelperStructures();        
     return sample_iterator(predicate, begin(), end());
   }
   
