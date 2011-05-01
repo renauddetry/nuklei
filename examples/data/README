@@ -1,0 +1,7 @@
+Example data files.
+
+Files *.txt are in the "txt" format (nuklei conv -w txt f1 f2).
+Files *.xml are in the "nuklei" format (nuklei conv -w nuklei f1 f2).
+
+Files points* contain SE(3) points with null bandwidths. Files
+density* have non-zero bandwidths.

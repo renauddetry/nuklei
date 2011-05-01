@@ -23,10 +23,10 @@ int main(int argc, char ** argv)
   // ----------- //
   
   // Set of datapoints that represent a density
-  std::string densityFilename = "data/density1.txt";
+  std::string densityFilename = "data/points1.txt";
   
   // Set of points at which the density will be evaluated
-  std::string pointsFilename = "data/points1.txt";
+  std::string pointsFilename = "data/points2.txt";
   
   // Kernel widths, for position and orientation:
   double locH = 20; // in the same unit as the datapoints forming the density
@@ -48,9 +48,11 @@ int main(int argc, char ** argv)
   density.setKernelLocH(locH);
   density.setKernelOriH(oriH);
   
-  density.normalizeWeights();
   density.computeKernelStatistics();
+  std::cout << "coucou" << std::endl;
+  density.normalizeWeights();
   density.buildKdTree();
+  
   
   // At this point, "density" should not be modified anymore. (Modifying it will
   // destroy the kd-tree, and the kernel statistics.)

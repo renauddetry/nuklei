@@ -23,7 +23,7 @@ int main(int argc, char ** argv)
   // ----------- //
   
   // Set of datapoints that represent a density
-  std::string densityFilename = "data/density1.txt";
+  std::string densityFilename = "data/points1.txt";
 
   // File to which the samples will be written
   std::string samplesFilename = "/tmp/nuklei_samples.txt";
