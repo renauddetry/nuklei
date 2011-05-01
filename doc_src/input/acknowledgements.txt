@@ -9,7 +9,8 @@ Nuklei relies on the following libraries:
 - The <a href="http://www.gnu.org/software/gsl/">GNU Scientific Library</a> (GSL)
 - The math module of the <a href="http://www.geometrictools.com/">Wild Magic</a> library
 - <a href="http://trsl.sf.net">TRSL</a>
+- <a href="http://sugiyama-www.cs.titech.ac.jp/~yamada/iwklr.html">IWKLR</a>
 
-Packages for the latter two are missing in most Linux distributions. To ease deployment, Wild Magic and TRSL are bundled with Nuklei.
+Packages for the latter three are missing in most Linux distributions. To ease deployment, Wild Magic, TRSL, and IWKLR, are bundled with Nuklei.
 
 */
