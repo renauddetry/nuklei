@@ -211,24 +211,71 @@ namespace nuklei {
 
       // Statistical moments
       
+      /**
+       * @brief Returns a kernel holding the mean position and orientation of
+       * the data.
+       */
       kernel::base::ptr mean() const;
+      /**
+       * @brief Returns a kernel holding the mean and standard deviation in
+       * position and orientation of the data.
+       *
+       * Standard deviations for position and orientation are stored in the
+       * kernel bandwidths.
+       */
       kernel::base::ptr moments() const;
       
       // Geometrical properties
       
+      /**
+       * @brief Transforms the data with @p t.
+       */
       void transformWith(const kernel::se3& t);
+      /**
+       * @brief Transforms the data with the provided translation and rotation.
+       */
       void transformWith(const Location &translation,
                          const Rotation &rotation);
 
+      /**
+       * @brief Computes the local differential properties of the nearest
+       * neighbors of @p k.
+       *
+       * This function uses the CGAL <a
+       * href="http://www.cgal.org/Manual/3.3/doc_html/cgal_manual/Jet_fitting_3/Chapter_main.html">Monge
+       * fit</a> functions.
+       */
       boost::tuple<Matrix3, Vector3, coord_t>
       localLocationDifferential(const Vector3& k) const;
       
+      /**
+       * @brief Fits a plane to the positions of the kernels contained in @p
+       * *this.
+       *
+       * The location of the returned kernel is a point of the plane. The
+       * orientation of the returned kernel is such that its @f$ z @f$ axis is
+       * normal to the plane.
+       */
       kernel::se3 linearLeastSquarePlaneFit() const;
+      /**
+       * @brief Fits a plane to the positions of the kernels contained in @p
+       * *this.
+       *
+       * The location of the returned kernel is a point of the plane. The
+       * orientation of the returned kernel is such that its @f$ z @f$ axis is
+       * normal to the plane.
+       */
       kernel::se3
       ransacPlaneFit(coord_t inlinerThreshold, unsigned nSeeds = 100) const;
 
+      /**
+       * @brief Returns the locations of the contained kernels in an std::vector.
+       */
       std::vector<Vector3> get3DPointCloud() const;
 
+      /**
+       * @brief Builds a kd-tree of the kernel positions and stores the tree internally. The tree is used by the method
+       */
       void buildKdTree();
       void buildNeighborSearchTree();
       void buildConvexHull(unsigned n);
