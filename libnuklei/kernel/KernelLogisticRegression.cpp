@@ -6,8 +6,9 @@ namespace nuklei
 {
   
   
-  KernelLogisticRegression::KernelLogisticRegression(const KernelCollection &data,
-                                                     const std::vector<int>& labels) :
+  KernelLogisticRegression::KernelLogisticRegression
+  (const KernelCollection &data,
+   const std::vector<int>& labels) :
   trainSet_(data), labels_(labels)
   {
     NUKLEI_TRACE_BEGIN();
@@ -16,9 +17,10 @@ namespace nuklei
     NUKLEI_TRACE_END();
   }
   
-  KernelLogisticRegression::KernelLogisticRegression(const KernelCollection &data,
-                                                     const GMatrix& gramMatrix,
-                                                     const std::vector<int>& labels) :
+  KernelLogisticRegression::KernelLogisticRegression
+  (const KernelCollection &data,
+   const GMatrix& gramMatrix,
+   const std::vector<int>& labels) :
   trainSet_(data), gramMatrix_(gramMatrix), labels_(labels)
   {
     NUKLEI_ASSERT(trainSet_.size() == labels_.size());
@@ -101,7 +103,8 @@ namespace nuklei
     
     GMatrix pr(2, testSet.size());
     
-    for (KernelCollection::const_iterator ti = testSet.begin(); ti != testSet.end(); ++ti)
+    for (KernelCollection::const_iterator ti = testSet.begin();
+         ti != testSet.end(); ++ti)
     {
       Vector2 p = test(*ti);
       pr(0,std::distance(testSet.begin(), ti)) = p.X();
