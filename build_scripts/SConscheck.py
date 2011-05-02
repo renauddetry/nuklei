@@ -198,36 +198,38 @@ if conf.env['UseOpenCV']:
     Exit(1)
 
 
-# OpenEXR (IlmBase, IlmImf)
-if not conf.CheckPKG('IlmBase') or \
-   not conf.CheckPKG('OpenEXR') or \
-   not conf.CheckCXXHeader('OpenEXR/IlmBaseConfig.h') or \
-   not conf.CheckCXXHeader('OpenEXR/ImfVersion.h'):
-  pass
+#disable OpenEXR
+if False:
+  # OpenEXR (IlmBase, IlmImf)
+  if not conf.CheckPKG('IlmBase') or \
+    not conf.CheckPKG('OpenEXR') or \
+    not conf.CheckCXXHeader('OpenEXR/IlmBaseConfig.h') or \
+    not conf.CheckCXXHeader('OpenEXR/ImfVersion.h'):
+      pass
   #print 'Warning: OpenEXR (IlmBase, IlmImf) is not supported.'
   #print 'The library will compile, but the use of EXR input files is disabled.'
   #print '** For more information, refer to the INSTALL document **'
-else:
-  # IlmBase
-  ilmbasedict = conf.env.ParseFlags("!pkg-config --cflags --libs IlmBase")
-  for i in ilmbasedict['CPPPATH']:
-    ilmbasedict['CCFLAGS'].append('-I' + i)
-    conf.env['PkgCCflags'] += ' -I' + i
-  for i in ilmbasedict['LIBS']:
-    conf.env['PkgCLibs'] += ' -l' + i
-  ilmbasedict['CPPPATH'] = []
-  conf.env.MergeFlags(ilmbasedict)
-  # IlmImf
-  ilmimfdict = conf.env.ParseFlags("!pkg-config --cflags --libs OpenEXR")
-  for i in ilmimfdict['CPPPATH']:
-    ilmimfdict['CCFLAGS'].append('-I' + i)
-    conf.env['PkgCCflags'] += ' -I' + i
-  for i in ilmimfdict['LIBS']:
-    conf.env['PkgCLibs'] += ' -l' + i
-  ilmimfdict['CPPPATH'] = []
-  conf.env.MergeFlags(ilmimfdict)
-  
-  conf.env.Append(CPPDEFINES = ['NUKLEI_USE_EXR_LIB'])
+  else:
+    # IlmBase
+    ilmbasedict = conf.env.ParseFlags("!pkg-config --cflags --libs IlmBase")
+    for i in ilmbasedict['CPPPATH']:
+      ilmbasedict['CCFLAGS'].append('-I' + i)
+      conf.env['PkgCCflags'] += ' -I' + i
+    for i in ilmbasedict['LIBS']:
+      conf.env['PkgCLibs'] += ' -l' + i
+    ilmbasedict['CPPPATH'] = []
+    conf.env.MergeFlags(ilmbasedict)
+    # IlmImf
+    ilmimfdict = conf.env.ParseFlags("!pkg-config --cflags --libs OpenEXR")
+    for i in ilmimfdict['CPPPATH']:
+      ilmimfdict['CCFLAGS'].append('-I' + i)
+      conf.env['PkgCCflags'] += ' -I' + i
+    for i in ilmimfdict['LIBS']:
+      conf.env['PkgCLibs'] += ' -l' + i
+    ilmimfdict['CPPPATH'] = []
+    conf.env.MergeFlags(ilmimfdict)
+    
+    conf.env.Append(CPPDEFINES = ['NUKLEI_USE_EXR_LIB'])
 
 # Octave
 #if not conf.CheckOctaveAPI():
