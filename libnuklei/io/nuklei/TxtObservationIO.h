@@ -2,10 +2,10 @@
 #define NUKLEI_TXTOBSERVATIONSERIAL_H
 
 
-#include "nuklei/definitions.h"
-#include "nuklei/ObservationSerial.h"
-#include "nuklei/TxtObservation.h"
-#include "nuklei/KernelCollection.h"
+#include <nuklei/Definitions.h>
+#include <nuklei/ObservationIO.h>
+#include <nuklei/TxtObservation.h>
+#include <nuklei/KernelCollection.h>
 
 namespace nuklei {
 

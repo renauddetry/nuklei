@@ -1,5 +1,5 @@
 #include <nuklei/KernelLogisticRegression.h>
-#include <nuklei/ObservationSerial.h>
+#include <nuklei/ObservationIO.h>
 #include <klr_train.h>
 
 namespace nuklei

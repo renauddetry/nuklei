@@ -9,11 +9,11 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 
-#include "nuklei/definitions.h"
-#include "nuklei/Color.h"
-#include "nuklei/linear_algebra.h"
-#include "nuklei/Observation.h"
-#include "nuklei/member_clone_ptr.h"
+#include <nuklei/Definitions.h>
+#include <nuklei/Color.h>
+#include <nuklei/LinearAlgebra.h>
+#include <nuklei/Observation.h>
+#include <nuklei/member_clone_ptr.h>
 
 namespace nuklei {
 

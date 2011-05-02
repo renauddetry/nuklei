@@ -5,8 +5,8 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "nuklei/TxtObservationSerial.h"
-#include "nuklei/TxtObservation.h"
+#include <nuklei/TxtObservationIO.h>
+#include <nuklei/TxtObservation.h>
 
 namespace nuklei {
 
@@ -28,7 +28,7 @@ namespace nuklei {
     NUKLEI_ASSERT(!in_.is_open());
     in_.open(observationFileName.c_str(), std::ios::in);
     if (!in_.is_open())
-      throw ObservationSerialError(std::string("Could not open file ") +
+      throw ObservationIOError(std::string("Could not open file ") +
                                    observationFileName + " for reading.");    
   }
 
@@ -109,7 +109,7 @@ namespace nuklei {
     try {
       points_.clear();
     } catch (std::exception& e) {
-      throw ObservationSerialError(e.what());
+      throw ObservationIOError(e.what());
     }
     NUKLEI_TRACE_END();
   }
