@@ -164,15 +164,6 @@ namespace nuklei {
       errorsCat += "\n" + std::string(e.what());
     }
 
-    #ifdef NUKLEI_USE_EXR_LIB
-    try {
-      reader = createReader(arg, Observation::EXR);
-      return reader;
-    } catch (ObservationIOError &e) {
-      errorsCat += "\n" + std::string(e.what());
-    }
-    #endif
-
     try {
       reader = createReader(arg, Observation::BUILTINVTK);
       return reader;
@@ -237,13 +228,6 @@ namespace nuklei {
         reader.reset(new KernelReader(arg));
         break;
       }
-      #ifdef NUKLEI_USE_EXR_LIB
-      case Observation::EXR:
-      {
-        reader.reset(new EXRReader(arg));
-        break;
-      }
-      #endif
       case Observation::BUILTINVTK:
       {
         reader.reset(new BuiltinVTKReader(arg));
@@ -328,14 +312,6 @@ namespace nuklei {
         writer.reset(new KernelWriter(arg));
         break;
       }
-      #ifdef NUKLEI_USE_EXR_LIB
-      case Observation::EXR:
-      {
-        NUKLEI_THROW("Not implemented.");
-        //writer.reset(new OsuTxtWriter(arg));
-        break;
-      }
-      #endif
       case Observation::BUILTINVTK:
       {
         NUKLEI_THROW("Not implemented.");

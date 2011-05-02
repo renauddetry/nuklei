@@ -197,59 +197,6 @@ if conf.env['UseOpenCV']:
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
 
-
-#disable OpenEXR
-if False:
-  # OpenEXR (IlmBase, IlmImf)
-  if not conf.CheckPKG('IlmBase') or \
-    not conf.CheckPKG('OpenEXR') or \
-    not conf.CheckCXXHeader('OpenEXR/IlmBaseConfig.h') or \
-    not conf.CheckCXXHeader('OpenEXR/ImfVersion.h'):
-      pass
-  #print 'Warning: OpenEXR (IlmBase, IlmImf) is not supported.'
-  #print 'The library will compile, but the use of EXR input files is disabled.'
-  #print '** For more information, refer to the INSTALL document **'
-  else:
-    # IlmBase
-    ilmbasedict = conf.env.ParseFlags("!pkg-config --cflags --libs IlmBase")
-    for i in ilmbasedict['CPPPATH']:
-      ilmbasedict['CCFLAGS'].append('-I' + i)
-      conf.env['PkgCCflags'] += ' -I' + i
-    for i in ilmbasedict['LIBS']:
-      conf.env['PkgCLibs'] += ' -l' + i
-    ilmbasedict['CPPPATH'] = []
-    conf.env.MergeFlags(ilmbasedict)
-    # IlmImf
-    ilmimfdict = conf.env.ParseFlags("!pkg-config --cflags --libs OpenEXR")
-    for i in ilmimfdict['CPPPATH']:
-      ilmimfdict['CCFLAGS'].append('-I' + i)
-      conf.env['PkgCCflags'] += ' -I' + i
-    for i in ilmimfdict['LIBS']:
-      conf.env['PkgCLibs'] += ' -l' + i
-    ilmimfdict['CPPPATH'] = []
-    conf.env.MergeFlags(ilmimfdict)
-    
-    conf.env.Append(CPPDEFINES = ['NUKLEI_USE_EXR_LIB'])
-
-# Octave
-#if not conf.CheckOctaveAPI():
-#  print 'Please check your Octave installation.'
-#  print 'A dev install of Octave is temporarily necessary.'
-#  Exit(1)
-#else:
-#  octaveincludedir = conf.env.ParseFlags("!echo '-I'`octave-config -p OCTINCLUDEDIR`")
-#  octavelibdir = conf.env.ParseFlags("!echo '-L'`octave-config -p OCTLIBDIR`")
-#  for i in octaveincludedir['CPPPATH']:
-#    octaveincludedir['CCFLAGS'].append('-I' + i)
-#  octaveincludedir['CPPPATH'] = []
-#  conf.env.MergeFlags(octaveincludedir)
-#  conf.env.MergeFlags(octavelibdir)
-#  #conf.env.Append(LIBPATH = octavedir)
-#  conf.env.Append(LIBS = [ 'octinterp', 'octave', 'cruft' ])
-#  for i in octavelibdir['LIBPATH']:
-#    conf.env.Append(RPATH = i)
-
-
 # These are simply expected...
 conf.env.Append(LIBS = [ 'X11', 'z', 'pthread', 'm' ])
 
