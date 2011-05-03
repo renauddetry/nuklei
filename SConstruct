@@ -103,6 +103,8 @@ opts.AddVariables(
   EnumVariable('qpl', 'Activates QPL code', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'yes',
                allowed_values = ('yes', 'no'))
   # nice -n 18 distcc nice -n 18 i686-apple-darwin8-g++-4.0.1
 )
@@ -113,6 +115,7 @@ env['BuildType'] = env['bt']
 env['EnableGPL'] = env['gpl'] == 'yes'
 env['EnableQPL'] = env['qpl'] == 'yes'
 env['UseOpenCV'] = env['use_opencv'] == 'yes'
+env['UseCIMG'] = env['use_cimg'] == 'yes'
 
 # this is obsolete, should not be used.
 env['InstallPrefix'] = env['prefix']
@@ -143,6 +146,12 @@ print 'C++ compiler currently set to `' + blue + \
 if not env['EnableGPL']:
   print red + "The whole Nuklei codebase is currently distributed under GPL. GPL code thus cannot be disabled." + defColor
   Exit(1)
+
+if env['UseCIMG']:
+  if not env['EnableGPL']:
+    print red + "CIMG is GPL. GPL needs to be enabled to enable CIMG." + defColor
+    Exit(1)
+
 if env['EnableQPL'] and env['EnableGPL']:
   print red + "Warning: GPL and QPL are incompatible. Programs built with these settings break both GPL and QPL terms." + defColor
 
@@ -195,10 +204,6 @@ env.Alias('install', [ '$BinInstallDir', '$HdrInstallDir', '$LibInstallDir' ])
 
 env['PkgCCflags'] = ''
 env['PkgCLibs'] = ' -lnuklei'
-
-if env['EnableGPL']:
-  env.Append(CPPDEFINES = 'NUKLEI_ENABLE_GPL')
-  env['PkgCCflags'] += " -DNUKLEI_ENABLE_GPL"
 
 ##############################################
 ## configuration: checks & pkg-config setup ##

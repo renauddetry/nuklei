@@ -12,7 +12,7 @@ conf.env.Append(LIBPATH = [ '/usr/X11R6/lib' ])
 # Local contributions
 
 
-if conf.env['EnableGPL']:
+if conf.env['UseCIMG']:
   conf.env['CImg_include'] = '#/contrib/CImg/include'
 conf.env['tclap_include'] = '#/contrib/tclap-1.1.0/include'
 conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
@@ -40,7 +40,7 @@ conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
 
 # contrib: CImg
 
-if conf.env['EnableGPL']:
+if conf.env['UseCIMG']:
   conf.env.Prepend(CPPPATH = [ '$CImg_include' ])
   if conf.env['BuildType'] == 'develop':
     conf.env.Append(CPPDEFINES = [ ('cimg_debug', 2) ])

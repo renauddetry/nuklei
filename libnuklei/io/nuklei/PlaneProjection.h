@@ -11,7 +11,7 @@
 #include <nuklei/Common.h>
 #include <nuklei/member_clone_ptr.h>
 
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
 // CImg is slow to compile. CImg-related methods will be put in a
 // separate .cpp, which should include few headers (no KernelCollection.h, ...)
 // so that it's not compiled too often.
@@ -28,7 +28,7 @@ namespace nuklei {
   struct PlaneProjection
   {
     typedef unsigned char pixel_t;
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     typedef cimg_library::CImg<pixel_t> image_t;
 #else
     typedef int image_t;
@@ -55,7 +55,7 @@ namespace nuklei {
     void setOpacity(const weight_t opacity) { opacity_ = opacity; }
     
     const image_t& getImage() const {
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
       NUKLEI_ASSERT(image_.get() != NULL); return *image_;
 #else
       return 0;
@@ -71,7 +71,7 @@ namespace nuklei {
     
     pixel_t color_[3];
     float opacity_;
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     std::auto_ptr<image_t> image_;
 #endif
   };
@@ -79,7 +79,7 @@ namespace nuklei {
   struct StereoPlaneProjection
   {
     typedef unsigned char pixel_t;
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     typedef cimg_library::CImg<pixel_t> image_t;
 #else
     typedef int image_t;

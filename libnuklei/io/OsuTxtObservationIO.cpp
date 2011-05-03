@@ -17,7 +17,7 @@
 #include <nuklei/Indenter.h>
 
 
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
 #include "CImg.h"
 #endif
 
@@ -49,7 +49,7 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
     
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     
     NUKLEI_ASSERT(!in_.is_open());
     in_.open(geometryFileName.c_str(), std::ios::in);
@@ -129,7 +129,7 @@ namespace nuklei {
     currentIndex_ = 0;
     
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif
     
     NUKLEI_TRACE_END();

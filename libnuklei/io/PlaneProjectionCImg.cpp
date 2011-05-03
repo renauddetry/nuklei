@@ -8,7 +8,7 @@
 #include "cvaux.h"
 #endif
 
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
 #include "CImg.h"
 #endif
 
@@ -35,13 +35,13 @@ namespace nuklei
     distortionCoeffsData_ = pp.distortionCoeffsData_;
     for (int i = 0; i < 3; ++i) color_[i] = pp.color_[i];
     opacity_ = pp.opacity_;
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     if (pp.image_.get() != NULL)
     {
       image_.reset(new image_t(pp.getImage()));
     }
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif
   }
   
@@ -55,13 +55,13 @@ namespace nuklei
     distortionCoeffsData_ = pp.distortionCoeffsData_;
     for (int i = 0; i < 3; ++i) color_[i] = pp.color_[i];
     opacity_ = pp.opacity_;
-#ifdef NUKLEI_ENABLE_GPL      
+#ifdef NUKLEI_USE_CIMG      
     if (pp.image_.get() != NULL)
     {
       image_.reset(new image_t(pp.getImage()));
     }
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif    
     return *this;
     NUKLEI_TRACE_END();
@@ -96,7 +96,7 @@ namespace nuklei
   {
     NUKLEI_TRACE_BEGIN();
     
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     
     // cvProjectPoints2 projects p points to the image plane.
     // cvProjectPoints2 assumes that p > 3 :-(.
@@ -151,7 +151,7 @@ namespace nuklei
     return imagePoints;
     
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif
 
     NUKLEI_TRACE_END();
@@ -171,14 +171,14 @@ namespace nuklei
   void PlaneProjection::readImage(const std::string& name)
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     try {
       image_ = std::auto_ptr<image_t>(new image_t(name.c_str()));
     } catch (cimg_library::CImgException &e) {
       NUKLEI_THROW("CImg error: " << e.what());
     }
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif    
     NUKLEI_TRACE_END();
   }
@@ -186,7 +186,7 @@ namespace nuklei
   void PlaneProjection::writeImage(const std::string& name) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     NUKLEI_ASSERT(image_.get() != NULL);
     try {
       image_->save(name.c_str());
@@ -194,7 +194,7 @@ namespace nuklei
       NUKLEI_THROW("CImg error: " << e.what());
     }
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif    
     NUKLEI_TRACE_END();
   }
@@ -202,7 +202,7 @@ namespace nuklei
   void StereoPlaneProjection::writeStereoImage(const std::string& name) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_GPL
+#ifdef NUKLEI_USE_CIMG
     try {
       image_t image = (left_.getImage().get_append(right_.getImage(), 'x'));
       image.save(name.c_str());
@@ -210,7 +210,7 @@ namespace nuklei
       NUKLEI_THROW("CImg error: " << e.what());
     }
 #else
-    NUKLEI_THROW("This function requires GPL-licensed code.");
+    NUKLEI_THROW("This function requires CIMG.");
 #endif    
     NUKLEI_TRACE_END();
   }
