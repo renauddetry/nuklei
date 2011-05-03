@@ -48,10 +48,29 @@ int test(int argc, char ** argv)
   
   {
     Quaternion r;
-    r.FromAxisAngle(Vector3::UNIT_X, 180 / 180*M_PI);
+    r.FromAxisAngle(Vector3::UNIT_Z, M_PI/2);
+    q = r * q;
+    std::cout << la::normalized(q) << std::endl;
+  }
+
+  {
+    Quaternion r;
+    r.FromAxisAngle(Vector3::UNIT_Z, M_PI);
     std::cout << la::normalized(r*q) << std::endl;
   }
-  
+
+  {
+    Quaternion r;
+    r.FromAxisAngle(Vector3::UNIT_Y, 90. / 180*M_PI);
+    std::cout << la::normalized(r*q) << std::endl;
+  }
+
+  {
+    Quaternion r;
+    r.FromAxisAngle(Vector3::UNIT_Y, -90. / 180*M_PI);
+    std::cout << la::normalized(r*q) << std::endl;
+  }
+
   return 0;
   
   NUKLEI_TRACE_END();

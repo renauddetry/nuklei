@@ -141,7 +141,7 @@ print 'C++ compiler currently set to `' + blue + \
       env['CXX'] + defColor + '\'.'
 
 if not env['EnableGPL']:
-  print red + "GPL code cannot be disabled (yet)." + defColor
+  print red + "The whole Nuklei codebase is currently distributed under GPL. GPL code thus cannot be disabled." + defColor
   Exit(1)
 if env['EnableQPL'] and env['EnableGPL']:
   print red + "Warning: GPL and QPL are incompatible. Programs built with these settings break both GPL and QPL terms." + defColor
@@ -472,6 +472,8 @@ libtarget = os.path.join(env['LibDir'], env['projectName'])
 library = env.SharedLibrary(source = objects,
                             target = libtarget)
 env.Install(dir = '$LibInstallDir', source = library)
+AlwaysBuild(env.Alias('check'))
+AlwaysBuild(env.Alias('examples'))
 
 ################
 ## misc stuff ##

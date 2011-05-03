@@ -27,8 +27,9 @@ sources = [ 'nuklei_example_evaluate.cpp' ]
 target_name = 'nuklei_example_evaluate'
 target  = os.path.join(env['BinDir'], target_name)
 product = env.Program(source = sources, target = target)
-env.Install(dir = '$BinInstallDir', source = product)
-env.Alias(target_name, [ target ])
+env.Alias('check', [ target ], 'cd examples && ' + product[0].abspath + '>/tmp/' + target_name + '.output'
+          + ' && diff -q /tmp/' + target_name + '.output ../test/data/' + target_name + '.output')
+env.Alias('examples', [ target ])
 
 ## sample ################
 env = origEnv.Clone()
@@ -38,6 +39,6 @@ sources = [ 'nuklei_example_sample.cpp' ]
 target_name = 'nuklei_example_sample'
 target  = os.path.join(env['BinDir'], target_name)
 product = env.Program(source = sources, target = target)
-env.Install(dir = '$BinInstallDir', source = product)
-env.Alias(target_name, [ target ])
-
+env.Alias('check', [ target ], 'cd examples && ' + product[0].abspath + '>/tmp/' + target_name + '.output'
+          + ' && test `cat /tmp/' + target_name + '.output | wc -l` -eq `cat ../test/data/' + target_name + '.output | wc -l`')
+env.Alias('examples', [ target ])
