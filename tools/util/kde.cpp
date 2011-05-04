@@ -181,7 +181,7 @@ int resample(int argc, char ** argv)
   {
     if (uniformArg.getValue())
     {
-      kernel::se3 c = dynamic_cast<const kernel::se3&>(*i);
+      kernel::se3 c(*i);
       kernel::se3 s;
       {
         typedef nuklei::unnormalized_shape_dist_kernel
@@ -372,7 +372,7 @@ int importance_sampling(int argc, char ** argv)
     else if (importanceDistribution.kernelType() == kernel::base::R3XS2P &&
              i->polyType() == kernel::base::SE3)
     {
-      kernel::se3 se3k = dynamic_cast<const kernel::se3&>(*i);
+      kernel::se3 se3k(*i);
       kernel::r3xs2p r3xs2pk;
       r3xs2pk.loc_ = se3k.getLoc();
       r3xs2pk.dir_ = la::normalized(la::matrixCopy(se3k.ori_).GetColumn(2));

@@ -24,7 +24,7 @@ env = origEnv.Clone()
 
 sources = [ 'kde.cpp' ]
 
-target_name = 'nuklei_test_kde'
-target  = os.path.join(env['BinDir'], target_name)
+target_name = 'kde'
+target  = os.path.join(env['BinDir'], 'tests', target_name)
 product = env.Program(source = sources, target = target)
 env.Alias('check', [ target ], product[0].abspath)

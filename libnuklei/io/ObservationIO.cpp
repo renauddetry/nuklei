@@ -14,7 +14,6 @@
 #include <nuklei/SerializedKernelObservationIO.h>
 #include <nuklei/BuiltinVTKObservationIO.h>
 #include <nuklei/KernelCollection.h>
-#include <nuklei/EXRObservationIO.h>
 #include <nuklei/TxtObservationIO.h>
 
 namespace nuklei {

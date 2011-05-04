@@ -1,4 +1,4 @@
-.PHONY: all build install doc
+.PHONY: all build install examples push doc test publish
 
 all: build
 
@@ -8,8 +8,12 @@ build:
 install:
 	./scons.py install
 
+examples:
+	./scons.py install
+
 push:
 	git push origin master
+
 doc:
 	doxygen doc_src/Doxyfile
 	cp LICENSE.txt doc_generated/html

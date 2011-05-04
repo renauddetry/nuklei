@@ -13,4 +13,4 @@ if [ ! -e /vlt/scons.build/ ]; then
   tar -f scons_build.tgz -C /vlt -xz
 fi
 
-./scons.py -j 3 install
+./scons.py -j 3 install examples

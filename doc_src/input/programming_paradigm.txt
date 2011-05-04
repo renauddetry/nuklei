@@ -14,7 +14,7 @@ namespace nuklei
 /**
 
 @ingroup using_code
-@defgroup programming_paradigm Programming Paradigms
+@defgroup programming_paradigm Programming Paradigms and Semantics
 
 Nuklei's code follows two distinct programming paradigms. Parts of 
 Nuklei are written in generic C++, while other parts are written in object-oriented/polymorphic C++. Generic code (i.e., templates) is flexible and fast (static binding, allows for inlining). Unfortunately, generic code can quickly become obscure. Generic programming also restricts the range of programmers who will be comfortable with the code.
@@ -33,6 +33,8 @@ k.polyEval(k2) // Again, slow evaluation.
 k.eval(k2) // Compilation error - the base class only has the virtual methods.
 @endcode
 The template kernel::implementation_prototype binds the polymorphic wrapper to static implementations. kernel::implementation_prototype follows the CRTP trick to avoid clutter in derived kernels.
+
+
 
 */
 
