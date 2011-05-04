@@ -22,10 +22,10 @@ origEnv.Prepend(LIBS = [ 'nuklei' ])
 ## evaluate ################
 env = origEnv.Clone()
 
-sources = [ 'nuklei_example_evaluate.cpp' ]
+sources = [ 'evaluate.cpp' ]
 
-target_name = 'nuklei_example_evaluate'
-target  = os.path.join(env['BinDir'], target_name)
+target_name = 'evaluate'
+target  = os.path.join(env['BinDir'], 'examples', target_name)
 product = env.Program(source = sources, target = target)
 env.Alias('check', [ target ], 'cd examples && ' + product[0].abspath + '>/tmp/' + target_name + '.output'
           + ' && diff -q /tmp/' + target_name + '.output ../test/data/' + target_name + '.output')
@@ -34,10 +34,10 @@ env.Alias('examples', [ target ])
 ## sample ################
 env = origEnv.Clone()
 
-sources = [ 'nuklei_example_sample.cpp' ]
+sources = [ 'sample.cpp' ]
 
-target_name = 'nuklei_example_sample'
-target  = os.path.join(env['BinDir'], target_name)
+target_name = 'sample'
+target  = os.path.join(env['BinDir'], 'examples', target_name)
 product = env.Program(source = sources, target = target)
 env.Alias('check', [ target ], 'cd examples && ' + product[0].abspath + '>/tmp/' + target_name + '.output'
           + ' && test `cat /tmp/' + target_name + '.output | wc -l` -eq `cat ../test/data/' + target_name + '.output | wc -l`')

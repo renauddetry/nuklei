@@ -23,10 +23,10 @@ int main(int argc, char ** argv)
   // ----------- //
   
   // Set of datapoints that represent a density
-  std::string densityFilename = "examples/data/points1.txt";
+  std::string densityFilename = "data/points1.txt";
   
   // Set of points at which the density will be evaluated
-  std::string pointsFilename = "examples/data/points2.txt";
+  std::string pointsFilename = "data/points2.txt";
   
   // Kernel widths, for position and orientation:
   double locH = 40; // in the same unit as the datapoints forming the density
