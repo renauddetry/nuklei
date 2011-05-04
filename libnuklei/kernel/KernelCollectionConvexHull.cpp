@@ -10,45 +10,6 @@
 
 namespace nuklei {
 
-  void KernelCollection::buildFatConvexHull(unsigned n)
-  {
-    NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_QPL
-    KernelCollection kc;
-    
-    unsigned nn = std::max(n/6, 1u);
-    if (nn > size()) nn = size();
-
-    kernel::base::ptr m = moments();
-    coord_t f = m->getLocH() / 8;
-    for (int d = 0; d < 3; ++d)
-    {
-      KernelCollection tkc;
-      Vector3 t(0, 0, 0);
-      
-      tkc.resetWithSampleOf(*this, nn);
-      t[d] += f;
-      tkc.transformWith(t, Rotation::IDENTITY);
-      kc.add(tkc);
-      
-      tkc.resetWithSampleOf(*this, nn);
-      t[d] -= 2*f;
-      tkc.transformWith(t, Rotation::IDENTITY);
-      kc.add(tkc);
-    }
-    
-    kc.buildConvexHull(n);
-    
-    using namespace cgal_convex_hull_types;
-    if (deco_.has_key(HULL_KEY)) deco_.erase(HULL_KEY);
-    deco_.insert(HULL_KEY, kc.deco_.get< boost::shared_ptr<Convex_hull_3> >(HULL_KEY));
-#else
-    NUKLEI_THROW("This function requires QPL-licensed code.");
-#endif    
-    NUKLEI_TRACE_END();
-  }
-
-
   void KernelCollection::buildConvexHull(unsigned n)
   {
     NUKLEI_TRACE_BEGIN();

@@ -39,6 +39,34 @@ namespace nuklei {
    * provides methods related to the density function modeled by the kernels it
    * contains.
    *
+   * In Nuklei, kernel classes play the double role of kernel class and point
+   * class. There is no class specifically designed for holding an @f$ SE(3) @f$
+   * point, the kernel class is used for that purpose. A KernelCollection is
+   * thus often used to contain a set of points that are entirely unrelated to a
+   * density function.
+   *
+   * Some of the methods of this class can benefit from caching intermediary
+   * results. For instance, the KernelCollection::evaluationAt method
+   * requires a @f$k@f$d-tree of all kernel positions. @f$k@f$d-trees are
+   * expensive to construct, it is thus important to avoid reconstructing them
+   * in each call of KernelCollection::evaluationAt. KernelCollection
+   * thus allows users to precompute intermediary results, such as
+   * @f$k@f$d-trees, and it stores these structures internally. When a
+   * KernelCollection is modified however, intermediary results become
+   * invalid. To avoid inconsistencies, each call to KernelCollection which can
+   * potentially allow one to modify the contained kernels (for instance,
+   * KernelCollection::add) automatically destroys all intermediary
+   * results.
+   *
+   * The functions responsible for computing intermediary results are:
+   * - KernelCollection::computeKernelStatistics which computes the sum of all
+   *   kernel weights (total weight), and the maximum kernel cut point (todo:
+   *   explain cutpoint).
+   * - KernelCollection::buildKdTree
+   * - KernelCollection::buildNeighborSearchTree
+   * - KernelCollection::buildConvexHull
+   *
+   *
    * Todo: Speak about helper structures
    */
   class KernelCollection
@@ -279,7 +307,6 @@ namespace nuklei {
       void buildKdTree();
       void buildNeighborSearchTree();
       void buildConvexHull(unsigned n);
-      void buildFatConvexHull(unsigned n);
       bool isWithinConvexHull(const kernel::base& k) const;
       
       // Density-related methods

@@ -83,7 +83,7 @@ Nuklei is developped by <a href="http://www.csc.kth.se/~detryr/">Renaud Detry</a
 
 /**
 
-@example nuklei_example_evaluate.cpp
-@example nuklei_example_sample.cpp
+@example evaluate.cpp
+@example sample.cpp
 
 */
