@@ -109,9 +109,7 @@ namespace nuklei {
   void readObservations(const std::string &s, KernelCollection &kc,
                         Observation::Type& t);
   
-  /**
-   * @brief Base class for kernel writer and point writer classes.
-   */
+  /** @brief Base class for kernel writer and point writer classes. */
   class ObservationWriter : boost::noncopyable
     {
     public:
@@ -132,13 +130,9 @@ namespace nuklei {
 
     };
 
-  /**
-   * @brief Writes the content of @p kc using the provided writer @p w.
-   */
+  /** @brief Writes the content of @p kc using the provided writer @p w. */
   void writeObservations(ObservationWriter &w, const KernelCollection &kc);  
-  /**
-   * @brief Writes the content of @p kc to file @p s, using file format @p t.
-   */
+  /** @brief Writes the content of @p kc to file @p s, using file format @p t. */
   void writeObservations(const std::string &s, const KernelCollection &kc,
                          const Observation::Type &t = Observation::NUKLEI);  
 }

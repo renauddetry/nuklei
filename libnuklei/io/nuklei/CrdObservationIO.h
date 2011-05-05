@@ -22,9 +22,6 @@ namespace ticpp {
 namespace nuklei {
 
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CrdReader : public ObservationReader
     {
     public:
@@ -44,9 +41,6 @@ namespace nuklei {
     };
 
   
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CrdWriter : public ObservationWriter
   {
   public:

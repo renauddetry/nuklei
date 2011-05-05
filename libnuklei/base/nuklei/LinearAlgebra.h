@@ -15,9 +15,7 @@
 
 namespace nuklei {
 
-  /**
-   * @brief Namespace containing linear algebra functions (and some other functions).
-   */
+  /** @brief Namespace containing linear algebra functions (and some other functions). */
   namespace la {
 
     inline
@@ -377,9 +375,7 @@ namespace nuklei {
      */
     
 
-    /**
-     * @brief Returns @f$ Xy + x @f$.
-     */
+    /** @brief Returns @f$ Xy + x @f$. */
     inline Vector3 transform(const Vector3& x,
                              const Matrix3& X,
                              const Vector3& y)
@@ -387,9 +383,7 @@ namespace nuklei {
       return X*y + x;
     }
     
-    /**
-     * @brief Returns @f$ Xy + x @f$.
-     */
+    /** @brief Returns @f$ Xy + x @f$. */
     inline Vector3 transform(const Vector3& x,
                              const Quaternion& X,
                              const Vector3& y)
@@ -397,9 +391,7 @@ namespace nuklei {
       return X.Rotate(y) + x;
     }
     
-    /**
-     * @brief @f$ z = X y + x,  Z = X Y @f$.
-     */
+    /** @brief @f$ z = X y + x,  Z = X Y @f$. */
     inline void transform(Vector3& z, Matrix3& Z,
                           const Vector3& x, const Matrix3& X,
                           const Vector3& y, const Matrix3& Y)
@@ -408,9 +400,7 @@ namespace nuklei {
       Z = X*Y;
     }
     
-    /**
-     * @brief @f$ z = X y + x,  Z = X Y @f$.
-     */
+    /** @brief @f$ z = X y + x,  Z = X Y @f$. */
     inline void transform(Vector3& z, Quaternion& Z,
                           const Vector3& x, const Quaternion& X,
                           const Vector3& y, const Quaternion& Y)
@@ -419,9 +409,7 @@ namespace nuklei {
       Z = X*Y;
     }
     
-    /**
-     * @brief @f$ z = X y + x,  Z = X Y @f$.
-     */
+    /** @brief @f$ z = X y + x,  Z = X Y @f$. */
     inline void transform(Vector3& z, Vector3& Z,
                           const Vector3& x, const Matrix3& X,
                           const Vector3& y, const Vector3& Y)
@@ -430,9 +418,7 @@ namespace nuklei {
       Z = transform(Vector3::ZERO, X, Y);
     }
     
-    /**
-     * @brief @f$ z = X y + x,  Z = X Y @f$.
-     */
+    /** @brief @f$ z = X y + x,  Z = X Y @f$. */
     inline void transform(Vector3& z, Vector3& Z,
                           const Vector3& x, const Quaternion& X,
                           const Vector3& y, const Vector3& Y)
@@ -441,9 +427,7 @@ namespace nuklei {
       Z = transform(Vector3::ZERO, X, Y);
     }
 
-    /**
-     * @brief Returns @f$ X^T (z-x) @f$.
-     */
+    /** @brief Returns @f$ X^T (z-x) @f$. */
     inline Vector3 project(const Vector3& x,
                            const Matrix3& X,
                            const Vector3& z)
@@ -451,9 +435,7 @@ namespace nuklei {
       return X.Transpose() * (z-x);
     }
     
-    /**
-     * @brief Returns @f$ X^T (z-x) @f$.
-     */
+    /** @brief Returns @f$ X^T (z-x) @f$. */
     inline Vector3 project(const Vector3& x,
                            const Quaternion& X,
                            const Vector3& z)
@@ -461,9 +443,7 @@ namespace nuklei {
       return X.Conjugate().Rotate(z-x);
     }
     
-    /**
-     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
-     */
+    /** @brief @f$ y = X^T (z-x), Y = X^T Z @f$. */
     inline void project(Vector3& y, Matrix3& Y,
                         const Vector3& x, const Matrix3& X,
                         const Vector3& z, const Matrix3& Z)
@@ -472,9 +452,7 @@ namespace nuklei {
       Y = X.TransposeTimes(Z);
     }
     
-    /**
-     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
-     */
+    /** @brief @f$ y = X^T (z-x), Y = X^T Z @f$. */
     inline void project(Vector3& y, Quaternion& Y,
                         const Vector3& x, const Quaternion& X,
                         const Vector3& z, const Quaternion& Z)
@@ -483,9 +461,7 @@ namespace nuklei {
       Y = X.Conjugate() * Z;
     }
     
-    /**
-     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
-     */
+    /** @brief @f$ y = X^T (z-x), Y = X^T Z @f$. */
     inline void project(Vector3& y, Vector3& Y,
                         const Vector3& x, const Matrix3& X,
                         const Vector3& z, const Vector3& Z)
@@ -494,9 +470,7 @@ namespace nuklei {
       Y = project(Vector3::ZERO, X, Z);
     }
     
-    /**
-     * @brief @f$ y = X^T (z-x), Y = X^T Z @f$.
-     */
+    /** @brief @f$ y = X^T (z-x), Y = X^T Z @f$. */
     inline void project(Vector3& y, Vector3& Y,
                         const Vector3& x, const Quaternion& X,
                         const Vector3& z, const Vector3& Z)
@@ -505,9 +479,7 @@ namespace nuklei {
       Y = project(Vector3::ZERO, X, Z);
     }
     
-    /**
-     * @brief @f$ x = z - Z Y^T y, X = Z Y^T @f$
-     */
+    /** @brief @f$ x = z - Z Y^T y, X = Z Y^T @f$ */
     inline void transfoTo(Vector3& x, Matrix3& X,
                           const Vector3& y, const Matrix3& Y,
                           const Vector3& z, const Matrix3& Z)
@@ -516,9 +488,7 @@ namespace nuklei {
         x = z - X*y;
       }
 
-    /**
-     * @brief @f$ x = z - Z Y^T y, X = Z Y^T @f$
-     */
+    /** @brief @f$ x = z - Z Y^T y, X = Z Y^T @f$ */
     inline void transfoTo(Vector3& x, Quaternion& X,
                           const Vector3& y, const Quaternion& Y,
                           const Vector3& z, const Quaternion& Z)
@@ -527,9 +497,7 @@ namespace nuklei {
         x = z - X.Rotate(y);
       }
 
-    /**
-     * @}
-     */
+    /** @} */
     
     template<class R> void fromAngleAxisString(R &r, const std::string &angleAxis)
     {

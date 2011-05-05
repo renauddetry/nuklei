@@ -14,9 +14,6 @@
 
 namespace nuklei {
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class Observation
     {
     public:

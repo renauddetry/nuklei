@@ -16,9 +16,6 @@
 namespace nuklei {
 
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class PLYReader : public ObservationReader
     {
     public:
@@ -39,9 +36,6 @@ namespace nuklei {
       std::string observationFileName_;
     };
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class PLYWriter : public ObservationWriter
   {
   public:

@@ -23,12 +23,6 @@
 
 namespace nuklei {
 
-
-
-  /**
-   * CoViS 3D primitive reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CoViS3DObservation : public Observation
     {
     public:

@@ -22,12 +22,6 @@
 
 namespace nuklei {
 
-
-
-  /**
-   * KTH CRD format reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CrdObservation : public Observation
     {
     public:

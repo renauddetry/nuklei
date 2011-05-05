@@ -37,9 +37,7 @@ namespace nuklei {
     return s;
   }
   
-  /**
-   * @brief Fills a std::vector with all type names.
-   */
+  /** @brief Fills a std::vector with all type names. */
   template<class T>
   std::vector<std::string> listTypeNames()
   {
@@ -49,27 +47,21 @@ namespace nuklei {
     return l;
   }
   
-  /**
-   * @brief Returns the default type name.
-   */
+  /** @brief Returns the default type name. */
   template<class T>
   std::string defaultTypeName()
   {
     return T::TypeNames[T::defaultType];
   }
   
-  /**
-   * @brief Returns the default type.
-   */
+  /** @brief Returns the default type. */
   template<class T>
   typename T::Type defaultType()
   {
     return T::defaultType;
   }
   
-  /**
-   * @brief Returns the name of type @p t.
-   */
+  /** @brief Returns the name of type @p t. */
   template<class T>
   std::string nameFromType(int t)
   {
@@ -78,9 +70,7 @@ namespace nuklei {
     else return T::TypeNames[t];
   }
   
-  /**
-   * @brief Returns the type whose name is @p s.
-   */
+  /** @brief Returns the type whose name is @p s. */
   template<class T>
   typename T::Type typeFromName(std::string s)
   {
@@ -92,8 +82,6 @@ namespace nuklei {
     NUKLEI_THROW("Invalid type `" << s << "'.");
   }
   
-  /**
-   * @}
-   */
+  /** @} */
 }
 #endif

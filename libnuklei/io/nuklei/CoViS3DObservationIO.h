@@ -21,9 +21,6 @@ namespace ticpp {
 
 namespace nuklei {
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CoViS3DReader : public ObservationReader
     {
     public:
@@ -42,9 +39,6 @@ namespace nuklei {
       boost::shared_ptr<CoViS3DReader> reader_;
     };
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CoViS3DXMLReader : public CoViS3DReader
     {
     public:
@@ -63,9 +57,6 @@ namespace nuklei {
     };
 
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CoViS3DWandererReader : public CoViS3DReader
     {
     public:
@@ -81,9 +72,6 @@ namespace nuklei {
       std::ifstream in_;
     };
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class CoViS3DXMLWriter : public ObservationWriter
     {
     public:

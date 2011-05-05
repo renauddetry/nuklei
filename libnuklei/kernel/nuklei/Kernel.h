@@ -17,9 +17,7 @@
 
 namespace nuklei {
   
-  /**
-   * @brief Namespace containing kernel definitions.
-   */
+  /** @brief Namespace containing kernel definitions. */
   namespace kernel
   {
     class se3;
@@ -47,22 +45,14 @@ namespace nuklei {
     {
     public:
       
-      /**
-       * @brief std::auto_ptr for this class. 
-       */
+      /** @brief std::auto_ptr for this class.  */
       typedef std::auto_ptr< kernel::base > ptr;
       
-      /**
-       * @brief Explicit query of a kernel's type. See @ref type for more info.
-       */
+      /** @brief Explicit query of a kernel's type. See @ref type for more info. */
       typedef enum { R3 = 0, R3XS2, R3XS2P, SE3, UNKNOWN } Type;
-      /**
-       * @brief Explicit query of a kernel's type. See @ref type for more info.
-       */
+      /** @brief Explicit query of a kernel's type. See @ref type for more info. */
       static const Type defaultType = SE3;
-      /**
-       * @brief Explicit query of a kernel's type. See @ref type for more info.
-       */
+      /** @brief Explicit query of a kernel's type. See @ref type for more info. */
       static const std::string TypeNames[];
       /** @} */
       
@@ -90,9 +80,7 @@ namespace nuklei {
       
       virtual void assertConsistency() const = 0;
       
-      /**
-       * @brief Calls polyPrint
-       */
+      /** @brief Calls polyPrint */
       friend std::ostream& operator<<(std::ostream &out, const kernel::base &k);
       /**
        * @brief Prints the kernel parameters to the provided stream.
@@ -102,66 +90,38 @@ namespace nuklei {
        */
       virtual std::ostream& polyPrint(std::ostream &out) const = 0;
       
-      /**
-       * @brief Weight-based kernel comparator.
-       */
+      /** @brief Weight-based kernel comparator. */
       bool operator<(const kernel::base& k) const { return w_ < k.w_; }
-      /**
-       * @brief Weight-based kernel comparator.
-       */
+      /** @brief Weight-based kernel comparator. */
       bool operator>(const kernel::base& k) const { return w_ > k.w_; }
       
-      /**
-       * @brief Clone the kernel.
-       */
+      /** @brief Clone the kernel. */
       virtual base::ptr clone() const = 0;
-      /**
-       * @brief Create a new kernel of the same type.
-       */
+      /** @brief Create a new kernel of the same type. */
       virtual base::ptr create() const = 0;
       
-      /**
-       * @brief Get the location component of the kernel.
-       */
+      /** @brief Get the location component of the kernel. */
       virtual Vector3 getLoc() const = 0;
-      /**
-       * @brief Set the location component of the kernel.
-       */
+      /** @brief Set the location component of the kernel. */
       virtual void setLoc(const Vector3 &v) = 0;
       
-      /**
-       * @brief Get the location bandwidth.
-       */
+      /** @brief Get the location bandwidth. */
       virtual coord_t getLocH() const = 0;
-      /**
-       * @brief Set the location bandwidth.
-       */
+      /** @brief Set the location bandwidth. */
       virtual void setLocH(const coord_t h) = 0;
-      /**
-       * @brief Get the orientation bandwidth.
-       */
+      /** @brief Get the orientation bandwidth. */
       virtual coord_t getOriH() const = 0;
-      /**
-       * @brief Set the orientation bandwidth.
-       */
+      /** @brief Set the orientation bandwidth. */
       virtual void setOriH(const coord_t h) = 0;
       
-      /**
-       * @brief Get the "kernel type", i.e., its domain of definition.
-       */
+      /** @brief Get the "kernel type", i.e., its domain of definition. */
       virtual Type polyType() const = 0;
       
-      /**
-       * @brief Evaluate the kernel at the location/orientation of @p k.
-       */
+      /** @brief Evaluate the kernel at the location/orientation of @p k. */
       virtual coord_t polyEval(const base &k) const = 0;
-      /**
-       * @brief Distance (from the origin) at which the value of the kernel becomes zero.
-       */
+      /** @brief Distance (from the origin) at which the value of the kernel becomes zero. */
       virtual coord_t polyCutPoint() const = 0;
-      /**
-       * @brief Get a sample from the kernel.
-       */
+      /** @brief Get a sample from the kernel. */
       virtual base::ptr polySample() const = 0;
       /**
        * @brief Get an @f$ SE(3) @f$ sample from the kernel.
@@ -201,9 +161,7 @@ namespace nuklei {
        * result. (See @ref matrix_transfo.)
        */
       virtual base::ptr polyProjectedOn(const kernel::se3& k) const = 0;
-      /**
-       * @}
-       */
+      /** @} */
       /**
        * @brief Interpolates between @p *this and @p k.
        *
@@ -214,9 +172,7 @@ namespace nuklei {
        */
       virtual base::ptr linearInterpolation(const kernel::base& k,
                                             const coord_t x = .5) const = 0;
-      /**
-       * @brief Used internally.
-       */
+      /** @brief Used internally. */
       virtual void updateWidth(const kernel::base& k,
                                const coord_t x = .5) = 0;
       /**
@@ -244,13 +200,9 @@ namespace nuklei {
         { return k->w_; }
       };
       
-      /**
-       * @brief Returns this kernel's weight.
-       */
+      /** @brief Returns this kernel's weight. */
       weight_t getWeight() const { return w_; }
-      /**
-       * @brief Sets this kernel's weight.
-       */
+      /** @brief Sets this kernel's weight. */
       void setWeight(const weight_t w) { w_ = w; }
       
       bool hasDescriptor() const { return desc_.get() != NULL; }
@@ -437,9 +389,7 @@ namespace nuklei {
       implementation_prototype() {};
     };
     
-    /**
-     * @ingroup kernels
-     */
+    /** @ingroup kernels */
     class se3 : public implementation_prototype<se3>
     {
     public:
@@ -506,9 +456,7 @@ namespace nuklei {
       }
     };
     
-    /**
-     * @ingroup kernels
-     */
+    /** @ingroup kernels */
     template<class OriGrp>
     class r3xs2_base : public implementation_prototype< r3xs2_base<OriGrp> >
     {
@@ -594,9 +542,7 @@ namespace nuklei {
      */
     typedef r3xs2_base<groupS::s2p> r3xs2p;
     
-    /**
-     * @ingroup kernels
-     */
+    /** @ingroup kernels */
     class r3 : public implementation_prototype<r3>
     {
     public:

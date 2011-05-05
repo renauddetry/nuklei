@@ -22,12 +22,6 @@
 
 namespace nuklei {
 
-
-
-  /**
-   * Nuklei hypothesis reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class NukleiObservation : public SerializedKernelObservation
   {
   public:

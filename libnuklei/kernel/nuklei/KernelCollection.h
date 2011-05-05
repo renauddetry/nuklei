@@ -132,48 +132,32 @@ namespace nuklei {
       typedef Container::reverse_iterator reverse_iterator;
       typedef Container::const_reverse_iterator const_reverse_iterator;
 
-      /**
-       * @brief Returns the kernel at index @p n.
-       */
+      /** @brief Returns the kernel at index @p n. */
       Container::reference at(Container::size_type n)
         { invalidateHelperStructures(); return kernels_.at(n); }
-      /**
-       * @brief Returns the kernel at index @p n.
-       */
+      /** @brief Returns the kernel at index @p n. */
       Container::const_reference at(Container::size_type n) const
         { return kernels_.at(n); }
 
-      /**
-       * @brief Returns the kernel at index @p 0.
-       */
+      /** @brief Returns the kernel at index @p 0. */
       Container::reference front()
         { invalidateHelperStructures(); return kernels_.front(); }
-      /**
-       * @brief Returns the kernel at index @p 0.
-       */
+      /** @brief Returns the kernel at index @p 0. */
       Container::const_reference front() const
         { return kernels_.front(); }
 
-      /**
-       * @brief Returns the kernel at index #size()-1.
-       */
+      /** @brief Returns the kernel at index #size()-1. */
       Container::reference back()
         { invalidateHelperStructures(); return kernels_.back(); }
-      /**
-       * @brief Returns the kernel at index #size()-1.
-       */
+      /** @brief Returns the kernel at index #size()-1. */
       Container::const_reference back() const
         { return kernels_.back(); }
 
-      /**
-       * @brief Returns the number of kernels.
-       */
+      /** @brief Returns the number of kernels. */
       Container::size_type size() const
         { return kernels_.size(); }
 
-      /**
-       * @brief Returns true if empty.
-       */
+      /** @brief Returns true if empty. */
       bool empty() const
         { return kernels_.empty(); }
 
@@ -197,29 +181,19 @@ namespace nuklei {
 
       // Container-related methods
 
-      /**
-       * @brief Resets the class to its initial state.
-       */
+      /** @brief Resets the class to its initial state. */
       void clear();
-      /**
-       * @brief Adds a copy of @p f.
-       */
+      /** @brief Adds a copy of @p f. */
       void add(const kernel::base &f);
-      /**
-       * @brief Adds a copy of the kernels contained in @p kv.
-       */
+      /** @brief Adds a copy of the kernels contained in @p kv. */
       void add(const KernelCollection &kv);
-      /**
-       * @brief Replaces the @p idx'th kernel with a copy of @p k.
-       */
+      /** @brief Replaces the @p idx'th kernel with a copy of @p k. */
       void replace(const size_t idx, const kernel::base &k);
       kernel::base::Type kernelType() const;
 
       // Iterators
 
-      /**
-       * @brief Used internally.
-       */
+      /** @brief Used internally. */
       typedef nuklei_trsl::is_picked_systematic<
         kernel::base, weight_t, kernel::base::WeightAccessor> is_picked;
       /**
@@ -296,9 +270,7 @@ namespace nuklei {
        */
       weight_t totalWeight() const;
       coord_t maxLocCutPoint() const;
-      /**
-       * @brief Divides all weights by the total weight.
-       */
+      /** @brief Divides all weights by the total weight. */
       void normalizeWeights();
       /**
        * @brief Sets all weights to @f$ 1 / t @f$, where @f$ t @f$ is
@@ -324,13 +296,9 @@ namespace nuklei {
       
       // Geometrical properties
       
-      /**
-       * @brief Transforms the data with @p t.
-       */
+      /** @brief Transforms the data with @p t. */
       void transformWith(const kernel::se3& t);
-      /**
-       * @brief Transforms the data with the provided translation and rotation.
-       */
+      /** @brief Transforms the data with the provided translation and rotation. */
       void transformWith(const Location &translation,
                          const Rotation &rotation);
 
@@ -369,9 +337,7 @@ namespace nuklei {
       kernel::se3
       ransacPlaneFit(coord_t inlinerThreshold, unsigned nSeeds = 100) const;
 
-      /**
-       * @brief Returns the locations of the contained kernels in an std::vector.
-       */
+      /** @brief Returns the locations of the contained kernels in an std::vector. */
       std::vector<Vector3> get3DPointCloud() const;
 
       /**

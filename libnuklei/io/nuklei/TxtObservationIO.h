@@ -16,9 +16,6 @@
 namespace nuklei {
 
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class TxtReader : public ObservationReader
     {
     public:
@@ -38,9 +35,6 @@ namespace nuklei {
     };
 
   
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class TxtWriter : public ObservationWriter
   {
   public:

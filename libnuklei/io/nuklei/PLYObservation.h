@@ -24,10 +24,6 @@
 
 namespace nuklei {
 
-  /**
-   * OSU 3D range data (TXT format) reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class PLYObservation : public Observation
     {
     public:

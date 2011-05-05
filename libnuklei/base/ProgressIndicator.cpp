@@ -25,9 +25,7 @@ namespace nuklei
   const std::string ProgressIndicator::backspaceSequence = "\033[A";
 
   
-  /**
-   * @brief Constructs a PI to go from spanStartDef to spanEndDef.
-   */
+  /** @brief Constructs a PI to go from spanStartDef to spanEndDef. */
   ProgressIndicator::ProgressIndicator()
   {
     initialize(spanStartDef, spanEndDef, messageDef, 0);
@@ -215,9 +213,7 @@ namespace nuklei
     state_ = ready;
   }
   
-  /**
-   * Forces the display of 100% and a new line.
-   */
+  /** Forces the display of 100% and a new line. */
   void ProgressIndicator::forceEnd()
   {
     setValue(spanEnd_);

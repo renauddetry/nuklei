@@ -24,12 +24,6 @@
 
 namespace nuklei {
 
-
-
-  /**
-   * Kernel reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class SerializedKernelObservation : public Observation
     {
     public:

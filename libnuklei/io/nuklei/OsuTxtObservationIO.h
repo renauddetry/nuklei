@@ -16,9 +16,6 @@
 namespace nuklei {
 
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class OsuTxtReader : public ObservationReader
     {
     public:

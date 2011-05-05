@@ -23,10 +23,6 @@
 
 namespace nuklei {
 
-  /**
-   * VTK data (TXT format) reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class BuiltinVTKObservation : public Observation
     {
     public:

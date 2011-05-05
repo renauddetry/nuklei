@@ -23,12 +23,6 @@
 
 namespace nuklei {
 
-
-
-  /**
-   * Text format reader.
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class TxtObservation : public Observation
     {
     public:

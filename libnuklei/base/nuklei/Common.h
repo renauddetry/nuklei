@@ -99,9 +99,7 @@ if (!(afe(e1, e2, tol))) \
 NUKLEI_THROW(stringify(e1, 20, 0) << " != " << stringify(e2, 20, 0) << " (TOL=" << tol << ")"); \
 }
   
-  /**
-   * @brief String (C string) file:line.
-   */
+  /** @brief String (C string) file:line. */
 # define NUKLEI_HERE() ((std::string(__FILE__) + ":" + nuklei::stringify(__LINE__)))
   
 # ifdef NDEBUG

@@ -22,9 +22,6 @@ namespace ticpp {
 
 namespace nuklei {
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class NukleiReader : public ObservationReader
     {
     public:
@@ -45,9 +42,6 @@ namespace nuklei {
       boost::shared_ptr<ElementIterator> e_;
     };
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class NukleiWriter : public ObservationWriter
     {
     public:

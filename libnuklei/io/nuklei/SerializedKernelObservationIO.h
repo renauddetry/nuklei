@@ -16,9 +16,6 @@
 
 namespace nuklei {
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class KernelReader : public ObservationReader
     {
     public:
@@ -41,9 +38,6 @@ namespace nuklei {
       KernelCollection kc_;
     };
 
-  /**
-   * @author Renaud Detry <detryr@montefiore.ulg.ac.be>
-   */
   class KernelWriter : public ObservationWriter
     {
     public:
