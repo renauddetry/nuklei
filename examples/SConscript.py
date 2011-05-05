@@ -27,8 +27,10 @@ sources = [ 'evaluate.cpp' ]
 target_name = 'evaluate'
 target  = os.path.join(env['BinDir'], 'examples', target_name)
 product = env.Program(source = sources, target = target)
-env.Alias('check', [ target ], 'cd examples && ' + product[0].abspath + '>/tmp/' + target_name + '.output'
-          + ' && diff -q /tmp/' + target_name + '.output ../test/data/' + target_name + '.output')
+env.Alias('check', [ 'install', target ], 'cd examples && '
+          + product[0].abspath + ' >/tmp/' + target_name + '.output'
+          + ' && diff -q /tmp/' + target_name + '.output output/'
+          + target_name + '.output')
 env.Alias('examples', [ target ])
 
 ## sample ################
@@ -39,6 +41,9 @@ sources = [ 'sample.cpp' ]
 target_name = 'sample'
 target  = os.path.join(env['BinDir'], 'examples', target_name)
 product = env.Program(source = sources, target = target)
-env.Alias('check', [ target ], 'cd examples && ' + product[0].abspath + '>/tmp/' + target_name + '.output'
-          + ' && test `cat /tmp/' + target_name + '.output | wc -l` -eq `cat ../test/data/' + target_name + '.output | wc -l`')
+env.Alias('check', [ 'install', target ], 'cd examples && '
+          + product[0].abspath + ' >/tmp/' + target_name + '.output'
+          + ' && test `cat /tmp/' + target_name
+          + '.output | wc -l` -eq `cat output/'
+          + target_name + '.output | wc -l`')
 env.Alias('examples', [ target ])
