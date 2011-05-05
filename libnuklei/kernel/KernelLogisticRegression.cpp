@@ -1,3 +1,9 @@
+// (C) Copyright Renaud Detry   2007-2011.
+// Distributed under the GNU General Public License. (See accompanying file
+// LICENSE.txt or copy at http://www.gnu.org/copyleft/gpl.html)
+
+/** @file */
+
 #include <nuklei/KernelLogisticRegression.h>
 #include <nuklei/ObservationIO.h>
 #include <klr_train.h>
