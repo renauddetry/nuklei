@@ -67,7 +67,6 @@ namespace nuklei {
    * - KernelCollection::buildConvexHull
    *
    *
-   * Todo: Speak about helper structures
    */
   class KernelCollection
     {
@@ -302,7 +301,7 @@ namespace nuklei {
       std::vector<Vector3> get3DPointCloud() const;
 
       /**
-       * @brief Builds a kd-tree of the kernel positions and stores the tree internally. The tree is used by the method
+       * @brief Builds a kd-tree of the kernel positions and stores the tree internally. The tree is used by the method KernelCollection::evaluationAt.
        */
       void buildKdTree();
       void buildNeighborSearchTree();

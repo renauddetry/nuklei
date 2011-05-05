@@ -52,7 +52,7 @@ To get started, take a look at the <a href="modules.html">Modules</a> page. The 
 
 @section index_license License
 
-Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a> (GPL). Nuklei will continue to be distributed under these terms as long as dependencies on the GNU Scientific Library (GSL) exist. Once all GSL dependencies are removed, Nuklei will be distributed under a BSD-like license.
+Nuklei is distributed under the terms of the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a> (GPL).
 
 If the code is used for research purposes, I would appreciate that you cite the following publications:
 - R. Detry, D. Kraft, O. Kroemer, L. Bodenhagen, J. Peters, N. Krüger and J. Piater, Learning Grasp Affordance Densities. In Paladyn. Journal of Behavioral Robotics, 2011.
