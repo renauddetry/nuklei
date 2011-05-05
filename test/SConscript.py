@@ -27,4 +27,4 @@ sources = [ 'kde.cpp' ]
 target_name = 'kde'
 target  = os.path.join(env['BinDir'], 'tests', target_name)
 product = env.Program(source = sources, target = target)
-env.Alias('check', [ target ], product[0].abspath)
+env.Alias('check', [ 'install', target ], product[0].abspath)

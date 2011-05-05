@@ -26,7 +26,7 @@ namespace nuklei
 
   
   /**
-   * Constructs a PI to go from spanStartDef to spanEndDef.
+   * @brief Constructs a PI to go from spanStartDef to spanEndDef.
    */
   ProgressIndicator::ProgressIndicator()
   {
@@ -34,7 +34,7 @@ namespace nuklei
   }
   
   /**
-   * Constructs a PI which will scale [spanStartDef spanEnd]
+   * @brief Constructs a PI which will scale [spanStartDef spanEnd]
    * to [0 100].
    */
   ProgressIndicator::ProgressIndicator(const int spanEnd,
@@ -45,7 +45,7 @@ namespace nuklei
   }
   
   /**
-   * Constructs a PI which will scale [spanStart spanEnd]
+   * @brief Constructs a PI which will scale [spanStart spanEnd]
    * to [0 100].
    */
   ProgressIndicator::ProgressIndicator(const int spanStart,

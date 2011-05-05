@@ -61,7 +61,7 @@ int main(int argc, char ** argv)
   for (nuklei::KernelCollection::const_iterator i = points.begin();
        i != points.end(); ++i)
   {
-    std::cout << density.evaluationAt(*i) << std::endl;
+    //std::cout << density.evaluationAt(*i) << std::endl;
   }
   
   return 0;
