@@ -64,7 +64,8 @@ namespace nuklei {
     if (KDTREE_DENSITY_EVAL && size() > 1000)
     {
       using namespace libkdtree_types;
-      NUKLEI_ASSERT(deco_.has_key(KDTREE_KEY));
+      if (!deco_.has_key(KDTREE_KEY))
+        NUKLEI_THROW("Undefined kd-tree. Call buildKdTree() first.");
 
       const KernelType &evalPoint = static_cast<const KernelType&>(k);
       std::vector<FlexiblePoint> in_range;

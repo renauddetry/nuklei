@@ -45,6 +45,8 @@ namespace nuklei {
 #ifdef NUKLEI_ENABLE_QPL
     using namespace cgal_convex_hull_types;
     Vector3 loc = k.getLoc();
+    if (!deco_.has_key(HULL_KEY))
+      NUKLEI_THROW("Undefined convex hull. Call buildConvexHull() first.");
     return deco_.get< boost::shared_ptr<Convex_hull_3> >(HULL_KEY)->bounded_side
       (Point_3(loc.X(), loc.Y(), loc.Z())) != CGAL::ON_UNBOUNDED_SIDE;
 #else

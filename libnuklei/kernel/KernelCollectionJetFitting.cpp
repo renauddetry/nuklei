@@ -38,7 +38,9 @@ namespace nuklei
     using namespace cgal_userdef_neighbor_search_types;
     using namespace cgal_jet_fitting_types;
     
-    NUKLEI_ASSERT(deco_.has_key(NSTREE_KEY));
+    if (!deco_.has_key(NSTREE_KEY))
+      NUKLEI_THROW("Undefined neighbor search tree. Call buildNeighborSearchTree() first.");
+
     boost::shared_ptr<Tree> tree(deco_.get< boost::shared_ptr<Tree> >(NSTREE_KEY));
       
 

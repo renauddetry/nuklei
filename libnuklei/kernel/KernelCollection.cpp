@@ -81,15 +81,18 @@ namespace nuklei {
   void KernelCollection::replace(const size_t idx, const kernel::base &k)
   {
     NUKLEI_TRACE_BEGIN();
-    invalidateHelperStructures();
+    NUKLEI_ASSERT(0 <= idx && idx < size());
     NUKLEI_ASSERT(*kernelType_ == k.polyType());
     kernels_.replace(idx, k.clone());
+    invalidateHelperStructures();
     NUKLEI_TRACE_END();
   }
 
   kernel::base::Type KernelCollection::kernelType() const
   {
     NUKLEI_TRACE_BEGIN();
+    if (empty())
+      NUKLEI_THROW("KernelCollection empty, hence undefined kernelType.");
     NUKLEI_ASSERT(kernelType_);
     return *kernelType_;
     NUKLEI_TRACE_END();
