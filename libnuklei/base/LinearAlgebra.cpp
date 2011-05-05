@@ -6,8 +6,6 @@
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
-#include <gsl/gsl_sf_hyperg.h>
-#include <gsl/gsl_sf_bessel.h>
 #include <gsl/gsl_linalg.h>
 
 #include <nuklei/LinearAlgebra.h>
@@ -56,17 +54,7 @@ namespace nuklei
        gsl_vector_free (eval);
        gsl_matrix_free (evec);
     }
-    
-    double confluentHypergeometric1F1(const double a, const double b, const double x)
-    {
-      return gsl_sf_hyperg_1F1(a, b, x);
-    }
-
-    double besselI1(const double x)
-    {
-      return gsl_sf_bessel_I1(x);
-    }
-    
+        
     // The following function
     //     Vector3 project(const Plane3& plane, const Vector3& point)
     // is currently defined in KernelCollectionPCA.cpp

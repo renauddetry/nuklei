@@ -179,22 +179,6 @@ namespace nuklei {
       }
 
     inline
-      void makeTop(Vector3 &v)
-      {
-        v = Vector3(std::numeric_limits<coord_t>::max(),
-                    std::numeric_limits<coord_t>::max(),
-                    std::numeric_limits<coord_t>::max());
-      }
-
-    inline
-      void makeBottom(Vector3 &v)
-      {
-        v = Vector3(std::numeric_limits<coord_t>::min(),
-                    std::numeric_limits<coord_t>::min(),
-                    std::numeric_limits<coord_t>::min());
-      }
-
-    inline
       void makeIdentity(Matrix3 &m)
       {
         m = Matrix3::IDENTITY;
@@ -380,9 +364,6 @@ namespace nuklei {
     }
 
     void eigenDecomposition(Matrix3 &eVectors, Vector3& eValues, const Matrix3& sym);
-
-    double confluentHypergeometric1F1(const double a, const double b, const double x);
-    double besselI1(const double x);
 
     double determinant(const GMatrix &m);
     GMatrix inverse(const GMatrix &m);

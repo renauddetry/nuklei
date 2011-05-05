@@ -377,7 +377,7 @@ namespace nuklei {
                         value_scaleS::normalized, FI)
     {
       coord_t arg = std::pow(mean.Dot(p), 2);
-      return std::exp( h*arg ) / la::confluentHypergeometric1F1(.5, 2, h);
+      return std::exp( h*arg ) / confluentHypergeometric1F1(.5, 2, h);
     }
   };
 
@@ -498,8 +498,8 @@ namespace nuklei {
       coord_t arg = dist_exponent(mean, p, groupS::so3());
 
       // This function should return
-      // std::exp( h*arg ) * h / (4 * M_PI * M_PI * la::besselI1(h));
-      // However, la::besselI1 quickly overflows, and it is slow.
+      // std::exp( h*arg ) * h / (4 * M_PI * M_PI * besselI1(h));
+      // However, besselI1 quickly overflows, and it is slow.
       // The below approximation works very well.
 
       // See "Clustering Documents with an Exponential-Family Approximation of

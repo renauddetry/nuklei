@@ -126,6 +126,10 @@ namespace nuklei {
     return d;
   }
   
+  double confluentHypergeometric1F1(const double a, const double b, const double x);
+  double besselI1(const double x);
+
+  
   
 }
 
