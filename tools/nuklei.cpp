@@ -125,7 +125,7 @@ int main(int argc, char ** argv)
   catch (std::exception &e) {
     std::cerr << "Exception caught: ";
     std::cerr << e.what() << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
   catch (...) {
     std::cerr << "Caught unknown exception." << std::endl;

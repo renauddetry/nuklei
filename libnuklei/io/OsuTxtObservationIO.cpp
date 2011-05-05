@@ -50,7 +50,6 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     
 #ifdef NUKLEI_USE_CIMG
-    
     NUKLEI_ASSERT(!in_.is_open());
     in_.open(geometryFileName.c_str(), std::ios::in);
     if (!in_.is_open())

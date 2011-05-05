@@ -41,6 +41,7 @@ conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
 # contrib: CImg
 
 if conf.env['UseCIMG']:
+  conf.env.Append(CPPDEFINES = ['NUKLEI_USE_CIMG'])
   conf.env.Prepend(CPPPATH = [ '$CImg_include' ])
   if conf.env['BuildType'] == 'develop':
     conf.env.Append(CPPDEFINES = [ ('cimg_debug', 2) ])
