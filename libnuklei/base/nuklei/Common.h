@@ -149,11 +149,7 @@ throw nuklei::Error(e, __PRETTY_FUNCTION__, NUKLEI_HERE()); \
   
 # define NUKLEI_NOCOLOR      "\033[0m"
   
-  /** @brief Provides a const reference to an object.
-   *
-   * Possible usage is to force calling "begin() const" instead of
-   * "begin()" on a container.
-   */
+  /** @brief Provides a const reference to an object.  */
   template<class T>
   inline T const& as_const(T const& t)
   { return t; }

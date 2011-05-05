@@ -45,28 +45,78 @@ namespace nuklei {
    * thus often used to contain a set of points that are entirely unrelated to a
    * density function.
    *
+   * @section intermediary Intermediary Results
+   *
    * Some of the methods of this class can benefit from caching intermediary
-   * results. For instance, the KernelCollection::evaluationAt method
-   * requires a @f$k@f$d-tree of all kernel positions. @f$k@f$d-trees are
-   * expensive to construct, it is thus important to avoid reconstructing them
-   * in each call of KernelCollection::evaluationAt. KernelCollection
-   * thus allows users to precompute intermediary results, such as
-   * @f$k@f$d-trees, and it stores these structures internally. When a
-   * KernelCollection is modified however, intermediary results become
-   * invalid. To avoid inconsistencies, each call to KernelCollection which can
-   * potentially allow one to modify the contained kernels (for instance,
-   * KernelCollection::add) automatically destroys all intermediary
-   * results.
+   * results. For instance, the #evaluationAt() method requires a @f$k@f$d-tree
+   * of all kernel positions. @f$k@f$d-trees are expensive to construct, it is
+   * important to avoid reconstructing them in each call of #evaluationAt().
+   *
+   * KernelCollection provides methods for precomputing intermediary results, such as
+   * @f$k@f$d-trees. These structures are stored internally. For instance,
+   * @code
+   * using namespace nuklei;
+   * KernelCollection kc;
+   * readObservations("file.txt", kc);
+   *
+   * kc.computeKernelStatistics(); // kernel statistics stored internally
+   * kc.buildKdTree(); // position kd-tree stored internally
+   *
+   * kernel::se3 k;
+   * ... // choose a value for k
+   *
+   * kc.evaluationAt(k); // evaluationAt makes use of intermediary results
+   * @endcode
    *
    * The functions responsible for computing intermediary results are:
-   * - KernelCollection::computeKernelStatistics which computes the sum of all
-   *   kernel weights (total weight), and the maximum kernel cut point (todo:
-   *   explain cutpoint).
-   * - KernelCollection::buildKdTree
-   * - KernelCollection::buildNeighborSearchTree
-   * - KernelCollection::buildConvexHull
+   * - #computeKernelStatistics() 
+   * - #buildKdTree()
+   * - #buildNeighborSearchTree()
+   * - #buildConvexHull()
    *
+   * When a KernelCollection is modified, intermediary results become
+   * invalid. To avoid inconsistencies, each call to a KernelCollection method
+   * which can potentially allow one to modify the contained kernels (for
+   * instance, #add()) automatically destroys all intermediary results. In order
+   * to preserve intermediary results, one must be careful to avoid calling such
+   * methods. In particular, several methods, such as #front() and
+   * #front()const, or #begin() and #begin()const, have a @p const and a @p
+   * non-const version. The @p const methods will always preserve intermediary
+   * results. One can force a call to the @p const version with as_const():
+   * @code
+   * using namespace nuklei;
+   * KernelCollection kc;
+   * readObservations("file.txt", kc);
    *
+   * kc.computeKernelStatistics();
+   * kc.buildKdTree();
+   *
+   * kernel::se3 k;
+   * ... // choose a value for k
+   *
+   * kc.evaluationAt(k); // ok!
+   *
+   * for (KernelCollection::const_iterator i = as_const(kc).begin();
+   *      i != as_const(kc).end(); ++i)
+   * {
+   *   i->setLocH(10);
+   * }
+   *
+   * kc.evaluationAt(k); // ok!
+   *
+   * // In the following line, even though i is a const_iterator, kc.begin()
+   * // calls the non-const begin() method, which destroys intermediary results.
+   * for (KernelCollection::const_iterator i = kc.begin();
+   *      i != kc.end(); ++i)
+   * {
+   *   i->setLocH(10);
+   * }
+   *
+   * kc.evaluationAt(k); // throws exception: no kernel statistics, no kd-tree.
+   * @endcode
+   *
+   * If the intermediary results that a method requires have not been computed,
+   * the method throws an exception.
    */
   class KernelCollection
     {
@@ -82,24 +132,48 @@ namespace nuklei {
       typedef Container::reverse_iterator reverse_iterator;
       typedef Container::const_reverse_iterator const_reverse_iterator;
 
+      /**
+       * @brief Returns the kernel at index @p n.
+       */
       Container::reference at(Container::size_type n)
         { invalidateHelperStructures(); return kernels_.at(n); }
+      /**
+       * @brief Returns the kernel at index @p n.
+       */
       Container::const_reference at(Container::size_type n) const
         { return kernels_.at(n); }
 
+      /**
+       * @brief Returns the kernel at index @p 0.
+       */
       Container::reference front()
         { invalidateHelperStructures(); return kernels_.front(); }
+      /**
+       * @brief Returns the kernel at index @p 0.
+       */
       Container::const_reference front() const
         { return kernels_.front(); }
 
+      /**
+       * @brief Returns the kernel at index #size()-1.
+       */
       Container::reference back()
         { invalidateHelperStructures(); return kernels_.back(); }
+      /**
+       * @brief Returns the kernel at index #size()-1.
+       */
       Container::const_reference back() const
         { return kernels_.back(); }
 
+      /**
+       * @brief Returns the number of kernels.
+       */
       Container::size_type size() const
         { return kernels_.size(); }
 
+      /**
+       * @brief Returns true if empty.
+       */
       bool empty() const
         { return kernels_.empty(); }
 
@@ -151,14 +225,14 @@ namespace nuklei {
       /**
        * @brief Sample Iterator type.
        *
-       * See KernelCollection::sampleBegin.
+       * See #sampleBegin().
        */
       typedef nuklei_trsl::ppfilter_iterator<
         is_picked, iterator> sample_iterator;
       /**
        * @brief Sample Iterator type.
        *
-       * See KernelCollection::sampleBegin.
+       * See #sampleBegin().
        */
       typedef nuklei_trsl::ppfilter_iterator<
         is_picked, const_iterator> const_sample_iterator;
@@ -187,13 +261,13 @@ namespace nuklei {
       /**
        * @brief Sort Iterator type.
        *
-       * See KernelCollection::sortBegin.
+       * See #sortBegin().
        */
       typedef nuklei_trsl::reorder_iterator<iterator> sort_iterator;
       /**
        * @brief Sort Iterator type.
        *
-       * See KernelCollection::sortBegin.
+       * See #sortBegin().
        */
       typedef nuklei_trsl::reorder_iterator<const_iterator> const_sort_iterator;
       
@@ -211,18 +285,14 @@ namespace nuklei {
       // Particle-related methods
 
       /**
-       * @brief Computes the total weight of the kernels, and the
-       * maximum kernel width.
-       *
-       * Necessary for methods such as KernelCollection::sampleBegin
-       * or KernelCollection::evaluationAt which require these
-       * statistics. If a method such as KernelCollection::sampleBegin
-       * is called at a point where kernel statistics are not
-       * available, an exception will be thrown.
+       * @brief Computes the sum of all kernel weights (total weight), and the
+       * maximum kernel cut point (todo: explain cutpoint).
        */
       void computeKernelStatistics();
       /**
        * @brief Returns the sum of kernel weights.
+       *
+       * Precede by a call to #computeKernelStatistics(). See @ref intermediary.
        */
       weight_t totalWeight() const;
       coord_t maxLocCutPoint() const;
@@ -268,6 +338,10 @@ namespace nuklei {
        * @brief Computes the local differential properties of the nearest
        * neighbors of @p k.
        *
+       * This function requires a neighbor search tree. Its call must thus be
+       * preceded by a call to #buildNeighborSearchTree(). See @ref
+       * intermediary.
+       *
        * This function uses the CGAL <a
        * href="http://www.cgal.org/Manual/3.3/doc_html/cgal_manual/Jet_fitting_3/Chapter_main.html">Monge
        * fit</a> functions.
@@ -301,7 +375,9 @@ namespace nuklei {
       std::vector<Vector3> get3DPointCloud() const;
 
       /**
-       * @brief Builds a kd-tree of the kernel positions and stores the tree internally. The tree is used by the method KernelCollection::evaluationAt.
+       * @brief Builds a kd-tree of the kernel positions and stores the tree
+       * internally. The tree is used by the method
+       * #evaluationAt().
        */
       void buildKdTree();
       void buildNeighborSearchTree();
@@ -322,6 +398,11 @@ namespace nuklei {
       void setKernelOriH(coord_t h);
       
       typedef enum { SUM_EVAL, MAX_EVAL, WEIGHTED_SUM_EVAL } EvaluationStrategy;
+      /**
+       * @brief Evaluates the density represented by @p *this at @p f.
+       *
+       * Precede by a call to #computeKernelStatistics() and #buildKdTree(). See @ref intermediary.
+       */
       weight_t evaluationAt(const kernel::base &f,
                             const EvaluationStrategy strategy = WEIGHTED_SUM_EVAL) const;
       
