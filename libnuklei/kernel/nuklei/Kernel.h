@@ -170,16 +170,16 @@ namespace nuklei {
        * Euclidean space. Slerp should be used instead. To be fixed
        * soon.
        */
-      virtual base::ptr linearInterpolation(const kernel::base& k,
-                                            const coord_t x = .5) const = 0;
+      virtual base::ptr polyLinearInterpolation(const kernel::base& k,
+                                                const coord_t x = .5) const = 0;
       /** @brief Used internally. */
-      virtual void updateWidth(const kernel::base& k,
-                               const coord_t x = .5) = 0;
+      virtual void polyUpdateWidth(const kernel::base& k,
+                                   const coord_t x = .5) = 0;
       /**
        * @brief Returns a std::pair containing the distance in
        * position and orientation between @p *this and @p k.
        */
-      virtual coord_pair distanceTo(const kernel::base& k) const = 0;
+      virtual coord_pair polyDistanceTo(const kernel::base& k) const = 0;
       
       /**
        * @brief Weight accessor for this class. The accessor is used
@@ -358,8 +358,8 @@ namespace nuklei {
         NUKLEI_TRACE_END();
       }
       
-      base::ptr linearInterpolation(const kernel::base& k,
-                                    const coord_t x) const
+      base::ptr polyLinearInterpolation(const kernel::base& k,
+                                        const coord_t x) const
       {
         NUKLEI_TRACE_BEGIN();
         const T& down = dynamic_cast<const T&>(k);
@@ -368,8 +368,8 @@ namespace nuklei {
         NUKLEI_TRACE_END();
       }
       
-      void updateWidth(const kernel::base& k,
-                       const coord_t x = .5)
+      void polyUpdateWidth(const kernel::base& k,
+                           const coord_t x = .5)
       {
         NUKLEI_TRACE_BEGIN();
         const T& down = dynamic_cast<const T&>(k);
@@ -377,7 +377,7 @@ namespace nuklei {
         NUKLEI_TRACE_END();
       }
       
-      coord_pair distanceTo(const kernel::base& k) const
+      coord_pair polyDistanceTo(const kernel::base& k) const
       {
         NUKLEI_TRACE_BEGIN();
         const T& down = dynamic_cast<const T&>(k);

@@ -206,7 +206,7 @@ namespace nuklei {
     for (const_iterator i = begin(); i != end(); i++)
     {
       coord_t f = i->getWeight() / (w + i->getWeight());
-      moments = moments->linearInterpolation(*i, f);
+      moments = moments->polyLinearInterpolation(*i, f);
       w += i->getWeight();
     }
     
@@ -226,7 +226,7 @@ namespace nuklei {
     for (const_iterator i = begin(); i != end(); i++)
     {
       coord_t f = i->getWeight() / (w + i->getWeight());
-      dev->updateWidth(*i, f);
+      dev->polyUpdateWidth(*i, f);
       w += i->getWeight();
     }
     
