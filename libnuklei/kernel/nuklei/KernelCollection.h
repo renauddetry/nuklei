@@ -52,8 +52,9 @@ namespace nuklei {
    * of all kernel positions. @f$k@f$d-trees are expensive to construct, it is
    * important to avoid reconstructing them in each call of #evaluationAt().
    *
-   * KernelCollection provides methods for precomputing intermediary results, such as
-   * @f$k@f$d-trees. These structures are stored internally. For instance,
+   * KernelCollection provides methods for precomputing intermediary results,
+   * such as @f$k@f$d-trees. These structures are stored internally. For
+   * instance,
    * @code
    * using namespace nuklei;
    * KernelCollection kc;
@@ -122,7 +123,6 @@ namespace nuklei {
     {
     public:
       void assertConsistency() const;
-      void invalidateHelperStructures();
 
       // Forwarded container symbols
 
@@ -161,21 +161,29 @@ namespace nuklei {
       bool empty() const
         { return kernels_.empty(); }
 
+      /** @brief Returns an iterator pointing to the first kernel. */
       Container::iterator begin()
         { invalidateHelperStructures(); return kernels_.begin(); }
+      /** @brief Returns an iterator pointing to the first kernel. */
       Container::const_iterator begin() const
         { return kernels_.begin(); }
+      /** @brief Returns an iterator pointing to the last kernel. */
       Container::iterator end()
         { invalidateHelperStructures(); return kernels_.end(); }
+      /** @brief Returns an iterator pointing to the last kernel. */
       Container::const_iterator end() const
         { return kernels_.end(); }
 
+      /** @brief Returns an reverse iterator pointing to the last kernel. */
       Container::reverse_iterator rbegin()
         { invalidateHelperStructures(); return kernels_.rbegin(); }
+      /** @brief Returns an reverse iterator pointing to the last kernel. */
       Container::const_reverse_iterator rbegin() const
         { return kernels_.rbegin(); }
+      /** @brief Returns an reverse iterator pointing to the first kernel. */
       Container::reverse_iterator rend()
         { invalidateHelperStructures(); return kernels_.rend(); }
+      /** @brief Returns an reverse iterator pointing to the first kernel. */
       Container::const_reverse_iterator rend() const
         { return kernels_.rend(); }
 
@@ -342,12 +350,24 @@ namespace nuklei {
 
       /**
        * @brief Builds a kd-tree of the kernel positions and stores the tree
-       * internally. The tree is used by the method
-       * #evaluationAt().
+       * internally. See @ref intermediary.
        */
       void buildKdTree();
+      /**
+       * @brief Builds a neighbor search tree of the kernel positions and stores
+       * the tree internally. See @ref intermediary.
+       */
       void buildNeighborSearchTree();
+      /**
+       * @brief Builds the convex hull of kernel positions and stores the hull
+       * internally. See @ref intermediary.
+       */
       void buildConvexHull(unsigned n);
+      /**
+       * @brief Check if @p k is within the convex hull of contained kernel positions.
+       *
+       * Precede by a call to #buildConvexHull(). See @ref intermediary.
+       */
       bool isWithinConvexHull(const kernel::base& k) const;
       
       // Density-related methods
@@ -379,7 +399,7 @@ namespace nuklei {
 
       void setFlag(const bitfield_t flag);
 
-    protected:
+    private:
       Container kernels_;
       
       boost::optional<weight_t> totalWeight_;
@@ -390,6 +410,8 @@ namespace nuklei {
       const static int HULL_KEY;
       const static int KDTREE_KEY;
       const static int NSTREE_KEY;
+
+      void invalidateHelperStructures();
 
       template<class KernelType>
       weight_t staticEvaluationAt(const kernel::base &k,
