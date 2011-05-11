@@ -49,7 +49,6 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
     
-#ifdef NUKLEI_USE_CIMG
     NUKLEI_ASSERT(!in_.is_open());
     in_.open(geometryFileName.c_str(), std::ios::in);
     if (!in_.is_open())
@@ -100,6 +99,7 @@ namespace nuklei {
     rgb_.clear();
     if (!appFileName.empty())
     {
+#ifdef NUKLEI_USE_CIMG
       try {
         cimg_library::CImg<unsigned char> img(appFileName.c_str());
         for (unsigned r = 0; r < rows_; r++)
@@ -113,6 +113,9 @@ namespace nuklei {
       } catch (cimg_library::CImgException &e) {
         NUKLEI_THROW("CImg error: " << e.what());
       }
+#else
+      NUKLEI_THROW("This function requires CIMG.");
+#endif
     }
     else
     {
@@ -127,9 +130,6 @@ namespace nuklei {
     in_.close();
     currentIndex_ = 0;
     
-#else
-    NUKLEI_THROW("This function requires CIMG.");
-#endif
     
     NUKLEI_TRACE_END();
   }
