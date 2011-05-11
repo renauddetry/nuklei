@@ -36,14 +36,14 @@ namespace nuklei {
   /**
    * @ingroup kernels
    * @brief This class acts as a vector-like container for kernels. It also
-   * provides methods related to the density function modeled by the kernels it
-   * contains.
+   * provides methods related to kernel density estimation.
    *
-   * In Nuklei, kernel classes play the double role of kernel class and point
-   * class. There is no class specifically designed for holding an @f$ SE(3) @f$
-   * point, the kernel class is used for that purpose. A KernelCollection is
-   * thus often used to contain a set of points that are entirely unrelated to a
-   * density function.
+   * Note: In Nuklei, the kernel classes (kernel::base and its descendants) play the
+   * double role of representing kernels and points. For instance, there is no
+   * class specifically designed for holding an @f$ SE(3) @f$ point, the class
+   * kernel::se3 is used for that purpose. A KernelCollection is thus often used
+   * to contain a set of points that are entirely unrelated to a density
+   * function.
    *
    * @section intermediary Intermediary Results
    *
@@ -66,7 +66,8 @@ namespace nuklei {
    * kernel::se3 k;
    * ... // choose a value for k
    *
-   * kc.evaluationAt(k); // evaluationAt makes use of intermediary results
+   * double e = kc.evaluationAt(k); // evaluationAt makes use of intermediary
+   *                                // results
    * @endcode
    *
    * The functions responsible for computing intermediary results are:
@@ -79,11 +80,12 @@ namespace nuklei {
    * invalid. To avoid inconsistencies, each call to a KernelCollection method
    * which can potentially allow one to modify the contained kernels (for
    * instance, #add()) automatically destroys all intermediary results. In order
-   * to preserve intermediary results, one must be careful to avoid calling such
-   * methods. In particular, several methods, such as #front() and
+   * to preserve intermediary results, one has to be careful to avoid calling
+   * these methods. In particular, several methods, such as #front() and
    * #front()const, or #begin() and #begin()const, have a @p const and a @p
    * non-const version. The @p const methods will always preserve intermediary
-   * results. One can force a call to the @p const version with as_const():
+   * results, while the @p non-const methods are likely to destroy them. One can
+   * force a call to the @p const version with as_const():
    * @code
    * using namespace nuklei;
    * KernelCollection kc;
@@ -95,7 +97,7 @@ namespace nuklei {
    * kernel::se3 k;
    * ... // choose a value for k
    *
-   * kc.evaluationAt(k); // ok!
+   * double e = kc.evaluationAt(k); // ok!
    *
    * for (KernelCollection::const_iterator i = as_const(kc).begin();
    *      i != as_const(kc).end(); ++i)
@@ -103,7 +105,7 @@ namespace nuklei {
    *   i->setLocH(10);
    * }
    *
-   * kc.evaluationAt(k); // ok!
+   * double e = kc.evaluationAt(k); // ok!
    *
    * // In the following line, even though i is a const_iterator, kc.begin()
    * // calls the non-const begin() method, which destroys intermediary results.
@@ -113,7 +115,8 @@ namespace nuklei {
    *   i->setLocH(10);
    * }
    *
-   * kc.evaluationAt(k); // throws exception: no kernel statistics, no kd-tree.
+   * double e = kc.evaluationAt(k); // throws exception: no kernel statistics,
+   *                                // no kd-tree.
    * @endcode
    *
    * If the intermediary results that a method requires have not been computed,
@@ -345,7 +348,10 @@ namespace nuklei {
       kernel::se3
       ransacPlaneFit(coord_t inlinerThreshold, unsigned nSeeds = 100) const;
 
-      /** @brief Returns the locations of the contained kernels in an std::vector. */
+      /**
+       * @brief Returns the locations of the contained kernels in an
+       * std::vector.
+       */
       std::vector<Vector3> get3DPointCloud() const;
 
       /**
@@ -364,7 +370,8 @@ namespace nuklei {
        */
       void buildConvexHull(unsigned n);
       /**
-       * @brief Check if @p k is within the convex hull of contained kernel positions.
+       * @brief Check if @p k is within the convex hull of contained kernel
+       * positions.
        *
        * Precede by a call to #buildConvexHull(). See @ref intermediary.
        */
@@ -387,7 +394,8 @@ namespace nuklei {
       /**
        * @brief Evaluates the density represented by @p *this at @p f.
        *
-       * Precede by a call to #computeKernelStatistics() and #buildKdTree(). See @ref intermediary.
+       * Precede by a call to #computeKernelStatistics() and #buildKdTree(). See
+       * @ref intermediary.
        */
       weight_t evaluationAt(const kernel::base &f,
                             const EvaluationStrategy strategy = WEIGHTED_SUM_EVAL) const;

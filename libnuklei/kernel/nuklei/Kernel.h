@@ -37,9 +37,10 @@ namespace nuklei {
      * See @ref programming_paradigm for an explanation of why some of
      * the methods begin with @p poly.
      *
-     * In Nuklei, kernel classes play the double role of kernel class and point
-     * class. There is no class specifically designed for holding an @f$ SE(3)
-     * @f$ point, the kernel class is used for that purpose.
+     * In Nuklei, the kernel classes (kernel::base and its descendants) play the
+     * double role of representing kernels and points. For instance, there is no
+     * class specifically designed for holding an @f$ SE(3) @f$ point, the class
+     * kernel::se3 is used for that purpose.
      */
     class base
     {
