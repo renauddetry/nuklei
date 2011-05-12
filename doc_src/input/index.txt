@@ -5,7 +5,7 @@ namespace nuklei
 
 /**
 
-@mainpage
+@mainpage Kernel Methods for SE(3) Data (a C++ machine-learning library)
 
 <img style="text-align: center;" alt="Logo" src="doc_src/nuklei_logo.jpg">
 

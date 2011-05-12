@@ -46,7 +46,7 @@ namespace nuklei {
     {
     public:
       
-      /** @brief std::auto_ptr for this class.  */
+      /** @brief std::auto_ptr for kernel::base. */
       typedef std::auto_ptr< kernel::base > ptr;
       
       /** @brief Explicit query of a kernel's type. See @ref type for more info. */
@@ -183,7 +183,7 @@ namespace nuklei {
       virtual coord_pair polyDistanceTo(const kernel::base& k) const = 0;
       
       /**
-       * @brief Weight accessor for this class. The accessor is used
+       * @brief Weight accessor for kernel::base. The accessor is used
        * internally. Normal Nuklei users will generally not need it.
        *
        * Example:

@@ -7,8 +7,7 @@
 //
 // This example can be compiled with
 //
-//   g++ `pkg-config --cflags --libs nuklei` -O3
-//       sample.cpp -o sample
+//   g++ `pkg-config --cflags --libs nuklei` -O3 sample.cpp -o sample
 //
 // (It may be necessary to add -I/path/to/boost/include -L/path/to/boost/lib if
 // Boost doesn't reside at a standard place.)
