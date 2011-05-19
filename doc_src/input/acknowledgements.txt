@@ -7,6 +7,7 @@
 Nuklei relies on the following libraries:
 -# <a href="http://www.boost.org">Boost</a>
 -# The <a href="http://www.gnu.org/software/gsl/">GNU Scientific Library</a> (GSL)
+-# BLAS and LAPACK
 -# The math module of the <a href="http://www.geometrictools.com/">Wild Magic</a> library
 -# <a href="http://trsl.sf.net">TRSL</a>
 -# <a href="http://sugiyama-www.cs.titech.ac.jp/~yamada/iwklr.html">IWKLR</a>
@@ -15,6 +16,6 @@ Nuklei relies on the following libraries:
 -# <a href="http://tclap.sourceforge.net/">TCLAP</a>
 -# <a href="http://code.google.com/p/ticpp/">ticpp</a>
 
-Packages for 3&mdash;9 are missing in most Linux distributions. To ease deployment, libraries 3 to 9 are bundled with Nuklei.
+Packages for 4&mdash;10 are missing in most Linux distributions. To ease deployment, libraries 4 to 10 are bundled with Nuklei.
 
 */

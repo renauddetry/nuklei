@@ -110,9 +110,19 @@ namespace nuklei {
       virtual coord_t getLocH() const = 0;
       /** @brief Set the location bandwidth. */
       virtual void setLocH(const coord_t h) = 0;
-      /** @brief Get the orientation bandwidth. */
+      /**
+       * @brief Get the orientation bandwidth.
+       *
+       * This method is implemented in child classes. In classes that do not
+       * have an orientation (or a direction), this method returns 0.
+       */
       virtual coord_t getOriH() const = 0;
-      /** @brief Set the orientation bandwidth. */
+      /**
+       * @brief Set the orientation bandwidth.
+       *
+       * This method is implemented in child classes. In classes that do not
+       * have an orientation (or a direction), this method does nothing.
+       */
       virtual void setOriH(const coord_t h) = 0;
       
       /** @brief Get the "kernel type", i.e., its domain of definition. */

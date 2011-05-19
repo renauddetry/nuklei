@@ -1,7 +1,19 @@
 // (C) Copyright Renaud Detry       2007-2011.
 
+namespace nuklei {
+
 /**
 
 @defgroup faq F.A.Q.
 
+@section faq_thread_safe Is Nuklei thread-safe?
+
+Short answer: no.
+
+Long answer:
+-# There is no access synchronization in Nuklei class methods (an object should therefore not be accessed simultaneously from multiple threads).
+-# Many Nuklei procedures require the generation of random numbers. Random numbers are provided by the GSL. The GSL random generator is held in a single global variable (see @p nuklei::randomRng in Random.cpp). I am unaware of synchronization mechanisms in GSL to prevent concurrent access to a random generator. Hence, concurrent calls to Nuklei procedures is dangerous.
+
 */
+
+}

@@ -17,6 +17,7 @@
 
 namespace nuklei {
   
+  /** @brief GSL random generator */
   static gsl_rng * randomRng;  
   
   static boost::mutex mutex;

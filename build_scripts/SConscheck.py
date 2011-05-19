@@ -106,7 +106,7 @@ if conf.env['EnableQPL']:
     conf.env.Append(CPPDEFINES = ['NUKLEI_ENABLE_QPL'])
     conf.env.Append(LIBS = [ 'CGAL' ])
 
-# gsl
+# GSL
 
 if not conf.CheckCXXHeader('gsl/gsl_version.h') or \
    not conf.CheckLib('gsl', language = 'C++'):

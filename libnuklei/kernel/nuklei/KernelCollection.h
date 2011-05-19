@@ -230,6 +230,9 @@ namespace nuklei {
        * the density, it returns a sample of the kernels. To get
        * samples from the density, the returned kernels need to be
        * sampled exactly once each.</b>
+       *
+       * This method runs in @f$ O(n+\textrm{sampleSize}) @f$ time, where
+       * @f$ n @f$ is the number of kernels in the collection.
        */
       sample_iterator sampleBegin(size_t sampleSize);
       /**
@@ -385,9 +388,25 @@ namespace nuklei {
       void resetWithHeaviestKernelsOf(const KernelCollection &kc,
                                       int sampleSize);
       
+      /**
+       * @brief Returns a kernel from the collection.
+       *
+       * The probability of returning the @f$ i^{\rm th} @f$ kernel is
+       * proportional to the weight of that kernel. This methods is @f$ O(n)
+       * @f$, where @f$ n @f$ is the number of kernels contained in the
+       * collection. To efficiently select multiple kernels randomly, use
+       * #sampleBegin().
+       */
       const kernel::base& randomKernel() const;
       
+      /** @brief Sets the location bandwidth of all kernels. */
       void setKernelLocH(coord_t h);
+      /**
+       * @brief Sets the orientation bandwidth of all kernels.
+       *
+       * This method calls kernel::base::setOriH on all kernels. If the kernels
+       * do not have an orientation, this method does nothing.
+       */
       void setKernelOriH(coord_t h);
       
       typedef enum { SUM_EVAL, MAX_EVAL, WEIGHTED_SUM_EVAL } EvaluationStrategy;

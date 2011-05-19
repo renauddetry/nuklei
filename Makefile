@@ -27,6 +27,9 @@ test:
 	./scons.py CXX=clang++ gpl=yes qpl=no use_opencv=no
 	cp /tmp/nuklei-darwin.conf .
 
+check:
+	./scons.py check
+
 publish: doc
 	ssh renauddetry,nuklei@shell.sourceforge.net create
 	rsync -rl --delete --delete-excluded doc_generated/html/ renauddetry@shell.sourceforge.net:/home/project-web/nuklei/htdocs/doxygen

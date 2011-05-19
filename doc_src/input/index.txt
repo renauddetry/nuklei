@@ -31,7 +31,7 @@ Nuklei is a C++ library that implements kernel functions and kernel density esti
 Nuklei includes implementations of efficient algorithms for:
 - Evaluating and simulating Gaussian distributions and von Mises-Fisher distributions.
 - Evaluating and simulating arbitrary @f$ SE(3) @f$ distributions with kernel density estimation.
-- (Coming soon: kernel logistic regression.)
+- Kernel logistic regression.
 - Reading, writing, transforming clouds of @f$ SE(3) @f$ points.
 
 Potential applications of  @f$ SE(3) @f$ density models:  robot position and orientation (navigation), object pose (pose estimation), gripper pose (grasping).

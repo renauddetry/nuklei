@@ -34,6 +34,7 @@ Nuklei is exclusively written in C++.
 <b>Required nonstandard libraries:</b>
 - <a href="http://www.boost.org/">Boost</a>. Boost libraries are updated often. Version 1.38 and above should be fine. I'm currently using 1.41. Before reporting a problem with compiling Nuklei, try compiling it with Boost 1.41.
 - <a href="http://www.gnu.org/software/gsl/">GSL</a>. Version 1.8 and above should be ok.
+- BLAS and LAPACK
 
 <b>Optional nonstandard libraries:</b>
 - OpenCV 1+
