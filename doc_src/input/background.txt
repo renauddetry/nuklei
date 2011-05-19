@@ -5,12 +5,12 @@
 @ingroup using
 @defgroup background Background
 
-Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This section reviews the theory behind density estimation and density integrals particularized to the function domains we worked with. This section also discusses details related to this computer implementation where appropriate.
+Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This page reviews the theory behind density estimation and density integrals particularized to @f$ SE(3) @f$ data. This is the place to start if you haven't yet heard of nonparametric representations, of quaternions, or of von Mises-Fisher distributions. Once you feel comfortable with the material presented here (feel free to explore the references given below!), move on to @ref kernels, which explains what concepts Nuklei implements, and how they are implemented.
 
 
 @section background_param Parametrization
 
-The domains for which Nuklei currently provides modeling tools are
+This page reviews kernel methods for data defined on the following domains:
 - The group of 6D poses. A 6D pose, also referred to as <em>transformation</em>, is composed of a 3D position and a 3D orientation . The group of 6D poses is referred to as the <a href="http://en.wikipedia.org/wiki/Euclidean_group">Special Euclidean group</a>. It is denoted by @f[ SE(3) = \mathbb R^3 \times SO(3), @f] where <a href="http://en.wikipedia.org/wiki/Rotation_group">@f$SO(3)@f$</a> is the group of 3D rotations, and @f$ \times @f$ denotes a semidirect product. Poses are parametrized by a pair composed of a 3D position and a 3D orientation. Orientations can be <a href="http://en.wikipedia.org/wiki/Rotation_representation">parametrized in multiple ways</a>, e.g., with rotation matrices, Euler angles, or unit quaternions. We parametrize 3DOF orientations with unit quaternions. Unit quaternions form the 3-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
 @f[
 q = \left(\cos\frac\alpha 2, v_x\sin\frac\alpha 2, v_y\sin\frac\alpha 2, v_z\sin\frac\alpha 2 \right).
@@ -21,13 +21,11 @@ Because a rotation of @f$ \alpha @f$ radians about @f$ v @f$ is equivalent to a 
 @f]
 where @f$ \theta^\top \theta' @f$ is the inner (dot) product of @f$ \theta @f$ and @f$ \theta' @f$. In this expression, we take the absolute value @f$ |\theta ^\top \theta'| @f$ to take into account the double cover issue mentioned above.
 
-- The space of the pairs composed of a 3DOF position and a 2DOF orientation (a vector orientation in 3D). A 2DOF orientation is parametrized with a 3D unit vector. The set of 3D unit vectors forms the <a href="http://en.wikipedia.org/wiki/N-sphere">2-sphere @f$S^2@f$</a>. The space of the pairs composed of a 3DOF position and a 2DOF orientation is denoted by 
+<!-- - The space of the pairs composed of a 3DOF position and a 2DOF orientation (a vector orientation in 3D). A 2DOF orientation is parametrized with a 3D unit vector. The set of 3D unit vectors forms the <a href="http://en.wikipedia.org/wiki/N-sphere">2-sphere @f$S^2@f$</a>. The space of the pairs composed of a 3DOF position and a 2DOF orientation is denoted by 
+@f[\mathbb R^3 \times S^2. @f] -->
+
+- The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are parametrized with 3D unit vectors. We note that unit vectors form a double cover of axial 2DOF orientations, as an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
 @f[\mathbb R^3 \times S^2. @f]
-
-- The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are also parametrized with 3D unit vectors. In this case, an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
-@f[\mathbb R^3 \times S^2_p. @f]
-
-- The group of 3D positions, @f$ \mathbb R^3 @f$.
 
 <!-- Two-DOF orientations (which belong to @f$ S^2 @f$) are parametrized with 3D unit vectors. The set of 3D unit vectors forms the 2-sphere @f$ S^2 @f$. As  we consider edge orientations and surface normals as axial data (a surface normal @f$ v @f$ is equivalent to @f$ -v @f$), each 2DOF orientation is represented by exactly two unit vectors of @f$ S^2 @f$.
 
@@ -115,9 +113,9 @@ x = (\lambda, \theta)&\qquad x\in \mathbb R^3\times S^2, \quad \lambda\in\mathbb
 @f}
 The @f$ \mathbb R^3\times S^2 @f$ kernel is defined as
 @f[
-\mathcal K_3\left(x ;\mu, \sigma \right) = \mathcal N\left(\lambda ; \mu_t, \sigma_t\right) \mathcal O\left(\theta ; \mu_r, \sigma_r\right),
+\mathcal K_3\left(x ;\mu, \sigma \right) = \mathcal N\left(\lambda ; \mu_t, \sigma_t\right) \mathcal O_3\left(\theta ; \mu_r, \sigma_r\right),
 @f]
-where @f$ \mathcal{\Theta_3} @f$ is a mixture of two antipodal @f$ S^2 @f$ von Mises&mdash;Fisher distributions, i.e.,
+where @f$ \mathcal{O_3} @f$ is a mixture of two antipodal @f$ S^2 @f$ von Mises&mdash;Fisher distributions, i.e.,
 @f{align}{
 \mathcal O_3\left(\theta ; \mu_r, \sigma_r\right) &=  \frac {\mathcal F_3\left(\theta ; \mu_r, \sigma_r \right) + \mathcal F_3\left(\theta ; -\mu_r, \sigma_r\right) }2,\\
 \mathcal F_3\left(\theta ; \mu_r, \sigma_r\right) &= C_3(\sigma_r)e^{\sigma_r \; \mu_r^T \theta}.
