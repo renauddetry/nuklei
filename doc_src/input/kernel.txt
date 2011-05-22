@@ -1,19 +1,71 @@
 // (C) Copyright Renaud Detry       2007-2011.
 
+namespace nuklei {
+
 /**
 
 @ingroup using
 @defgroup kernels Kernels, kernel density estimation, kernel regression
 
-In Nuklei, a kernel is a function that provides a measure of similarity between its arguments. Nuklei provides kernels for elements that belong to
-- the Special Euclidean Group @f$ SE(3) @f$ (i.e., 3D rigid body transformations),
-- @f$ \mathbb R^3 \times S^2 @f$ (i.e., the product of @f$ \mathbb R^3 @f$ and the space of 2DOF orientations,
+@brief This page presents the kernel density estimation (KDE) and kernel logistic regression (KLR) tools provided by Nuklei.
+
+Before reading this page, make sure you are familiar with the material discussed in @ref background.
+
+The KDE and KLR tools provided by Nuklei work in combination with the kernels defined in the nuklei::kernel namespace. These kernels are described below. If one wishes to work with different kernels, there are two options:
+-# Change the @p PositionKernel and @p OrientationKernel typedefs in one of the kernels (e.g., in kernel::se3),
+-# Re-implement KDE or KLR with @ref generic_kernels.
+
+@section kernels_kernels Kernels
+
+The nuklei::kernel namespace provides kernels for elements that belong to
+- the Special Euclidean Group @f$ SE(3) = \mathbb R^3 \times SO(3) @f$ (i.e., 3D rigid body transformations),
+- @f$ \mathbb R^3 \times S^2 @f$ (i.e., the product of @f$ \mathbb R^3 @f$ and the space of 2DOF orientations).
 - @f$ \mathbb R^3 @f$.
 
-We denote a kernel by @f[\mathcal K(x,y) : D\times D \rightarrow \mathbb R,@f] where @f$ D @f$ is either @f$ SE(3) @f$, @f$ \mathbb R^3 \times S^2 @f$, or @f$ \mathbb R^3 @f$.
+These kernels are defined as the product of a position kernel and an orientation kernel (except for the third one which is only a position kernel). An important difference between the kernels provided by nuklei::kernel and the kernels discussed in @ref background, is that the kernels provided by nuklei::kernel are <em>unnormalized</em>. Their value at their center point is equal to 1, and their integral varies with the bandwidth. The motivation behind this choice is that normalization factors are often expensive to compute, and often unnecessary (many algorithm with be happy with a KDE computed up to a multiplicative constant).
 
-In machine learning and statistics, kernels are used, e.g., for <a href="http://en.wikipedia.org/wiki/Kernel_density_estimation">density estimation</a> or for <a href="http://en.wikipedia.org/wiki/Kernel_regression">regression</a>.
+The class kernel::se3 implements an @f$ SE(3) @f$ kernel. The method kernel::se3::eval() returns an evaluation of
+@f[
+\mathcal K_{SE(3)}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right) = \mathcal T\left(\lambda ; \mu_t, \sigma_t\right) e^{f_{SE(3)}(\sigma_r) \; (|\mu_r^T \theta|-1)}
+@f]
+where @f$ \mathcal T @f$ is a triangular position kernel, @f$ |\cdot| @f$ denotes an absolute value, and @f$ f_{SE(3)}(\sigma_r)  = \frac{1}{1-\cos(0.5*\sigma_r)}@f$ is a function which allows @f$ \sigma_r @f$ to be expressed in radians, and translates it to the von Mises-Fisher bandwidth parameter. The  factor @f$ e^{f_{SE(3)}(\sigma_r) \; (|\mu_r^T \theta|-1)} @f$ efficiently approximates a pair of antipodal von Mises-Fisher distributions (thanks to the absolute value), and returns 1 when evaluated at @f$ \mu_r @f$. The position kernel @f$ \mathcal T @f$ is given by
+@f[
+\mathcal T\left(\lambda ; \mu_t, \sigma_t\right) = \begin{cases} 1 - \frac{\sqrt{(\lambda-\mu_t)^2}}{2\sigma_t} &\textrm{if } \sqrt{(\lambda-\mu_t)^2} \leq 2\sigma_t \\ 0 &\textrm{if } \sqrt{(\lambda-\mu_t)^2} > 2\sigma_t\end{cases}
+@f]
+The method kernel::se3::sample() returns samples @f$ (\lambda, \theta) @f$ that follow 
+@f[
+\mathcal K'_{SE(3)}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right) = \mathcal T\left(\lambda ; \mu_t, \sigma_t\right)  \frac {\mathcal F_4\left( \theta ; \mu_r, f_{SE(3)}(\sigma_r) \right) + \mathcal F_4 \left(\theta; -\mu_r, f_{SE(3)}(\sigma_r)\right)}2.
+@f]
+We note that this expression uses a pair of von Mises-Fisher distributions instead of the approximation introduced in @f$ \mathcal K_{SE(3)} @f$. The reason behind this difference is that @f$ K_{SE(3)} @f$ is fast to evaluate, but I do not know of an algorithm to generate samples from @f$ e^{f_{SE(3)}(\sigma_r) \; (|\mu_r^T \theta|-1)} @f$. An algorithm for sampling from a von Mises-Fisher distribution exists, which is why @f$ \mathcal K'_{SE(3)} @f$ uses a pair of these distributions.
 
-Nuklei was initially written with kernel density estimation in mind. 
+The class kernel::r3xs2p implements an @f$ \mathbb R^3 \times S^2 @f$ kernel for axial orientations. The method kernel::r3xs2p::eval() returns an evaluation of
+@f[
+\mathcal K_{RSA}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right) = \mathcal T\left(\lambda ; \mu_t, \sigma_t\right) e^{f_{RSA}(\sigma_r) \; (|\mu_r^T \theta|-1)}
+@f]
+where @f$ f_{RSA}(\sigma_r)  = \frac{1}{1-\cos(\sigma_r)}@f$ is a function which allows @f$ \sigma_r @f$ to be expressed in radians, and translates it to the von Mises-Fisher bandwidth parameter. The  factor @f$ e^{f_{RSA}(\sigma_r) \; (|\mu_r^T \theta|-1)} @f$ efficiently approximates a pair of antipodal von Mises-Fisher distributions (thanks to the absolute value), and returns 1 when evaluated at @f$ \mu_r @f$.
+Similar to the @f$ SE(3) @f$ kernel, the method kernel::r3xs2p::sample() returns samples @f$ (\lambda, \theta) @f$ that follow 
+@f[
+\mathcal K'_{RSA}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right) = \mathcal T\left(\lambda ; \mu_t, \sigma_t\right)  \frac {\mathcal F_3\left( \theta ; \mu_r, f_{RSA}(\sigma_r) \right) + \mathcal F_3 \left(\theta; -\mu_r, f_{RSA}(\sigma_r)\right)}2.
+@f]
+
+The class kernel::r3 implements an @f$ \mathbb R^3 @f$ kernel. The method kernel::r3::eval() returns an evaluation of
+@f[
+\mathcal K_{\mathbb R^3}\left(\lambda ; \mu_t, \sigma_t\right) = \mathcal T\left(\lambda ; \mu_t, \sigma_t\right).
+@f]
+The method kernel::r3::sample() returns samples @f$ \lambda @f$ that follow @f$ \mathcal K_{\mathbb R^3} @f$.
+
+@section kernels_kde Kernel Density Estimation
+
+
+
+
+
+<!-- In Nuklei, a kernel is a function that provides a measure of similarity between its arguments. We denote a kernel by @f[\mathcal K(x,y) : D\times D \rightarrow \mathbb R,@f] where @f$ D @f$ is either @f$ SE(3) @f$, @f$ \mathbb R^3 \times S^2 @f$, or @f$ \mathbb R^3 @f$.
+
+In machine learning and statistics, kernels are used, e.g., for <a href="http://en.wikipedia.org/wiki/Kernel_density_estimation">density estimation</a> or for <a href="http://en.wikipedia.org/wiki/Kernel_regression">regression</a>. -->
+
+
 
 */
+
+}

@@ -430,8 +430,36 @@ namespace nuklei {
       
       Type type() const;
       
+      /**
+       * @brief Evaluates this kernel at pose @p k.
+       *
+       * This function returns
+       * @f[
+       * \mathcal K_{SE(3)}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right),
+       * @f]
+       * where the arguments of @f$ \mathcal K_{SE(3)} @f$ are respectively equal to @p
+       * k.loc_, @p k.ori_, @p this->loc_, @p this->ori_, @p this->loc_h_, @p
+       * this->ori_h_.
+       * See @ref kernels for the definition of @f$ \mathcal K_{SE(3)} @f$.
+       *
+       * <b>Note:</b> @p this->ori_h_ should be expressed in radians.
+       */
       inline coord_t eval(const kernel::se3& k) const;
       inline coord_t cutPoint() const;
+      /**
+       * @brief Evaluates this kernel at pose @p k.
+       *
+       * This function returns a sample @f$ (\lambda, \theta) @f$ drawn from
+       * @f[
+       * \mathcal K'_{SE(3)}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right),
+       * @f]
+       * where the four last arguments of @f$ \mathcal K'_{SE(3)} @f$ are respectively
+       * equal to @p this->loc_, @p this->ori_, @p this->loc_h_, @p
+       * this->ori_h_.
+       * See @ref kernels for the definition of @f$ \mathcal K'_{SE(3)} @f$.
+       *
+       * <b>Note:</b> @p this->ori_h_ should be expressed in radians.
+       */
       kernel::se3 sample() const;
       kernel::se3 se3Sample() const;
       kernel::se3 se3Proj() const;
@@ -447,9 +475,13 @@ namespace nuklei {
                        const coord_t x = .5);
       coord_pair distanceTo(const kernel::se3& k) const;
       
+      /** @brief Kernel location */
       Vector3 loc_;
+      /** @brief Kernel orientation */
       Quaternion ori_;
+      /** @brief Location bandwidth, in radians. */
       coord_t loc_h_;
+      /** @brief Orientation bandwidth, in radians. */
       coord_t ori_h_;
       
     private:
@@ -506,6 +538,20 @@ namespace nuklei {
       
       base::Type type() const;
       
+      /**
+       * @brief Evaluates this kernel at pose @p k.
+       *
+       * This function returns
+       * @f[
+       * \mathcal K_{RSA}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right),
+       * @f]
+       * where the arguments of @f$ \mathcal K_{RSA} @f$ are respectively equal to @p
+       * k.loc_, @p k.dir_, @p this->loc_, @p this->dir_, @p this->loc_h_, @p
+       * this->dir_h_. (Given that OriGrp is groupS::r3xs2p.)
+       * See @ref kernels for the definition of @f$ \mathcal K_{RSA} @f$.
+       *
+       * <b>Note:</b> @p this->dir_h_ should be expressed in radians.
+       */
       inline coord_t eval(const kernel::r3xs2_base<OriGrp>& k) const;
       inline coord_t cutPoint() const;
       kernel::r3xs2_base<OriGrp> sample() const;

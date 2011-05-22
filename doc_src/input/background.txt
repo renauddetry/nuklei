@@ -5,13 +5,13 @@
 @ingroup using
 @defgroup background Background
 
-Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This page reviews the theory behind density estimation and density integrals particularized to @f$ SE(3) @f$ data. This is the place to start if you haven't yet heard of nonparametric representations, of quaternions, or of von Mises-Fisher distributions. Once you feel comfortable with the material presented here (feel free to explore the references given below!), move on to @ref kernels, which explains what concepts Nuklei implements, and how they are implemented.
+Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This page reviews the theory behind density estimation and density integrals particularized to @f$ SE(3) @f$ data. This is the place to start if you haven't yet heard of nonparametric representations, of quaternions, or of von Mises-Fisher distributions. Once you feel comfortable with the material presented here (feel free to explore the references given below!), move on to @ref kernels, which explains what concepts Nuklei implements, and how they are implemented. Keep in mind that the Nuklei implementation doesn't strictly follow the text presented below. For instance, the text below models 3D positions with a Gaussian distribution, while Nuklei offers both Gaussian and triangular kernels, and triangular kernels are used by default in kernel density estimation and kernel logistic regression.
 
 
 @section background_param Parametrization
 
 This page reviews kernel methods for data defined on the following domains:
-- The group of 6D poses. A 6D pose, also referred to as <em>transformation</em>, is composed of a 3D position and a 3D orientation . The group of 6D poses is referred to as the <a href="http://en.wikipedia.org/wiki/Euclidean_group">Special Euclidean group</a>. It is denoted by @f[ SE(3) = \mathbb R^3 \times SO(3), @f] where <a href="http://en.wikipedia.org/wiki/Rotation_group">@f$SO(3)@f$</a> is the group of 3D rotations, and @f$ \times @f$ denotes a semidirect product. Poses are parametrized by a pair composed of a 3D position and a 3D orientation. Orientations can be <a href="http://en.wikipedia.org/wiki/Rotation_representation">parametrized in multiple ways</a>, e.g., with rotation matrices, Euler angles, or unit quaternions. We parametrize 3DOF orientations with unit quaternions. Unit quaternions form the 3-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
+-# The group of 6D poses. A 6D pose, also referred to as <em>transformation</em>, is composed of a 3D position and a 3D orientation . The group of 6D poses is referred to as the <a href="http://en.wikipedia.org/wiki/Euclidean_group">Special Euclidean group</a>. It is denoted by @f[ SE(3) = \mathbb R^3 \times SO(3), @f] where <a href="http://en.wikipedia.org/wiki/Rotation_group">@f$SO(3)@f$</a> is the group of 3D rotations, and @f$ \times @f$ denotes a semidirect product. Poses are parametrized by a pair composed of a 3D position and a 3D orientation. Orientations can be <a href="http://en.wikipedia.org/wiki/Rotation_representation">parametrized in multiple ways</a>, e.g., with rotation matrices, Euler angles, or unit quaternions. We parametrize 3DOF orientations with unit quaternions. Unit quaternions form the 3-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
 @f[
 q = \left(\cos\frac\alpha 2, v_x\sin\frac\alpha 2, v_y\sin\frac\alpha 2, v_z\sin\frac\alpha 2 \right).
 @f]
@@ -24,7 +24,7 @@ where @f$ \theta^\top \theta' @f$ is the inner (dot) product of @f$ \theta @f$ a
 <!-- - The space of the pairs composed of a 3DOF position and a 2DOF orientation (a vector orientation in 3D). A 2DOF orientation is parametrized with a 3D unit vector. The set of 3D unit vectors forms the <a href="http://en.wikipedia.org/wiki/N-sphere">2-sphere @f$S^2@f$</a>. The space of the pairs composed of a 3DOF position and a 2DOF orientation is denoted by 
 @f[\mathbb R^3 \times S^2. @f] -->
 
-- The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are parametrized with 3D unit vectors. We note that unit vectors form a double cover of axial 2DOF orientations, as an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
+-# The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are parametrized with 3D unit vectors. We note that unit vectors form a double cover of axial 2DOF orientations, as an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
 @f[\mathbb R^3 \times S^2. @f]
 
 <!-- Two-DOF orientations (which belong to @f$ S^2 @f$) are parametrized with 3D unit vectors. The set of 3D unit vectors forms the 2-sphere @f$ S^2 @f$. As  we consider edge orientations and surface normals as axial data (a surface normal @f$ v @f$ is equivalent to @f$ -v @f$), each 2DOF orientation is represented by exactly two unit vectors of @f$ S^2 @f$.
@@ -192,8 +192,6 @@ The cross-correlation of @f$ f @f$ and @f$ g @f$ is approximated with Monte Carl
 c(x) \simeq \frac 1n \sum_{\ell=1}^n g(t_{x}(y_\ell)) \quad \textrm{where} \quad y_\ell \sim  f(y).
 @f]
 Sampling from @f$ c(x) @f$ can be achieved by simulating @f$ h(x) = g(t_{x}(y_f)) @f$, where @f$ y_f\sim f(y) @f$. The simulation of @f$ h(x) @f$ depends on the domain @f$ D @f$ on which @f$ f @f$ and @f$ g @f$ are defined. We first consider the case @f$ D = SE(3) @f$. In this case, drawing a sample from @f$ h(x) @f$ amounts to computing the (unique) transformation @f$ x_* @f$ that maps @f$ y_f @f$ onto @f$ y_g @f$, where @f$ y_g\sim g(y) @f$. When @f$ D = R^3\times S^2 @f$, the transformation between @f$ y_f @f$ and @f$ y_g @f$ is not unique anymore; sampling @f$ h(x) @f$ is done by selecting one transformation from a uniform distribution on the transformations that map @f$ y_f @f$ onto @f$ y_g @f$.
-
-
 
 
 

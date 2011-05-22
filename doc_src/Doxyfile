@@ -618,6 +618,7 @@ INPUT                  = libnuklei/base \
                          doc_src/input/top_groups.txt \
                          doc_src/input/background.txt \
                          doc_src/input/kernel.txt \
+                         doc_src/input/generic_kernels.txt \
                          doc_src/input/matrix_transfo.txt \
                          doc_src/input/programming_paradigm.txt \
                          doc_src/input/type.txt \

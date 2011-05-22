@@ -1,0 +1,16 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+namespace nuklei {
+
+/**
+
+@ingroup using
+@defgroup generic_kernels Generic Kernels
+
+@brief This page presents a set of generic kernel classes provided by Nuklei. The KDE and KLR-related kernels (e.g., kernel::se3, see @ref kernels) rely on the generic kernels presented here.
+
+(TODO)
+
+*/
+
+}
