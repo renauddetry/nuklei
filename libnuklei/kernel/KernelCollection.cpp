@@ -271,35 +271,30 @@ namespace nuklei {
     return proj;
   }
   
-  void KernelCollection::resetWithSampleOf(const KernelCollection &kc,
-                                           int sampleSize)
+  KernelCollection KernelCollection::sample(int sampleSize) const
   {
     NUKLEI_TRACE_BEGIN();
-    clear();
-        
+    KernelCollection s;
     for (const_sample_iterator
-         i = kc.sampleBegin(sampleSize);
+         i = sampleBegin(sampleSize);
          i != i.end(); ++i)
     {
       kernel::base::ptr k = i->polySample();
       k->setWeight( 1.0/sampleSize );
-      add(*k);
+      s.add(*k);
     }
-    NUKLEI_TRACE_END();
-  }
-  
-  void KernelCollection::resetWithHeaviestKernelsOf(const KernelCollection &kc,
-                                                    int sampleSize)
-  {
-    NUKLEI_TRACE_BEGIN();
-    clear();
-    
-    if (sampleSize < int(kc.size())) sampleSize = kc.size();
-    for (const_sort_iterator i = kc.sortBegin(sampleSize); i != i.end(); ++i)
-      add(*i);
+    return s;
     NUKLEI_TRACE_END();
   }
 
+  void KernelCollection::resetWithSampleOf(const KernelCollection &kc,
+                                           int sampleSize)
+  {
+    NUKLEI_TRACE_BEGIN();
+    *this = sample(sampleSize);
+    NUKLEI_TRACE_END();
+  }
+  
   const kernel::base& KernelCollection::randomKernel() const
   {
     NUKLEI_TRACE_BEGIN();

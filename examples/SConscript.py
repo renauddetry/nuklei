@@ -19,12 +19,12 @@ print 'Scanning ' + wd
 origEnv.Prepend(CPPPATH = [ '.' ])
 origEnv.Prepend(LIBS = [ 'nuklei' ])
 
-## evaluate ################
+## kde_evaluate ################
 env = origEnv.Clone()
 
-sources = [ 'evaluate.cpp' ]
+sources = [ 'kde_evaluate.cpp' ]
 
-target_name = 'evaluate'
+target_name = 'kde_evaluate'
 target  = os.path.join(env['BinDir'], 'examples', target_name)
 product = env.Program(source = sources, target = target)
 env.Alias('check', [ 'install', target ], 'cd examples && '
@@ -33,12 +33,12 @@ env.Alias('check', [ 'install', target ], 'cd examples && '
           + target_name + '.output')
 env.Alias('examples', [ target ])
 
-## sample ################
+## kde_sample ################
 env = origEnv.Clone()
 
-sources = [ 'sample.cpp' ]
+sources = [ 'kde_sample.cpp' ]
 
-target_name = 'sample'
+target_name = 'kde_sample'
 target  = os.path.join(env['BinDir'], 'examples', target_name)
 product = env.Program(source = sources, target = target)
 env.Alias('check', [ 'install', target ], 'cd examples && '

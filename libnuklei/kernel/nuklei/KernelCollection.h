@@ -382,12 +382,16 @@ namespace nuklei {
       
       // Density-related methods
             
+      /**
+       * @brief Returns @p sampleSize samples from the density modeled by *this.
+       */
+      KernelCollection sample(int sampleSize) const;
+      /**
+       * @brief Deprecated. Use #sample() instead.
+       */
       void resetWithSampleOf(const KernelCollection &kc,
                              int sampleSize);
-      
-      void resetWithHeaviestKernelsOf(const KernelCollection &kc,
-                                      int sampleSize);
-      
+            
       /**
        * @brief Returns a kernel from the collection.
        *

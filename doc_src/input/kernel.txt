@@ -22,7 +22,7 @@ The nuklei::kernel namespace provides kernels for elements that belong to
 - @f$ \mathbb R^3 \times S^2 @f$ (i.e., the product of @f$ \mathbb R^3 @f$ and the space of 2DOF orientations).
 - @f$ \mathbb R^3 @f$.
 
-These kernels are defined as the product of a position kernel and an orientation kernel (except for the third one which is only a position kernel). An important difference between the kernels provided by nuklei::kernel and the kernels discussed in @ref background, is that the kernels provided by nuklei::kernel are <em>unnormalized</em>. Their value at their center point is equal to 1, and their integral varies with the bandwidth. The motivation behind this choice is that normalization factors are often expensive to compute, and often unnecessary (many algorithm with be happy with a KDE computed up to a multiplicative constant).
+These kernels are defined as the product of a position kernel and an orientation kernel (except for the third one which is only a position kernel). An important difference between the kernels provided by nuklei::kernel and the kernels discussed in @ref background, is that the kernels provided by nuklei::kernel are <em>unnormalized</em>. Their value at their center point is equal to 1, and their integral varies with the bandwidth. The motivation behind this choice is that normalization factors are often expensive to compute, and often unnecessary (many algorithms will be happy with a KDE computed up to a multiplicative constant).
 
 The class kernel::se3 implements an @f$ SE(3) @f$ kernel. The method kernel::se3::eval() returns an evaluation of
 @f[
@@ -36,7 +36,7 @@ The method kernel::se3::sample() returns samples @f$ (\lambda, \theta) @f$ that 
 @f[
 \mathcal K'_{SE(3)}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right) = \mathcal T\left(\lambda ; \mu_t, \sigma_t\right)  \frac {\mathcal F_4\left( \theta ; \mu_r, f_{SE(3)}(\sigma_r) \right) + \mathcal F_4 \left(\theta; -\mu_r, f_{SE(3)}(\sigma_r)\right)}2.
 @f]
-We note that this expression uses a pair of von Mises-Fisher distributions instead of the approximation introduced in @f$ \mathcal K_{SE(3)} @f$. The reason behind this difference is that @f$ K_{SE(3)} @f$ is fast to evaluate, but I do not know of an algorithm to generate samples from @f$ e^{f_{SE(3)}(\sigma_r) \; (|\mu_r^T \theta|-1)} @f$. An algorithm for sampling from a von Mises-Fisher distribution exists, which is why @f$ \mathcal K'_{SE(3)} @f$ uses a pair of these distributions.
+We note that this expression uses a pair of von Mises-Fisher distributions instead of the approximation introduced in @f$ \mathcal K_{SE(3)} @f$. The reason behind this difference is that @f$ K_{SE(3)} @f$ is fast to evaluate, but I do not know of an algorithm to generate samples from @f$ e^{f_{SE(3)}(\sigma_r) \; (|\mu_r^T \theta|-1)} @f$. An algorithm for sampling from a von Mises-Fisher distribution exists, which is why @f$ \mathcal K'_{SE(3)} @f$ has that form.
 
 The class kernel::r3xs2p implements an @f$ \mathbb R^3 \times S^2 @f$ kernel for axial orientations. The method kernel::r3xs2p::eval() returns an evaluation of
 @f[
@@ -57,7 +57,68 @@ The method kernel::r3::sample() returns samples @f$ \lambda @f$ that follow @f$ 
 @section kernels_kde Kernel Density Estimation
 
 
+The KernelCollection class provides access to a kernel density estimate of the density modeled by the kernels it contains. The KDE defined by KernelCollection is expressed as
+@f[
+f(x) = \sum_{i=1}^n w_i \mathcal K\left(x ; \hat x_i, \sigma\right),
+@f]
+where @f$ n @f$ is the number of kernels, @f$ w_i @f$ and @f$ x_i @f$ denote the weight and center point of the @f$ i^\mathrm{th} @f$ kernel, respectively, and @f$ \sigma @f$ denotes kernel bandwidths, which may correspond to a pair of values if the kernels have both a location and orientation component.
 
+KernelCollection must contain kernels of identical domain of definition (for instance, @f$ SE(3) @f$ kernels cannot be mixed with @f$ \mathbb R^3 @f$ kernels). The methods of KernelCollection enforce this constraint (exceptions will be thrown if it is attempted to mix different kernels). KernelCollection hold kernel objects of a class that inherits from kernel::base. Those kernels are by default unnormalized, which impacts KDE in two ways:
+- The KDE evaluation provided by KernelCollection::evaluationAt() provides a density estimate up to a multiplicative constant, i.e.,
+@f[
+\int f(x) \mathrm{d}x = C(\sigma),
+@f]
+where @f$ C @f$ is positive and depends on @f$ \sigma @f$.
+- All kernels in a KernelCollection must have the same bandwidth. This constraint is <em>not</em> enforced by KernelCollection methods. It is the user's responsibility to make sure it is verified prior to calling KernelCollection::evaluationAt().
+
+@subsection kernels_kde_eval Evaluation
+
+Evaluation is provided by KernelCollection::evaluationAt(). In effect, this method computes
+@code
+using namespace nuklei; // [for proper linking by doxygen]
+double KernelCollection::evaluationAt(const kernel::base &k) const
+{
+  double value = 0;
+  for (KernelCollection::const_iterator i = begin(); i != end(); i++)
+    value += i->getWeight() * i->polyEval(k);
+  return value;
+}
+@endcode
+For performance issues, the actual implementation of this function differs in two ways from this piece of code:
+- If the number of kernels is larger than 1000, a @f$kd@f$-tree is used to discard the kernels that are too far from @p k to be relevant (see below).
+- A switch on the type of @p k forces calls to the static equivalent of @p polyEval, to avoid repeated VTABLE lookups.
+
+The Nuklei implementation follows the description given in @ref background and uses a @f$ kd @f$-tree to quickly access kernels that are near the evaluation point. The definition of <em>near</em> is given by the @p cutPoint method that kernels of nuklei::kernel must implement. This method gives the distance to the kernel's origin at which the kernel value can be assume to be zero. For triangular kernels, this distance is @f$ 2\sigma_t @f$.
+
+Calls to KernelCollection::evaluationAt() should be preceded a call to KernelCollection::computeKernelStatistics() (or KernelCollection::normalizeWeights()), which compute statistics necessary for evaluation, and a call to KernelCollection::buildKdTree(). Read @ref intermediary for an explanation of how to use these functions, and @ref kde_evaluate.cpp for an example.
+
+@subsection kernels_kde_sample Sampling
+
+Sampling is provided by KernelCollection::sample(). Random variates from the density are generated as follows:
+- First, a kernel index @f$ i @f$ is selected by drawing @f$ i @f$ from
+@f[
+P(i = \ell) \propto w_{\ell},
+@f] where @f$ w_{\ell} @f$ is the weight of the @f$ \ell^\mathrm{th} @f$ kernel. (This effectively gives a higher chance to kernels with a larger weight.)
+- Then, a random variate @f$ x @f$ is generated by sampling from the kernel @f$ \mathcal K\left(x ; \hat x_i, \sigma\right) @f$.
+
+Sampling is provided by KernelCollection::sample(). This method works as follows:
+@code
+using namespace nuklei; // [for proper linking by doxygen]
+KernelCollection KernelCollection::sample(int sampleSize) const
+{
+  KernelCollection s;
+  for (const_sample_iterator i = sampleBegin(sampleSize); i != i.end(); ++i)
+  {
+    kernel::base::ptr k = i->polySample();
+    k->setWeight( 1.0/sampleSize );
+    s.add(*k);
+  }
+  return s;
+}
+@endcode
+The loop selects @p sampleSize kernels with probability @f$ P(i = \ell) \propto w_{\ell} @f$. Calling @p polySample then draws a sample from each of the selected kernels.
+
+If a single sample is needed, kernelCollection.randomKernel().polySample() can be used. Note that this expression is linear in the number of kernels in kernelCollection.
 
 
 <!-- In Nuklei, a kernel is a function that provides a measure of similarity between its arguments. We denote a kernel by @f[\mathcal K(x,y) : D\times D \rightarrow \mathbb R,@f] where @f$ D @f$ is either @f$ SE(3) @f$, @f$ \mathbb R^3 \times S^2 @f$, or @f$ \mathbb R^3 @f$.

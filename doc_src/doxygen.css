@@ -1,5 +1,8 @@
 /* The standard CSS for doxygen */
 
+code {
+  font-size: 120%;
+}
 
 body, table, div, p, dl {
 	font-family: "Trebuchet MS", Verdana, arial, sans-serif;

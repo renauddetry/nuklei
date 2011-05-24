@@ -447,7 +447,7 @@ namespace nuklei {
       inline coord_t eval(const kernel::se3& k) const;
       inline coord_t cutPoint() const;
       /**
-       * @brief Evaluates this kernel at pose @p k.
+       * @brief Returns a sample taken from this kernel.
        *
        * This function returns a sample @f$ (\lambda, \theta) @f$ drawn from
        * @f[
@@ -541,19 +541,41 @@ namespace nuklei {
       /**
        * @brief Evaluates this kernel at pose @p k.
        *
+       * <b>Note:</b> This doc describes the behavior of this method when @p
+       * OriGrp is groupS::s2p, i.e., when the object on which the method is
+       * called is of type kernel::r3xs2p.
+       *
        * This function returns
        * @f[
        * \mathcal K_{RSA}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right),
        * @f]
        * where the arguments of @f$ \mathcal K_{RSA} @f$ are respectively equal to @p
        * k.loc_, @p k.dir_, @p this->loc_, @p this->dir_, @p this->loc_h_, @p
-       * this->dir_h_. (Given that OriGrp is groupS::r3xs2p.)
+       * this->dir_h_.
        * See @ref kernels for the definition of @f$ \mathcal K_{RSA} @f$.
        *
        * <b>Note:</b> @p this->dir_h_ should be expressed in radians.
        */
       inline coord_t eval(const kernel::r3xs2_base<OriGrp>& k) const;
       inline coord_t cutPoint() const;
+      /**
+       * @brief Returns a sample taken from this kernel.
+       *
+       * <b>Note:</b> This doc describes the behavior of this method when @p
+       * OriGrp is groupS::s2p, i.e., when the object on which the method is
+       * called is of type kernel::r3xs2p.
+       *
+       * This function returns a sample @f$ (\lambda, \theta) @f$ drawn from
+       * @f[
+       * \mathcal K'_{RSA}\left(\lambda, \theta ; \mu_t, \mu_r, \sigma_t, \sigma_r\right),
+       * @f]
+       * where the four last arguments of @f$ \mathcal K'_{RSA} @f$ are respectively
+       * equal to @p this->loc_, @p this->dir_, @p this->loc_h_, @p
+       * this->dir_h_.
+       * See @ref kernels for the definition of @f$ \mathcal K'_{RSA} @f$.
+       *
+       * <b>Note:</b> @p this->dir_h_ should be expressed in radians.
+       */
       kernel::r3xs2_base<OriGrp> sample() const;
       kernel::se3 se3Sample() const;
       kernel::se3 se3Proj() const;
@@ -628,8 +650,30 @@ namespace nuklei {
       
       Type type() const;
       
+      /**
+       * @brief Evaluates this kernel at pose @p k.
+       *
+       * This function returns
+       * @f[
+       * \mathcal K_{\mathbb R^3}\left(\lambda ; \mu_t, \sigma_t\right),
+       * @f]
+       * where the arguments of @f$ \mathcal K_{\mathbb R^3} @f$ are respectively equal to @p
+       * k.loc_, @p this->loc_, @p this->loc_h_.
+       * See @ref kernels for the definition of @f$ \mathcal K_{\mathbb R^3} @f$.
+       */
       inline coord_t eval(const kernel::r3& k) const;
       inline coord_t cutPoint() const;
+      /**
+       * @brief Returns a sample taken from this kernel.
+       *
+       * This function returns a sample @f$ \lambda @f$ drawn from
+       * @f[
+       * \mathcal K_{\mathbb R^3}\left(\lambda ; \mu_t, \sigma_t\right),
+       * @f]
+       * where the two last arguments of @f$ \mathcal K_{\mathbb R^3} @f$ are
+       * respectively equal to @p this->loc_, @p this->loc_h_.
+       * See @ref kernels for the definition of @f$ \mathcal K_{\mathbb R^3} @f$.
+       */
       kernel::r3 sample() const;
       kernel::se3 se3Sample() const;
       kernel::se3 se3Proj() const;

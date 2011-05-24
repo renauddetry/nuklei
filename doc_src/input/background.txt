@@ -5,13 +5,13 @@
 @ingroup using
 @defgroup background Background
 
-Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This page reviews the theory behind density estimation and density integrals particularized to @f$ SE(3) @f$ data. This is the place to start if you haven't yet heard of nonparametric representations, of quaternions, or of von Mises-Fisher distributions. Once you feel comfortable with the material presented here (feel free to explore the references given below!), move on to @ref kernels, which explains what concepts Nuklei implements, and how they are implemented. Keep in mind that the Nuklei implementation doesn't strictly follow the text presented below. For instance, the text below models 3D positions with a Gaussian distribution, while Nuklei offers both Gaussian and triangular kernels, and triangular kernels are used by default in kernel density estimation and kernel logistic regression.
+Nuklei was initially designed to model density functions defined on the Special Euclidean group @f$ SE(3) @f$ (or on a subspace thereof). This page reviews the theory behind density estimation and density integrals particularized to @f$ SE(3) @f$ data. This is the place to start if you haven't yet heard of nonparametric representations, quaternions, or von Mises-Fisher distributions. Once you feel comfortable with the material presented here (feel free to explore the references given below!), move on to @ref kernels, which explains which concepts Nuklei implements, and how they are implemented. Keep in mind that the Nuklei implementation doesn't strictly follow the text presented on this page. For instance, in the text below, 3D positions are modeled with Gaussian distributions. Nuklei, on the other hand, offers both Gaussian and triangular kernels for modeling positions, and triangular kernels are used by default in kernel density estimation and kernel logistic regression.
 
 
 @section background_param Parametrization
 
 This page reviews kernel methods for data defined on the following domains:
--# The group of 6D poses. A 6D pose, also referred to as <em>transformation</em>, is composed of a 3D position and a 3D orientation . The group of 6D poses is referred to as the <a href="http://en.wikipedia.org/wiki/Euclidean_group">Special Euclidean group</a>. It is denoted by @f[ SE(3) = \mathbb R^3 \times SO(3), @f] where <a href="http://en.wikipedia.org/wiki/Rotation_group">@f$SO(3)@f$</a> is the group of 3D rotations, and @f$ \times @f$ denotes a semidirect product. Poses are parametrized by a pair composed of a 3D position and a 3D orientation. Orientations can be <a href="http://en.wikipedia.org/wiki/Rotation_representation">parametrized in multiple ways</a>, e.g., with rotation matrices, Euler angles, or unit quaternions. We parametrize 3DOF orientations with unit quaternions. Unit quaternions form the 3-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
+- The group of 6D poses. A 6D pose, also referred to as <em>transformation</em>, is composed of a 3D position and a 3D orientation . The group of 6D poses is referred to as the <a href="http://en.wikipedia.org/wiki/Euclidean_group">Special Euclidean group</a>. It is denoted by @f[ SE(3) = \mathbb R^3 \times SO(3), @f] where <a href="http://en.wikipedia.org/wiki/Rotation_group">@f$SO(3)@f$</a> is the group of 3D rotations, and @f$ \times @f$ denotes a semidirect product. Poses are parametrized by a pair composed of a 3D position and a 3D orientation. Orientations can be <a href="http://en.wikipedia.org/wiki/Rotation_representation">parametrized in multiple ways</a>, e.g., with rotation matrices, Euler angles, or unit quaternions. We parametrize 3DOF orientations with unit quaternions. Unit quaternions form the 3-sphere @f$ S^3 @f$ (the set of unit vectors in @f$ \mathbb R^4 @f$). A rotation of @f$ \alpha @f$ radians about a unit vector @f$ v = (v_x, v_y, v_z) @f$ is parametrized by a quaternion @f$ q @f$ defined as
 @f[
 q = \left(\cos\frac\alpha 2, v_x\sin\frac\alpha 2, v_y\sin\frac\alpha 2, v_z\sin\frac\alpha 2 \right).
 @f]
@@ -20,11 +20,9 @@ Because a rotation of @f$ \alpha @f$ radians about @f$ v @f$ is equivalent to a 
 \textrm{d}\left(\theta, \theta'\right) = 2\arccos\left|\theta ^\top \theta'\right|,
 @f]
 where @f$ \theta^\top \theta' @f$ is the inner (dot) product of @f$ \theta @f$ and @f$ \theta' @f$. In this expression, we take the absolute value @f$ |\theta ^\top \theta'| @f$ to take into account the double cover issue mentioned above.
-
 <!-- - The space of the pairs composed of a 3DOF position and a 2DOF orientation (a vector orientation in 3D). A 2DOF orientation is parametrized with a 3D unit vector. The set of 3D unit vectors forms the <a href="http://en.wikipedia.org/wiki/N-sphere">2-sphere @f$S^2@f$</a>. The space of the pairs composed of a 3DOF position and a 2DOF orientation is denoted by 
 @f[\mathbb R^3 \times S^2. @f] -->
-
--# The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are parametrized with 3D unit vectors. We note that unit vectors form a double cover of axial 2DOF orientations, as an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
+- The space of the pairs composed of a 3DOF position and an <b>axial</b> 2DOF orientation (a line orientation in 3D). Axial 2DOF orientations are parametrized with 3D unit vectors. We note that unit vectors form a double cover of axial 2DOF orientations, as an orientation @f$v@f$ is equivalent to @f$ -v @f$. The space of the pairs composed of a 3DOF position and an axial 2DOF orientation is denoted by 
 @f[\mathbb R^3 \times S^2. @f]
 
 <!-- Two-DOF orientations (which belong to @f$ S^2 @f$) are parametrized with 3D unit vectors. The set of 3D unit vectors forms the 2-sphere @f$ S^2 @f$. As  we consider edge orientations and surface normals as axial data (a surface normal @f$ v @f$ is equivalent to @f$ -v @f$), each 2DOF orientation is represented by exactly two unit vectors of @f$ S^2 @f$.
@@ -75,32 +73,32 @@ x = (\lambda, \theta)&\qquad x\in SE(3),\quad \lambda\in\mathbb R^3,\quad \theta
 @f}
 The kernel we use is defined with
 @f[
-\mathcal K\left(x ; \mu, \sigma\right) = \mathcal L\left(\lambda ; \mu_t, \sigma_t\right) \mathcal O\left(\theta ; \mu_r, \sigma_r\right),
+\mathcal K\left(x ; \mu, \sigma\right) = \mathcal L\left(\lambda ; \mu_t, \sigma_t\right) \mathcal O_4\left(\theta ; \mu_r, \sigma_r\right),
 @f]
-where @f$ \mu @f$ is the kernel mean point, @f$ \sigma @f$ is the kernel bandwidth, @f$ \mathcal L @f$ is an isotropic location kernel defined on @f$ \mathbb R^3 @f$, and @f$ \mathcal O @f$ is an isotropic orientation kernel defined on @f$ SO(3) @f$.
+where @f$ \mu @f$ is the kernel mean point, @f$ \sigma @f$ is the kernel bandwidth, @f$ \mathcal L @f$ is an isotropic location kernel defined on @f$ \mathbb R^3 @f$, and @f$ \mathcal O_4 @f$ is an isotropic orientation kernel defined on @f$ SO(3) @f$.
 
 
 For @f$ \mathbb R^3 @f$, we can simply use a trivariate isotropic Gaussian kernel
 @f[
 \mathcal L\left(\lambda; \mu_t, \Sigma_t\right) = C_g(\Sigma_t)  e^{-\frac{1}{2}( \lambda - \mu_t)^\top \Sigma_t^{-1} (\lambda - \mu_t)},
 @f]
-where @f$ C_g(\cdot) @f$ is a normalizing factor and @f$ \Sigma_t = \sigma_t^2 \mathbf{I} @f$. The definition of the orientation kernel @f$ \mathcal O @f$ is based on the <a href="http://dx.doi.org/10.1098/rspa.1953.0064">von Mises&mdash;Fisher distribution</a> on the 3-sphere in @f$ \mathbb R^4 @f$. The von Mises&mdash;Fisher distribution is a Gaussian-like distribution on @f$ S^3 @f$. It is defined as
+where @f$ C_g(\cdot) @f$ is a normalizing factor and @f$ \Sigma_t = \sigma_t^2 \mathbf{I} @f$. The definition of the orientation kernel @f$ \mathcal O_4 @f$ is based on the <a href="http://dx.doi.org/10.1098/rspa.1953.0064">von Mises&mdash;Fisher distribution</a> on the 3-sphere in @f$ \mathbb R^4 @f$. The von Mises&mdash;Fisher distribution is a Gaussian-like distribution on @f$ S^3 @f$. It is defined as
 @f[
-\mathcal F\left(\theta ; \mu_r, \sigma_r\right) = C_4(\sigma_r)e^{\sigma_r \; \mu_r^T \theta},
+\mathcal F_4\left(\theta ; \mu_r, \sigma_r\right) = C_4(\sigma_r)e^{\sigma_r \; \mu_r^T \theta},
 @f]
-where @f$ C_4(\sigma_r) @f$ is a normalizing factor, @f$ \theta @f$ and @f$ \mu_r @f$ are unit quaternions, and @f$ \mu_r^T \theta @f$ is a dot product. Because unit quaternions form a double cover of the rotation group, @f$ \mathcal O @f$ has to verify @f$ \mathcal O\left(q ; \mu_r, \sigma_r\right) = \mathcal O\left(-q ; \mu_r, \sigma_r\right) @f$ for all unit quaternions @f$ q @f$. We thus define @f$ \mathcal O @f$ as a <a href="http://dspace.mit.edu/handle/1721.1/34023">pair of antipodal von Mises&mdash;Fisher distributions</a>,
+where @f$ C_4(\sigma_r) @f$ is a normalizing factor, @f$ \theta @f$ and @f$ \mu_r @f$ are unit quaternions, and @f$ \mu_r^T \theta @f$ is a dot product. Because unit quaternions form a double cover of the rotation group, @f$ \mathcal O_4 @f$ has to verify @f$ \mathcal O_4\left(q ; \mu_r, \sigma_r\right) = \mathcal O_4\left(-q ; \mu_r, \sigma_r\right) @f$ for all unit quaternions @f$ q @f$. We thus define @f$ \mathcal O_4 @f$ as a <a href="http://dspace.mit.edu/handle/1721.1/34023">pair of antipodal von Mises&mdash;Fisher distributions</a>,
 @f[
-\mathcal O\left(\theta ; \mu_r, \sigma_r\right) =  \frac {\mathcal F\left( \theta ; \mu_r, \sigma_r \right) + \mathcal F \left(\theta; -\mu_r, \sigma_r\right)}2.
+\mathcal O_4\left(\theta ; \mu_r, \sigma_r\right) =  \frac {\mathcal F_4\left( \theta ; \mu_r, \sigma_r \right) + \mathcal F_4 \left(\theta; -\mu_r, \sigma_r\right)}2.
 @f]
-We note that the von Mises&mdash;Fisher distribution involves the same dot product as the rotation metric defined above (@f$ \textrm{d}\left(\theta, \theta'\right) = 2\arccos\left|\theta ^\top \theta'\right| @f$). The dot product @f$ \mu_r^\top \theta @f$ is equal to @f$ 1 @f$ when @f$ \mu_r = \theta @f$. The dot product decreases as @f$ \theta @f$ moves further away from @f$ \mu_r @f$, to reach @f$ 0 @f$ when @f$ \theta @f$ is a @f$ 180^\circ @f$ rotation away from @f$ \mu_r @f$. In this range of values, the von Mises&mdash;Fisher kernel thus varies between @f$ C_4(\sigma_r)e^{\sigma_r} @f$ and @f$ C_4(\sigma_r) @f$. While @f$ e^{\sigma_r} @f$ grows rapidly with @f$ \sigma_r @f$, @f$ C_4(\sigma_r) @f$ rapidly becomes very small. This makes the computation of @f$ \mathcal{F} @f$ numerically difficult. A robust approximation of @f$ \mathcal{F} @f$ can be obtained with 
+We note that the von Mises&mdash;Fisher distribution involves the same dot product as the rotation metric defined above (@f$ \textrm{d}\left(\theta, \theta'\right) = 2\arccos\left|\theta ^\top \theta'\right| @f$). The dot product @f$ \mu_r^\top \theta @f$ is equal to @f$ 1 @f$ when @f$ \mu_r = \theta @f$. The dot product decreases as @f$ \theta @f$ moves further away from @f$ \mu_r @f$, to reach @f$ 0 @f$ when @f$ \theta @f$ is a @f$ 180^\circ @f$ rotation away from @f$ \mu_r @f$. In this range of values, the von Mises&mdash;Fisher kernel thus varies between @f$ C_4(\sigma_r)e^{\sigma_r} @f$ and @f$ C_4(\sigma_r) @f$. While @f$ e^{\sigma_r} @f$ grows rapidly with @f$ \sigma_r @f$, @f$ C_4(\sigma_r) @f$ rapidly becomes very small. This makes the computation of @f$ \mathcal F_4 @f$ numerically difficult. A robust approximation of @f$ \mathcal F_4 @f$ can be obtained with 
 @f[
-\mathcal F \left(\theta ; \mu_r, \sigma_r\right) \simeq e^{\sigma_r \; \mu_r^T \theta + C_4'(\sigma_r)},
+\mathcal F_4 \left(\theta ; \mu_r, \sigma_r\right) \simeq e^{\sigma_r \; \mu_r^T \theta + C'_4(\sigma_r)},
 @f]
-where @f$ C_4'(\sigma_r) @f$ approximates the logarithm of @f$ C_4(\sigma_r) @f$(<a href="http://eric.ed.gov/ERICWebPortal/detail?accno=ED250164">Abramowitz 1965</a>, <a href="http://dx.doi.org/10.1145/1143844.1143881">Elkan 2006</a>). However, since @f$ \sigma_r @f$ is common to all kernels forming a density, using
+where @f$ C'_4(\sigma_r) @f$ approximates the logarithm of @f$ C_4(\sigma_r) @f$(<a href="http://eric.ed.gov/ERICWebPortal/detail?accno=ED250164">Abramowitz 1965</a>, <a href="http://dx.doi.org/10.1145/1143844.1143881">Elkan 2006</a>). However, since @f$ \sigma_r @f$ is common to all kernels forming a density, using
 @f[
-\mathcal{\tilde F} \left(\theta ; \mu_r, \sigma_r\right) = e^{- \sigma_r\left(1-\mu_r^T \theta\right)}
+\mathcal{\tilde F_4} \left(\theta ; \mu_r, \sigma_r\right) = e^{- \sigma_r\left(1-\mu_r^T \theta\right)}
 @f]
-instead of @f$ \mathcal{F} @f$ in the expression of @f$ \mathcal O @f$ above will yield density estimates equal to @f$ d @f$ (defined above) up to a multiplicative factor, while allowing for efficient and robust numerical computation. This alternative will be preferred in all situations where @f$ d @f$ need not integrate to one.
+instead of @f$ \mathcal{F_4} @f$ in the expression of @f$ \mathcal O_4 @f$ above will yield density estimates equal to @f$ d @f$ (defined above) up to a multiplicative factor, while allowing for efficient and robust numerical computation. This alternative will be preferred in all situations where @f$ d @f$ need not integrate to one.
 
 @subsection background_npde_r3xs2 Defining Densities on \( \mathbb R^3\times S^2 \)
 

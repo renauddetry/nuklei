@@ -201,6 +201,7 @@ env['LibInstallDir'] = join(env['prefix'], 'lib')
 
 # `scons install' will install everything in ~/usr/{bin,lib,include}
 env.Alias('install', [ '$BinInstallDir', '$HdrInstallDir', '$LibInstallDir' ])
+env.Clean('install', join('$HdrInstallDir', '$projectName'))
 
 env['PkgCCflags'] = ''
 env['PkgCLibs'] = ' -lnuklei'
