@@ -129,10 +129,15 @@ namespace nuklei {
 
       // Forwarded container symbols
 
+      /** @brief Kernel container type. */
       typedef boost::ptr_vector<kernel::base> Container;
+      /** @brief KernelCollection iterator. */
       typedef Container::iterator iterator;
+      /** @brief KernelCollection iterator. */
       typedef Container::const_iterator const_iterator;
+      /** @brief KernelCollection iterator. */
       typedef Container::reverse_iterator reverse_iterator;
+      /** @brief KernelCollection iterator. */
       typedef Container::const_reverse_iterator const_reverse_iterator;
 
       /** @brief Returns the kernel at index @p n. */
@@ -274,7 +279,9 @@ namespace nuklei {
 
       /**
        * @brief Computes the sum of all kernel weights (total weight), and the
-       * maximum kernel cut point (todo: explain cutpoint).
+       * maximum kernel cut point.
+       *
+       * See @ref kernels_kde for an explanation of "cut point".
        */
       void computeKernelStatistics();
       /**
@@ -384,6 +391,11 @@ namespace nuklei {
             
       /**
        * @brief Returns @p sampleSize samples from the density modeled by *this.
+       *
+       * See @ref kernels_kde for a description of this method.
+       *
+       * Precede by a call to #computeKernelStatistics(). See
+       * @ref intermediary.
        */
       KernelCollection sample(int sampleSize) const;
       /**
@@ -416,6 +428,8 @@ namespace nuklei {
       typedef enum { SUM_EVAL, MAX_EVAL, WEIGHTED_SUM_EVAL } EvaluationStrategy;
       /**
        * @brief Evaluates the density represented by @p *this at @p f.
+       *
+       * See @ref kernels_kde for a description of this method.
        *
        * Precede by a call to #computeKernelStatistics() and #buildKdTree(). See
        * @ref intermediary.

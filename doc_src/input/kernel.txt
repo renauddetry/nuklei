@@ -61,7 +61,7 @@ The KernelCollection class provides access to a kernel density estimate of the d
 @f[
 f(x) = \sum_{i=1}^n w_i \mathcal K\left(x ; \hat x_i, \sigma\right),
 @f]
-where @f$ n @f$ is the number of kernels, @f$ w_i @f$ and @f$ x_i @f$ denote the weight and center point of the @f$ i^\mathrm{th} @f$ kernel, respectively, and @f$ \sigma @f$ denotes kernel bandwidths, which may correspond to a pair of values if the kernels have both a location and orientation component.
+where @f$ n @f$ is the number of kernels held in a KernelCollection object, @f$ w_i @f$ and @f$ x_i @f$ denote the weight and center point of the @f$ i^\mathrm{th} @f$ kernel, respectively, @f$ \mathcal K @f$ denotes the kernel function implemented by the kernels, and @f$ \sigma @f$ denotes kernel bandwidths, which may correspond to a pair of values if the kernels have both a location and orientation component.
 
 KernelCollection must contain kernels of identical domain of definition (for instance, @f$ SE(3) @f$ kernels cannot be mixed with @f$ \mathbb R^3 @f$ kernels). The methods of KernelCollection enforce this constraint (exceptions will be thrown if it is attempted to mix different kernels). KernelCollection hold kernel objects of a class that inherits from kernel::base. Those kernels are by default unnormalized, which impacts KDE in two ways:
 - The KDE evaluation provided by KernelCollection::evaluationAt() provides a density estimate up to a multiplicative constant, i.e.,
@@ -90,7 +90,7 @@ For performance issues, the actual implementation of this function differs in tw
 
 The Nuklei implementation follows the description given in @ref background and uses a @f$ kd @f$-tree to quickly access kernels that are near the evaluation point. The definition of <em>near</em> is given by the @p cutPoint method that kernels of nuklei::kernel must implement. This method gives the distance to the kernel's origin at which the kernel value can be assume to be zero. For triangular kernels, this distance is @f$ 2\sigma_t @f$.
 
-Calls to KernelCollection::evaluationAt() should be preceded a call to KernelCollection::computeKernelStatistics() (or KernelCollection::normalizeWeights()), which compute statistics necessary for evaluation, and a call to KernelCollection::buildKdTree(). Read @ref intermediary for an explanation of how to use these functions, and @ref kde_evaluate.cpp for an example.
+Calls to KernelCollection::evaluationAt() should be preceded a call to KernelCollection::computeKernelStatistics() (or KernelCollection::normalizeWeights()), which compute statistics necessary for evaluation, and a call to KernelCollection::buildKdTree(). Read @ref intermediary for an explanation of how to use these functions, and @ref kde_evaluate.cpp "kde_evaluate.cpp" for an example.
 
 @subsection kernels_kde_sample Sampling
 
