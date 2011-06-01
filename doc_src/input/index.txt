@@ -47,9 +47,9 @@ For more info, see @ref install "the install page".
 
 @section index_doc Documentation
 
-The @ref background section introduces the mathematical concepts implemented in Nuklei (density estimation, kernels, 6D poses,  quaternions, ...). This is a good starting point for those who are discovering Nuklei.
+The @ref background section introduces the mathematical concepts applied in Nuklei (density estimation, kernels, 6D poses,  quaternions, von Mises-Fisher distributions, ...). This is a good starting point for those who are discovering Nuklei. The page to read next is @ref kernels, which explains how these concepts are implemented in Nuklei.
 
-To get started, take a look at the <a href="modules.html">Modules</a> page. The central Nuklei classes are KernelCollection and the kernel classes (kernel::base and its subclasses).
+Other resources are available on the <a href="modules.html">Modules</a> page. The central Nuklei classes are KernelCollection and the kernel classes (kernel::base and its subclasses).
 
 
 @section index_license License
@@ -91,6 +91,7 @@ Nuklei is developped by <a href="http://www.csc.kth.se/~detryr/">Renaud Detry</a
 
 @example kde_evaluate.cpp
 @example kde_sample.cpp
+@example klr_classify.cpp
 
 */
 

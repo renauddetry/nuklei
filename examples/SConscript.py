@@ -47,3 +47,13 @@ env.Alias('check', [ 'install', target ], 'cd examples && '
           + '.output | wc -l` -eq `cat output/'
           + target_name + '.output | wc -l`')
 env.Alias('examples', [ target ])
+
+## klr_classify ################
+env = origEnv.Clone()
+
+sources = [ 'klr_classify.cpp' ]
+
+target_name = 'klr_classify'
+target  = os.path.join(env['BinDir'], 'examples', target_name)
+product = env.Program(source = sources, target = target)
+env.Alias('examples', [ target ])

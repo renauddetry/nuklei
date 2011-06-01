@@ -1,0 +1,1103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<kernelCollection version="1.0">
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>670.95399999999995 -459.94799999999998 191.80600000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.87310296349118277 -0.1557979934853039 -0.02573019892409124 0.46125498071261417</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>700.83500000000004 -485.69400000000002 186.964</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.95146673752833033 -0.0040548188814374274 0.09557357363506841 -0.29250691930902423</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>677.55600000000004 -459.25599999999997 186.06100000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.89327942253011017 -0.20386909643212367 0.0047300222373478735 0.40058318947985916</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>681.11300000000006 -455.67500000000001 189.93000000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.1192289477987762 0.89493860817493209 -0.36077784204301705 -0.23389889759358842</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>664.65599999999995 -464.04300000000001 201.381</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.34061101893534362 -0.019978801110667136 -0.1106730061525649 0.93345405189284036</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>676.38099999999997 -476.411 194.63499999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.08797087529805396 -0.85996075852571452 0.46619886909281882 0.18811494717791247</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>750.875 -533.94100000000003 177.90700000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.15977497668108354 0.35179394865620467 0.87240987267309711 0.29935595630945044</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>734.101 -532.755 181.21299999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.033082384023862939 -0.89692056685933219 0.32347184378905375 0.29967485528108984</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>711.56899999999996 -494.40199999999999 178.13300000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.18612397699600849 -0.90770188781259209 0.23123097142100985 0.29659296334259494</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>710 -520.49099999999999 173.28399999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.28717300007854185 0.78842000021563297 -0.52653200014400658 -0.1367100000373902</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>653.46000000000004 -421.072 215.078</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.84357104001702021 0.098118604654515149 -0.048277602290175567 0.52576602494109992</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>653.68799999999999 -447.30000000000001 192.33000000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.78277815155486685 -0.20887104043983939 -0.25764404988285583 0.52654610194539053</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>750.63400000000001 -537.23000000000002 164.04599999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.120095018183979 0.32889504979907386 0.93313714128934266 -0.081610712356944531</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>660.03099999999995 -437.98399999999998 219.72999999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.22548693194272709 -0.85765974113806698 0.46152386070121637 0.023898492786871364</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>648.06399999999996 -442.64400000000001 197.78800000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.80691792633416604 -0.0035225096784200667 0.21389598047282721 -0.5505629497375415</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>679.63999999999999 -446.16399999999999 204.63300000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.82336906179796721 -0.2516150188849659 -0.14524801090158984 0.48750003658931662</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>697.71699999999998 -479.28500000000003 189.69999999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.1645890342335154 0.36970207689577733 0.9135131900051725 -0.04152680863732295</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>732.21699999999998 -536.17899999999997 173.42599999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.29851701951055953 0.1942910126985268 0.052228803413584865 0.93295806097653611</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>663.41800000000001 -425.49299999999999 206.15700000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.89874497063177849 0.023692099225815066 -0.038263798749656741 -0.43615598574776376</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>721.87699999999995 -517.62199999999996 181.08000000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.11745900343525009 -0.56162901642561303 -0.81818502392894632 0.036735501074380249</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>731.99900000000002 -511.613 184.03299999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.21643293651211279 0.51255884964729048 0.824486758147151 -0.10325596971115643</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>688.77200000000005 -485.642 182.596</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.2314719836423049 0.25860598172479565 0.93645093382275202 0.051022696394320818</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>722.35799999999995 -499.46100000000001 196.46100000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.042047212390267499 0.94604927877718803 -0.2401110707547594 -0.21347006290431711</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>693.35599999999999 -495.37599999999998 191.78800000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.25282299036125011 0.30398998841053387 0.9022659656015618 0.17200799344228135</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>679.32399999999996 -446.37099999999998 201.36199999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.22224297915249833 0.85665191964177045 -0.41573596100189003 -0.20956898034138274</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>719.06299999999999 -510.815 186.05799999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.28086412600733107 -0.8161473661576607 0.46864421025328862 0.18812608440118761</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>741.68700000000001 -542.86000000000001 171.78299999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.91489428526362515 -0.20258706316655484 -0.23701407390088128 0.25642007995166516</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>722.01599999999996 -521.18100000000004 173.905</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.14704196710892131 -0.90286279804315783 0.39457391173974449 0.086768980591082762</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>683.97699999999998 -477.726 196.05000000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.015000593390962316 -0.89918760383135499 0.42484481281971287 0.10365095433293568</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>676.89099999999996 -458.15600000000001 190.071</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.46649316343509201 0.037919513285037447 0.092489532403551497 -0.87885830790652408</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>727.34199999999998 -516.42899999999997 185.673</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.025712699475675768 0.35255999281072187 0.91767898128701619 0.18139899630097611</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>751.59699999999998 -520.65999999999997 179.87</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.055703494635886031 0.92531091089476125 -0.30715897042132212 -0.21529097926799104</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>689.41399999999999 -464.863 181.761</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.82400999784603801 -0.28912799924421945 -0.11600999969674987 0.47323799876295591</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>699.12099999999998 -481.63499999999999 187.167</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.058537412299889388 -0.4166360875436339 -0.89566318819687629 -0.14413603028588315</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>715.62800000000004 -517.875 190.399</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.21471392240272449 -0.92524866561658048 0.23156991631099469 0.21020992403046249</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>717.84400000000005 -507.89400000000001 176.28</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.2874250963901937 0.19633306584178795 0.024963308371635462 0.9371323142744542</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>667.41300000000001 -475.35399999999998 188.596</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.93093137003018034 0.0096529138368773078 0.02270000902288687 -0.36436014482727136</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>700.10400000000004 -478.221 181.83600000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.48652408866853675 -0.18024103284875101 0.19277303513269609 -0.83285415178685018</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>706.60699999999997 -510.44799999999998 174.05699999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.45074982809540498 -0.062258076256342831 -0.10259496087287427 -0.88454666265625337</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>729.36599999999999 -523.84500000000003 180.209</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.85699478926148931 -0.099876075440066089 -0.33158391846216334 0.38162390615712655</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>733.67899999999997 -540.08100000000002 170.82400000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.86935096892287678 -0.22474699196585704 -0.11261399597433126 0.42548298479004726</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>708.30799999999999 -483.84100000000001 194.28399999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.14854703920624807 0.33448808828195453 0.90976024011441659 0.19592805171159142</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>730.80100000000004 -503.40800000000002 162.71199999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.93633527644656589 -0.055926616511949793 -0.084004524801759559 0.33629109928763967</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>706.94100000000003 -476.25 185.29599999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.22128395111638907 -0.41192490900209033 -0.87695080627369582 -0.11094397549148004</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>715.46100000000001 -516.06399999999996 171.24100000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.23228407801363693 -0.024738408308504056 -0.044131314821697645 -0.97133132622593032</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>715.29300000000001 -504.59500000000003 169.09800000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.32513693031487229 -0.2389189487935823 0.1750639624793327 -0.89808480751754516</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>643.80600000000004 -450.38499999999999 214.75700000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.017813493323252338 -0.88332566891712438 0.29371288991228078 0.36489886323077747</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>661.43700000000001 -435.25400000000002 206.39099999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.86787202824663134 -0.10667700347201647 -0.10220700332653139 0.4743120154374334</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>687.92999999999995 -450.80399999999997 200.196</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.17139100036866203 0.86274200185575811 -0.46388200099781024 -0.10542700022677348</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>729.33100000000002 -509.99000000000001 165.131</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.36557397455385882 0.31663797796009763 -0.1484639896660159 0.86258593995884514</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>741.61400000000003 -523.60500000000002 181.10599999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.18854095406652713 0.8461167938639752 -0.44093889257583452 -0.23261894332798422</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>753.90099999999995 -533.02599999999995 174.792</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.017459800345118799 -0.35868700708997964 -0.86811101715949923 -0.34266900677336015</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>739.73199999999997 -522.91300000000001 171.52000000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.92098729389538136 0.042338813510698604 -0.055193417612719113 0.38333212232474978</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>689.48699999999997 -478.52499999999998 190.28399999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.48118908171997815 0.088852515089755502 -0.0092523015713113846 0.87205314810012724</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>681.005 -481.39999999999998 200.976</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.11272100349450614 0.90060702792005665 -0.41060101272919614 -0.087222502704017546</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>726.86199999999997 -512.31100000000004 165.62700000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.84842888736216426 0.16677797785847379 0.22506397012039681 -0.44910994037594382</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>747.673 -525.721 174.53200000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.19644088523548789 -0.50384370564489667 -0.84007050921478477 0.042825674980423813</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>743.21699999999998 -539.97500000000002 173.21799999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.074549583445835579 0.90897079815779858 -0.41011290893206631 0.0046743589620316679</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>720.25999999999999 -523.46000000000004 182.56399999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.15944303754166483 0.22669105337554826 0.94913222347795401 0.14945603519017492</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>716.60500000000002 -511.54899999999998 185.11799999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.1222150223626013 -0.94637017316446426 0.29763405446034019 0.029342005368927278</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>730.81899999999996 -514.91600000000005 171.00700000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.31675307650458639 0.028135106795402688 -0.12901003115947343 0.93927222686009559</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>739.17399999999998 -542.81500000000005 176.91300000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.26503189642721953 -0.17491293164513813 -0.036963785554787562 -0.94752162971456988</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>722.33299999999997 -498.35599999999999 174.28800000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.57003908946594195 -0.012916402027190934 0.0059999309416713404 -0.82149412893106355</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>670.55399999999997 -439.84800000000001 197.80500000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.88743520258561259 -0.061627414068438344 0.11586202644923206 -0.44185610086785904</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>726.94000000000005 -534.52999999999997 179.59299999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.05971620325568449 -0.83266304539619096 0.46229102520377452 0.2989870163005573</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>655.45399999999995 -437.25999999999999 201.768</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.43136683782581076 0.055353079189775493 -0.10457796068347286 0.89438366375267442</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>650.928 -462.93200000000002 201.649</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.50587699976425127 -0.16511599992305268 -0.034305199984013095 -0.84595999960576584</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>680.61699999999996 -469.08699999999999 180.982</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.38730199344013067 0.098525898331232403 -0.032441699450523588 0.91609898448371119</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>688.42399999999998 -492.85899999999998 189.28100000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.40399513043121232 0.038710012497660193 0.90877629340154076 0.09703153132696242</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>734.01300000000003 -529.83199999999999 165.61199999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.35055803321913842 0.061535705831168984 -0.083234807887391932 0.93080308820358892</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>683.03300000000002 -452.649 194.505</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.10050194935126695 0.87622455841987112 -0.46412876609872622 -0.081941258705070255</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>671.875 -433.84899999999999 203.245</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.81486116065406577 -0.26328705190839546 -0.013662602693652342 0.51623110177761489</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>691.48299999999995 -494.98500000000001 191.21100000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.15246497111025389 0.79745784889411242 -0.27234794839429 -0.51637390215515855</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>757.54499999999996 -541.40599999999995 180.952</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.19370003634994595 0.38304107188187742 0.84227415806202566 0.32608906119420511</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>684.34699999999998 -463.64699999999999 194.29499999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.90830813290899193 0.025337703707561932 0.017008602488798819 -0.41718706104526609</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>734.29399999999998 -516.31799999999998 179.07400000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.87677614584032593 -0.11795001961945405 -0.12109902014324939 0.45020707488610046</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>692.73699999999997 -465.46800000000002 195.679</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.30525993731625201 0.38721292048757738 0.85205082503521534 0.17576096390828072</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>735.85000000000002 -526.48299999999995 183.88200000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.2201499841364947 -0.37221097317932694 -0.89914093520995664 -0.067368795145558408</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>732.13 -500.238 171.023</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.87416150706138429 -0.028646716616659129 0.029907317347876352 -0.4838662806688514</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>757.59500000000003 -540.18200000000002 158.405</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.92036737015997638 -0.18363707385648068 -0.069152627812301803 0.33825913604349506</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>737.75300000000004 -536.12199999999996 162.97200000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.32335794093606474 -0.041000392510947711 0.23747595662310167 -0.91507583285402061</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>749.44500000000005 -532.61800000000005 162.87100000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.31153012798306245 -0.32256613251688293 -0.0045796418814122311 -0.89380036719179945</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>668.452 -455.31200000000001 200.24299999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.34287410035202748 0.075458922085237162 0.12529903667238895 -0.92792427158389013</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>722.40700000000004 -520.57500000000005 182.85499999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.86840398437736799 -0.0059985498920857817 0.12582899773632991 -0.47958899137216959</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>695.14999999999998 -461.57499999999999 197.92400000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.41862113768807313 -0.10196703353782957 0.22364207355779106 -0.87426728755398952</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>668.84699999999998 -451.70699999999999 196.52600000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.92687681110963427 0.06324448711125992 0.011992897555939713 0.36980492463660042</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>712.07500000000005 -499.21600000000001 175.785</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.93646574059059751 0.10930996972015877 0.25578892914417428 -0.21367094081123453</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>689.28099999999995 -480.16500000000002 195.024</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.29853399621088111 0.87353198891276507 -0.37475099524350297 -0.085912798909558663</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>681.24000000000001 -469.08699999999999 187.03700000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.15355696328355478 -0.90059378466230611 0.40337890354954214 -0.051347387722513467</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>635.24800000000005 -433.97199999999998 197.54400000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.24065893434223518 -0.20421294428561107 0.10108797242067767 -0.94348374259408296</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>742.55100000000004 -541.12800000000004 170.06200000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.85922798185396454 0.024986999472299567 -0.20320199570857711 0.46884099009854729</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>700.30799999999999 -506.245 178.71000000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">0.47998894036377782 0.18078297753862035 -0.14024398257538748 0.84691189477543816</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>717.34000000000003 -522.76900000000001 183.25399999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.062837092382843823 -0.90631489013587663 0.38682395310893053 0.15815198082870652</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>741.29899999999998 -536.74699999999996 162.88300000000001</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.16371904947657467 0.92952728090699321 -0.31995109669054622 0.082500924932121134</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>705.98099999999999 -505.125 187.42599999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.16903805298718352 0.9308712917937535 -0.25146707882563729 -0.2041300639872323</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>676.70699999999999 -457.04700000000003 203.64599999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.84425030241684429 -0.14454805177820554 -0.20749007432451411 0.47254116926782114</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>682.36699999999996 -475.94 197.90799999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.0030693405480912727 -0.43880407835712004 -0.89855416045456205 0.0064792511569980449</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>707.12 -483.65199999999999 170.565</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.90981999844598638 -0.15600599973353474 -0.057574699901659816 0.38022999935055007</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>721.255 -503.577 181.34899999999999</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.19767096727217318 0.40270493332527524 0.89005985263529008 0.080922086601957405</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+    <kernel>
+        <weight>0.01</weight>
+        <location domain="r3">
+            <vector3>702.34199999999998 -484.48200000000003 159.446</vector3>
+            <width>10</width>
+        </location>
+        <orientation domain="so3">
+            <quaternion format="wxyz">-0.89447778736579864 0.01445869656289576 -0.11226197331321652 0.43254789717522563</quaternion>
+            <width>0.20000000000000001</width>
+        </orientation>
+    </kernel>
+</kernelCollection>

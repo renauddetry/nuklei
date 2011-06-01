@@ -63,13 +63,13 @@ f(x) = \sum_{i=1}^n w_i \mathcal K\left(x ; \hat x_i, \sigma\right),
 @f]
 where @f$ n @f$ is the number of kernels held in a KernelCollection object, @f$ w_i @f$ and @f$ x_i @f$ denote the weight and center point of the @f$ i^\mathrm{th} @f$ kernel, respectively, @f$ \mathcal K @f$ denotes the kernel function implemented by the kernels, and @f$ \sigma @f$ denotes kernel bandwidths, which may correspond to a pair of values if the kernels have both a location and orientation component.
 
-KernelCollection must contain kernels of identical domain of definition (for instance, @f$ SE(3) @f$ kernels cannot be mixed with @f$ \mathbb R^3 @f$ kernels). The methods of KernelCollection enforce this constraint (exceptions will be thrown if it is attempted to mix different kernels). KernelCollection hold kernel objects of a class that inherits from kernel::base. Those kernels are by default unnormalized, which impacts KDE in two ways:
-- The KDE evaluation provided by KernelCollection::evaluationAt() provides a density estimate up to a multiplicative constant, i.e.,
+KernelCollection must contain kernels of identical domain of definition (for instance, @f$ SE(3) @f$ kernels cannot be mixed with @f$ \mathbb R^3 @f$ kernels). The methods of KernelCollection enforce this constraint (exceptions will be thrown if it is attempted to mix different kernels). KernelCollection holds kernel objects of a class that inherits from kernel::base. Those kernels are by default unnormalized, which impacts KDE in two ways:
+- KD (KernelCollection::evaluationAt()) provides a density estimate up to a multiplicative constant, i.e.,
 @f[
 \int f(x) \mathrm{d}x = C(\sigma),
 @f]
 where @f$ C @f$ is positive and depends on @f$ \sigma @f$.
-- All kernels in a KernelCollection must have the same bandwidth. This constraint is <em>not</em> enforced by KernelCollection methods. It is the user's responsibility to make sure it is verified prior to calling KernelCollection::evaluationAt().
+- All kernels in a KernelCollection must have the same bandwidth. This constraint is <em>not</em> enforced by the methods of KernelCollection. It is the user's responsibility to make sure it is verified prior to calling KernelCollection::evaluationAt().
 
 @subsection kernels_kde_eval Evaluation
 
@@ -118,12 +118,14 @@ KernelCollection KernelCollection::sample(int sampleSize) const
 @endcode
 The loop selects @p sampleSize kernels with probability @f$ P(i = \ell) \propto w_{\ell} @f$. Calling @p polySample then draws a sample from each of the selected kernels.
 
-If a single sample is needed, kernelCollection.randomKernel().polySample() can be used. Note that this expression is linear in the number of kernels in kernelCollection.
+If a single sample is needed, <tt>kernelCollection.randomKernel().polySample()</tt> can be used. Note that this expression is linear in the number of kernels in @c kernelCollection.
 
 
 <!-- In Nuklei, a kernel is a function that provides a measure of similarity between its arguments. We denote a kernel by @f[\mathcal K(x,y) : D\times D \rightarrow \mathbb R,@f] where @f$ D @f$ is either @f$ SE(3) @f$, @f$ \mathbb R^3 \times S^2 @f$, or @f$ \mathbb R^3 @f$.
 
 In machine learning and statistics, kernels are used, e.g., for <a href="http://en.wikipedia.org/wiki/Kernel_density_estimation">density estimation</a> or for <a href="http://en.wikipedia.org/wiki/Kernel_regression">regression</a>. -->
+
+@section kernels_klr Kernel Logistic Regression
 
 
 

@@ -38,12 +38,14 @@ namespace nuklei {
    * @brief This class acts as a vector-like container for kernels. It also
    * provides methods related to kernel density estimation.
    *
-   * Note: In Nuklei, the kernel classes (kernel::base and its descendants) play the
-   * double role of representing kernels and points. For instance, there is no
-   * class specifically designed for holding an @f$ SE(3) @f$ point, the class
-   * kernel::se3 is used for that purpose. A KernelCollection is thus often used
-   * to contain a set of points that are entirely unrelated to a density
-   * function.
+   * The KDE-related functions of this class are discussed in @ref kernels_kde.
+   *
+   * Note: In Nuklei, the kernel classes (kernel::base and its
+   * descendants) play the double role of representing kernels and
+   * points. For instance, there is no class specifically designed for
+   * holding an @f$ SE(3) @f$ point, the class kernel::se3 is used for
+   * that purpose. A KernelCollection is thus often used to contain a
+   * set of points that are entirely unrelated to a density function.
    *
    * @section intermediary Intermediary Results
    *

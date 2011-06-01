@@ -7,7 +7,7 @@
 //
 // This example can be compiled with
 //
-//   g++ `pkg-config --cflags --libs nuklei` -O3 evaluate.cpp -o evaluate
+// g++ `pkg-config --cflags --libs nuklei` -O3 kde_evaluate.cpp -o kde_evaluate
 //
 // (It may be necessary to add -I/path/to/boost/include -L/path/to/boost/lib if
 // Boost doesn't reside at a standard place.)
