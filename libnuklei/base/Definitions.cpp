@@ -83,6 +83,15 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
 
   defConst(unsigned, N_THREADS, 0);
 
+  bool hasOpenMP()
+  {
+#ifdef NUKLEI_USE_OPENMP
+    return true;
+#else
+    return false;
+#endif
+  }
+  
 #ifdef NDEBUG
 #warning Compiling with NDEBUG set.
 #endif

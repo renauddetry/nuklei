@@ -198,6 +198,17 @@ if conf.env['UseOpenCV']:
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
 
+# OpenMP
+
+if conf.env['UseOpenMP']:
+  conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_OPENMP' ])
+  conf.env.Append(CCFLAGS = [ '-fopenmp' ])
+  conf.env.Append(LINKFLAGS = [ '-fopenmp' ])
+  conf.env['PkgCCflags'] += ' -DNUKLEI_USE_OPENMP'
+  conf.env['PkgCCflags'] += ' -fopenmp'
+  conf.env['PkgCLibs'] += ' -fopenmp'
+
+
 # These are simply expected...
 conf.env.Append(LIBS = [ 'X11', 'z', 'pthread', 'm' ])
 

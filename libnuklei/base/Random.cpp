@@ -15,6 +15,14 @@
 #include <nuklei/Common.h>
 #include <nuklei/Log.h>
 
+
+#ifdef NUKLEI_USE_OPENMP
+#warning coucou
+#define NUKLEI_RANDOM_SYNC_OMP
+#else
+#define NUKLEI_RANDOM_SYNC_MUTEX
+#endif
+
 namespace nuklei {
   
   /** @brief GSL random generator */
@@ -29,9 +37,17 @@ namespace nuklei {
     const gsl_rng_type * T;
     gsl_rng_env_setup();
     T = gsl_rng_default;
-    randomRng = gsl_rng_alloc(T);
-    
-    
+    {
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+      randomRng = gsl_rng_alloc(T);
+    }
     unsigned seed = 0;
     const char * envVal = getenv("NUKLEI_RANDOM_SEED");
     if (envVal != NULL)
@@ -53,27 +69,40 @@ namespace nuklei {
   
   void Random::seed(unsigned s)
   {
+    // Libraries Nuklei depends on may make use of random numbers.
+    // Let's make sure we seed those randomly as well.
     srandom(s);
 #ifdef __APPLE__
     //BSD implementation of rand differs from random.
     srand(s);
 #endif
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+    boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
     gsl_rng_set(randomRng, s);
   }
-  
-  long int Random::random()
-  {
-    //boost::unique_lock<boost::mutex> lock(mutex);
-    return ::random();
-  }
-  
+    
   //This function returns a double precision floating point number
   //uniformly distributed in the range [0,1). The range includes 0.0 but
   //excludes 1.0.
   double Random::uniform()
   {
-    //boost::unique_lock<boost::mutex> lock(mutex);
-    return gsl_rng_uniform(randomRng);
+    double r;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    r = gsl_rng_uniform(randomRng);
+    return r;
   }
   
   //This function returns a double precision floating point number
@@ -90,8 +119,17 @@ namespace nuklei {
   //integers in the range [0,n-1] are produced with equal probability.
   unsigned long int Random::uniformInt(unsigned long int n)
   {
-    //boost::unique_lock<boost::mutex> lock(mutex);
-    return gsl_rng_uniform_int(randomRng, n);
+    unsigned long int r;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    r = gsl_rng_uniform_int(randomRng, n);
+    return r;
   }
   
   //This function returns a Gaussian random variate, with mean zero and
@@ -100,23 +138,46 @@ namespace nuklei {
   //with mean \mu.
   double Random::gaussian(double sigma)
   {
-    //boost::unique_lock<boost::mutex> lock(mutex);
-    return gsl_ran_gaussian(randomRng, sigma);
+    double r;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    r = gsl_ran_gaussian(randomRng, sigma);
+    return r;
   }
   
   double Random::beta(double a, double b)
   {
-    //boost::unique_lock<boost::mutex> lock(mutex);
-    return gsl_ran_beta(randomRng, a, b);
+    double r;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    r = gsl_ran_beta(randomRng, a, b);
+    return r;
   }
   
   Vector2 Random::uniformDirection2d()
   {
     Vector2 dird;
-    {
-      //boost::unique_lock<boost::mutex> lock(mutex);
-      gsl_ran_dir_2d(randomRng, &dird.X(), &dird.Y());
-    }
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    gsl_ran_dir_2d(randomRng, &dird.X(), &dird.Y());
     Vector2 dir(dird.X(), dird.Y());
     return dir;
   }
@@ -124,10 +185,15 @@ namespace nuklei {
   Vector3 Random::uniformDirection3d()
   {
     Vector3 dird;
-    {
-      //boost::unique_lock<boost::mutex> lock(mutex);
-      gsl_ran_dir_3d(randomRng, &dird.X(), &dird.Y(), &dird.Z());
-    }
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+      boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    gsl_ran_dir_3d(randomRng, &dird.X(), &dird.Y(), &dird.Z());
     Vector3 dir(dird.X(), dird.Y(), dird.Z());
     return dir;
   }

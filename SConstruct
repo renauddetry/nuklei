@@ -102,6 +102,8 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('qpl', 'Activates QPL code', 'no',
                allowed_values = ('yes', 'no')),
+  EnumVariable('use_openmp', 'Enables OpenMP. Does not do anything at the moment.', 'no',
+               allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'yes',
@@ -114,6 +116,7 @@ opts.Update(env)
 env['BuildType'] = env['bt']
 env['EnableGPL'] = env['gpl'] == 'yes'
 env['EnableQPL'] = env['qpl'] == 'yes'
+env['UseOpenMP'] = env['use_openmp'] == 'yes'
 env['UseOpenCV'] = env['use_opencv'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
 

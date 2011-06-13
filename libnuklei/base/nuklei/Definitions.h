@@ -21,8 +21,6 @@
 
 namespace nuklei {
 
-/* --- Types --- */
-
   // Coordinates, weights, appearances (colors), ...
   typedef double coord_t;
   typedef std::pair<coord_t, coord_t> coord_pair;
@@ -71,6 +69,8 @@ namespace nuklei {
   extern const bool INTERACTIVE_SHELL;
   
   extern const unsigned N_THREADS;
+
+  bool hasOpenMP();
 }
 
 #endif

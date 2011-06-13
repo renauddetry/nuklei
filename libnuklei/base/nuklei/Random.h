@@ -21,9 +21,6 @@ namespace nuklei {
     
     static void seed(unsigned s);
     
-    //Traditionnal random number.
-    static long int random();
-    
     //This function returns a double precision floating point number
     //uniformly distributed in the range [0,1). The range includes 0.0 but
     //excludes 1.0.
