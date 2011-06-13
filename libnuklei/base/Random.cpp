@@ -17,7 +17,6 @@
 
 
 #ifdef NUKLEI_USE_OPENMP
-#warning coucou
 #define NUKLEI_RANDOM_SYNC_OMP
 #else
 #define NUKLEI_RANDOM_SYNC_MUTEX
