@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <algorithm> //iter_swap
+#include <nuklei/Random.h>
 
 /**
  * @brief Code version string.
@@ -67,11 +68,7 @@ namespace nuklei_trsl {
      */
     inline unsigned int uniform_int(unsigned int n)
     {
-#ifdef NUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR
-      return ::random()%n;
-#else
-      return std::rand()%n;
-#endif
+      return nuklei::Random::uniformInt(n);
     }
   
     /**
@@ -81,11 +78,7 @@ namespace nuklei_trsl {
     template<typename Real>
     inline Real uniform_01()
     {
-#ifdef NUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR
-      return (::random() / (RAND_MAX+Real(1.0)));
-#else
-      return (std::rand() / (RAND_MAX+Real(1.0)));
-#endif
+      return nuklei::Random::uniform();
     }
     
   }
