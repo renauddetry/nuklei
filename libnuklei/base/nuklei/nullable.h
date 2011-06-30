@@ -18,6 +18,9 @@ namespace nuklei {
 
   struct undefined {};
 
+  /**
+   * @brief Obsolete -- use boost::optional and boost::none instead
+   */
   template<typename T>
   struct nullable
   {

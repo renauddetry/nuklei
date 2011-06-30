@@ -280,8 +280,6 @@ namespace nuklei {
   void NukleiWriter::writeBuffer()
   {
     NUKLEI_TRACE_BEGIN();
-    //if (NORMALIZE_DENSITIES && !(totalWeight_ == -1))
-    //  NUKLEI_ASSERT_AFE(totalWeight_, 1);
     out_->SaveFile();
     NUKLEI_TRACE_END();
   }

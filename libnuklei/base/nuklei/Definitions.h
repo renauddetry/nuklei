@@ -21,25 +21,22 @@
 
 namespace nuklei {
 
-  // Coordinates, weights, appearances (colors), ...
+  /** @brief Type for point coordinates */
   typedef double coord_t;
+  /** @brief Pair of coord_t */
   typedef std::pair<coord_t, coord_t> coord_pair;
+  /** @brief Type for appearance-related values (e.g., color) */
   typedef double appear_t;
+  /** @brief Type for particle weights */
   typedef double weight_t;
+  /** @brief Type for bitfield */
   typedef unsigned int bitfield_t;
+  /** @brief Type for identifier label */
   typedef unsigned int id_t;
-
-  /* --- Constants & default values --- */
-
-  // Constants are defined in a cpp file to prevent
-  // re-compilation of the whole project at each modif of the default value.
 
   extern const coord_t FLOATTOL;
 
   extern const std::string INFOSTRING;
-
-  extern const coord_t OBSERVATION_ORIENTATION_STDEV;
-  extern const coord_t OBSERVATION_LOCATION_STDEV;
 
   // Default precision in text files.
   extern const int PRECISION;
@@ -47,8 +44,6 @@ namespace nuklei {
   extern const bool KDTREE_DENSITY_EVAL;
 
   extern const unsigned int KDE_KTH_NEAREST_NEIGHBOR;
-
-  extern const bool NORMALIZE_DENSITIES;
 
   extern const appear_t HSV_METRIC_VALUE_WEIGHT;
 
@@ -68,8 +63,6 @@ namespace nuklei {
   
   extern const bool INTERACTIVE_SHELL;
   
-  extern const unsigned N_THREADS;
-
   bool hasOpenMP();
 }
 

@@ -64,7 +64,7 @@ f(x) = \sum_{i=1}^n w_i \mathcal K\left(x ; \hat x_i, \sigma\right),
 where @f$ n @f$ is the number of kernels held in a KernelCollection object, @f$ w_i @f$ and @f$ x_i @f$ denote the weight and center point of the @f$ i^\mathrm{th} @f$ kernel, respectively, @f$ \mathcal K @f$ denotes the kernel function implemented by the kernels, and @f$ \sigma @f$ denotes kernel bandwidths, which may correspond to a pair of values if the kernels have both a location and orientation component.
 
 KernelCollection must contain kernels of identical domain of definition (for instance, @f$ SE(3) @f$ kernels cannot be mixed with @f$ \mathbb R^3 @f$ kernels). The methods of KernelCollection enforce this constraint (exceptions will be thrown if it is attempted to mix different kernels). KernelCollection holds kernel objects of a class that inherits from kernel::base. Those kernels are by default unnormalized, which impacts KDE in two ways:
-- KD (KernelCollection::evaluationAt()) provides a density estimate up to a multiplicative constant, i.e.,
+- KDE (KernelCollection::evaluationAt()) provides a density estimate up to a multiplicative constant, i.e.,
 @f[
 \int f(x) \mathrm{d}x = C(\sigma),
 @f]
@@ -84,7 +84,7 @@ double KernelCollection::evaluationAt(const kernel::base &k) const
   return value;
 }
 @endcode
-For performance issues, the actual implementation of this function differs in two ways from this piece of code:
+For computational efficiency, the actual implementation of this function differs in two ways from this piece of code:
 - If the number of kernels is larger than 1000, a @f$kd@f$-tree is used to discard the kernels that are too far from @p k to be relevant (see below).
 - A switch on the type of @p k forces calls to the static equivalent of @p polyEval, to avoid repeated VTABLE lookups.
 

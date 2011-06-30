@@ -44,9 +44,6 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
   
   const coord_t FLOATTOL = 1e-12;
   
-  defConst(coord_t, OBSERVATION_ORIENTATION_STDEV, .4);
-  defConst(coord_t, OBSERVATION_LOCATION_STDEV, 12);
-
   // Default precision in text files.
   const int PRECISION = std::numeric_limits<double>::digits10 + 2;
     
@@ -54,8 +51,6 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
 
   defConst(unsigned int, KDE_KTH_NEAREST_NEIGHBOR, 8);
   
-  const bool NORMALIZE_DENSITIES = true;
-
   // Remember that hue/saturation are projected on a disk of diameter 2.
   // A value of 1.0 for the following constant already quite lowers its
   // importance.
@@ -80,8 +75,6 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
     isatty(STDIN_FILENO) && isatty(STDOUT_FILENO) && isatty(STDERR_FILENO) &&
     (getenv("TERM") != NULL) &&
     (std::string(getenv("TERM")) != "dumb");
-
-  defConst(unsigned, N_THREADS, 0);
 
   bool hasOpenMP()
   {
