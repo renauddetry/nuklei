@@ -198,6 +198,26 @@ if conf.env['UseOpenCV']:
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
 
+# PCL
+
+if conf.env['UsePCL']:
+  if not conf.CheckPKG('pcl_io >= 1.0.0'):
+    print 'PCL >= 1.0.0 not found.'
+    Exit(1)
+  
+  pcldict = conf.env.ParseFlags("!pkg-config --cflags --libs pcl_io")
+  for i in pcldict['CPPPATH']:
+    pcldict['CCFLAGS'].append('-I' + i)
+  pcldict['CPPPATH'] = []
+  conf.env.MergeFlags(pcldict)
+  conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PCL' ])
+# todo: pcl flags should be added to the pkg-config file.  
+
+  if not conf.CheckCXXHeader('pcl/point_cloud.h'):
+    print 'Please check your PCL installation.'
+    print '** For more information, refer to the INSTALL document **'
+    Exit(1)
+
 # OpenMP
 
 if conf.env['UseOpenMP']:

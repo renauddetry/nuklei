@@ -106,6 +106,8 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
                allowed_values = ('yes', 'no')),
+  EnumVariable('use_pcl', 'Enables functions that depend on PCL', 'no',
+               allowed_values = ('yes', 'no')),
   EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'yes',
                allowed_values = ('yes', 'no'))
   # nice -n 18 distcc nice -n 18 i686-apple-darwin8-g++-4.0.1
@@ -118,6 +120,7 @@ env['EnableGPL'] = env['gpl'] == 'yes'
 env['EnableQPL'] = env['qpl'] == 'yes'
 env['UseOpenMP'] = env['use_openmp'] == 'yes'
 env['UseOpenCV'] = env['use_opencv'] == 'yes'
+env['UsePCL'] = env['use_pcl'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
 
 # this is obsolete, should not be used.

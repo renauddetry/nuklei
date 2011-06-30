@@ -36,6 +36,40 @@ namespace nuklei {
     if (!in_.is_open())
       throw ObservationIOError(std::string("Could not open file ") +
                                    observationFileName + " for reading.");    
+
+    std::string line;
+    int ntok = -1;
+    while (std::getline(in_, line))
+    {
+      std::vector<std::string> tokens;
+      boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+      if (tokens.back() == "")
+        tokens.pop_back();
+      if (tokens.size() == 0)
+      {
+        if (in_.good())
+          throw ObservationIOError("Unexpected empty line.");
+      }
+      if (tokens.size() == 3)
+      {
+        if (ntok == -1) ntok = 3;
+        else if (ntok != 3) throw ObservationIOError("Wrong number of tokens.");
+      }
+      else if (tokens.size() == 7)
+      {
+        if (ntok == -1) ntok = 7;
+        else if (ntok != 7) throw ObservationIOError("Wrong number of tokens.");
+      }
+      else {
+        throw ObservationIOError("Wrong number of tokens on line");
+      }
+    }
+    
+    in_.close();
+    in_.open(observationFileName.c_str(), std::ios::in);
+    if (!in_.is_open())
+      throw ObservationIOError(std::string("Could not open file ") +
+                               observationFileName + " for reading.");
   }
 
 

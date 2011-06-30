@@ -23,9 +23,12 @@ doc:
 
 test:
 	cp nuklei-darwin.conf /tmp/
-	./scons.py CXX=g++ gpl=yes qpl=yes use_opencv=yes
-	./scons.py CXX=clang++ gpl=yes qpl=no use_opencv=no
+	./scons.py CXX=g++ gpl=yes qpl=yes use_opencv=yes use_pcl=yes
+	$(MAKE) check
+	./scons.py CXX=g++ gpl=yes qpl=no use_opencv=no use_pcl=no
+	$(MAKE) check
 	cp /tmp/nuklei-darwin.conf .
+	./scons.py
 
 check:
 	./scons.py check

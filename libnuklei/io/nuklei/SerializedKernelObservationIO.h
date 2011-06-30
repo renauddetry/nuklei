@@ -33,7 +33,6 @@ namespace nuklei {
       void init_();
       std::auto_ptr<Observation> readObservation_();
       std::string observationFileName_;
-    private:
       int idx_;
       KernelCollection kc_;
     };
@@ -55,7 +54,7 @@ namespace nuklei {
       void writeObservation(const Observation &o);
       void writeBuffer();
       
-    private:
+    protected:
       std::string observationFileName_;
       KernelCollection kc_;
     };

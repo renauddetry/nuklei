@@ -8,6 +8,7 @@
 #include <nuklei/CoViS3DObservationIO.h>
 #include <nuklei/NukleiObservationIO.h>
 #include <nuklei/OsuTxtObservationIO.h>
+#include <nuklei/PCDObservationIO.h>
 #include <nuklei/PLYObservationIO.h>
 #include <nuklei/RIFObservationIO.h>
 #include <nuklei/CrdObservationIO.h>
@@ -136,6 +137,13 @@ namespace nuklei {
     }
 
     try {
+      reader = createReader(arg, Observation::PCD);
+      return reader;
+    } catch (ObservationIOError &e) {
+      errorsCat += "\n" + std::string(e.what());
+    }
+
+    try {
       reader = createReader(arg, Observation::PLY);
       return reader;
     } catch (ObservationIOError &e) {
@@ -205,6 +213,11 @@ namespace nuklei {
       case Observation::OSUTXT:
       {
         reader.reset(new OsuTxtReader(arg));
+        break;
+      }
+      case Observation::PCD:
+      {
+        reader.reset(new PCDReader(arg));
         break;
       }
       case Observation::PLY:
@@ -288,6 +301,11 @@ namespace nuklei {
       {
         NUKLEI_THROW("Not implemented.");
         //writer.reset(new OsuTxtWriter(arg));
+        break;
+      }
+      case Observation::PCD:
+      {
+        writer.reset(new PCDWriter(arg));
         break;
       }
       case Observation::PLY:
