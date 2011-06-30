@@ -212,8 +212,8 @@ if conf.env['UsePCL']:
   conf.env.MergeFlags(pcldict)
   conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PCL' ])
   conf.env['PkgCCflags'] += ' -DNUKLEI_USE_PCL ' + \
-                            os.popen("pkg-config --cflags pcl_io").read()
-  conf.env['PkgCLibs'] += ' ' + os.popen("pkg-config --libs pcl_io").read()
+                            os.popen("pkg-config --cflags pcl_io").read().rstrip("\n")
+  conf.env['PkgCLibs'] += ' ' + os.popen("pkg-config --libs pcl_io").read().rstrip("\n")
 
   if not conf.CheckCXXHeader('pcl/point_cloud.h'):
     print 'Please check your PCL installation.'
