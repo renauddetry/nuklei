@@ -51,24 +51,7 @@ int info(int argc, char ** argv)
   cmd.parse( argc, argv );
 
   NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
-  
-  Vector3 t(30, 33, 22);
-  
-  kernel::se3 o1, o2, h1, h2, m;
-  o1.loc_ = Vector3(100, 30, 10) + t;
-  o1.ori_ = Random::uniformQuaternion();
-  h1.loc_ = Vector3(120, 30, 20);
-  h1.ori_ = Random::uniformQuaternion();
-  o2.loc_ = Vector3(-10, 400, -300) + t;
-  o2.ori_ = Random::uniformQuaternion();
-  
-  la::project(m.loc_, m.ori_, o1.loc_, o1.ori_, h1.loc_, h1.ori_);
-  
-  la::transform(h2.loc_, h2.ori_, o2.loc_, o2.ori_, m.loc_, m.ori_);
-  
-  std::cout << h2 << std::endl;
-  return 0;
-  
+    
   KernelCollection kc;
   Observation::Type type;
 
