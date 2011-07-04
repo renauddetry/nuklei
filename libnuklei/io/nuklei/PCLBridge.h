@@ -33,25 +33,25 @@ namespace nuklei {
   inline bool valid(const pcl::PointXYZ& p)
   {
     float t = p.x + p.y + p.z;
-    return !boost::math::isnan(t);
+    return !(boost::math::isnan)(t);
   }
 
   inline bool valid(const pcl::PointNormal& p)
   {
     float t = p.x + p.y + p.z + p.normal_x + p.normal_y + p.normal_z;
-    return !boost::math::isnan(t);
+    return !(boost::math::isnan)(t);
   }
 
   inline bool valid(const pcl::PointXYZRGB& p)
   {
     float t = p.x + p.y + p.z + p.rgb;
-    return !boost::math::isnan(t);
+    return !(boost::math::isnan)(t);
   }
 
   inline bool valid(const pcl::PointXYZRGBNormal& p)
   {
     float t = p.x + p.y + p.z + p.normal_x + p.normal_y + p.normal_z + p.rgb;
-    return !boost::math::isnan(t);
+    return !(boost::math::isnan)(t);
   }
 
   
