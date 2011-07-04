@@ -12,6 +12,7 @@
 #include <nuklei/KernelCollection.h>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
+#include <boost/math/special_functions/fpclassify.hpp>
 
 // Forward declaration of PCL types
 //namespace pcl {
@@ -29,6 +30,30 @@
 
 namespace nuklei {
   
+  inline bool valid(const pcl::PointXYZ& p)
+  {
+    float t = p.x + p.y + p.z;
+    return boost::math::isnan(t);
+  }
+
+  inline bool valid(const pcl::PointNormal& p)
+  {
+    float t = p.x + p.y + p.z + p.normal_x + p.normal_y + p.normal_z;
+    return boost::math::isnan(t);
+  }
+
+  inline bool valid(const pcl::PointXYZRGB& p)
+  {
+    float t = p.x + p.y + p.z + p.rgb;
+    return boost::math::isnan(t);
+  }
+
+  inline bool valid(const pcl::PointXYZRGBNormal& p)
+  {
+    float t = p.x + p.y + p.z + p.normal_x + p.normal_y + p.normal_z + p.rgb;
+    return boost::math::isnan(t);
+  }
+
   
   kernel::r3 nukleiKernelFromPclPoint(const pcl::PointXYZ& p);
 
@@ -81,12 +106,14 @@ namespace nuklei {
 
   
   template<typename PointT>
-  KernelCollection nukleiFromPcl(const pcl::PointCloud<PointT>& cloud)
+  KernelCollection nukleiFromPcl(const pcl::PointCloud<PointT>& cloud,
+                                 const bool removeInvalidPoints = false)
   {
     KernelCollection kc;
     for (typename pcl::PointCloud<PointT>::const_iterator i = cloud.begin();
          i != cloud.end(); ++i)
     {
+      if (removeInvalidPoints && !valid(*i)) continue;
       kc.add(nukleiKernelFromPclPoint(*i));
     }
     return kc;
