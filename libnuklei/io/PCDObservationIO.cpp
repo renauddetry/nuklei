@@ -65,7 +65,7 @@ namespace nuklei {
           (observationFileName_, *cloud) == -1)
         throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
       else
-        kc_ = nukleiFromPcl(*cloud);
+        kc_ = nukleiFromPcl(*cloud, true);
     } catch (std::exception& e) {
       try {
         pcl::PointCloud<pcl::PointNormal>::Ptr cloud
@@ -75,7 +75,7 @@ namespace nuklei {
             (observationFileName_, *cloud) == -1)
           throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
         else
-          kc_ = nukleiFromPcl(*cloud);
+          kc_ = nukleiFromPcl(*cloud, true);
       } catch (std::exception& e) {
         try {
           pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud
@@ -85,7 +85,7 @@ namespace nuklei {
               (observationFileName_, *cloud) == -1)
             throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
           else
-            kc_ = nukleiFromPcl(*cloud);
+            kc_ = nukleiFromPcl(*cloud, true);
         } catch (std::exception& e) {
           try {
             pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
@@ -95,7 +95,7 @@ namespace nuklei {
                 (observationFileName_, *cloud) == -1)
               throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
             else
-              kc_ = nukleiFromPcl(*cloud);
+              kc_ = nukleiFromPcl(*cloud, true);
           } catch (std::exception& e) {
             throw ObservationIOError(e.what());
           }

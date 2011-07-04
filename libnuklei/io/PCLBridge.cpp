@@ -26,7 +26,7 @@ namespace nuklei {
     uint8_t r = (rgb >> 16) & 0x0000ff;
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
-    RGBColor c(r, g, b);
+    RGBColor c(double(r)/255, double(g)/255, double(b)/255);
     d.setColor(c);
     k.setDescriptor(d);
     return k;
@@ -60,7 +60,7 @@ namespace nuklei {
     uint8_t r = (rgb >> 16) & 0x0000ff;
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
-    RGBColor c(r, g, b);
+    RGBColor c(double(r)/255, double(g)/255, double(b)/255);
     d.setColor(c);
     k.setDescriptor(d);
     return k;
@@ -88,7 +88,7 @@ namespace nuklei {
     p.z = k.loc_.Z();
     const ColorDescriptor& d = dynamic_cast<const ColorDescriptor&>(k.getDescriptor());
     const RGBColor c(d.getColor());
-    uint8_t r = c.R(), g = c.G(), b = c.B();
+    uint8_t r = c.R()*255, g = c.G()*255, b = c.B()*255;
     uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
     p.rgb = *reinterpret_cast<float*>(&rgb);
   }
@@ -135,7 +135,7 @@ namespace nuklei {
     p.normal_z = k.dir_.Z();
     const ColorDescriptor& d = dynamic_cast<const ColorDescriptor&>(k.getDescriptor());
     const RGBColor c(d.getColor());
-    uint8_t r = c.R(), g = c.G(), b = c.B();
+    uint8_t r = c.R()*255, g = c.G()*255, b = c.B()*255;
     uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
     p.rgb = *reinterpret_cast<float*>(&rgb);
   }
