@@ -475,11 +475,11 @@ namespace nuklei {
                        const coord_t x = .5);
       coord_pair distanceTo(const kernel::se3& k) const;
       
-      /** @brief Kernel location */
+      /** @brief Kernel location. */
       Vector3 loc_;
-      /** @brief Kernel orientation */
+      /** @brief Kernel orientation. */
       Quaternion ori_;
-      /** @brief Location bandwidth, in radians. */
+      /** @brief Location bandwidth. */
       coord_t loc_h_;
       /** @brief Orientation bandwidth, in radians. */
       coord_t ori_h_;

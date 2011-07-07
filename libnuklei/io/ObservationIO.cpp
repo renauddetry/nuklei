@@ -28,13 +28,16 @@ namespace nuklei {
   std::auto_ptr<Observation> ObservationReader::readObservation()
   {
     NUKLEI_TRACE_BEGIN();
-    std::auto_ptr<Observation> observation = readObservation_();
-    if (observation.get() == NULL) return observation;
-    oc.incLabel("input");
-    if (roi_ && !roi_->contains(observation->getKernel()->getLoc()))
-      return readObservation();
-    oc.incLabel("inROI");
-    return observation;
+    for (;;)
+    {
+      std::auto_ptr<Observation> observation = readObservation_();
+      if (observation.get() == NULL) return observation;
+      oc.incLabel("input");
+      if (roi_ && !roi_->contains(observation->getKernel()->getLoc()))
+        continue;
+      oc.incLabel("inROI");
+      return observation;
+    }
     NUKLEI_TRACE_END();
   }
 

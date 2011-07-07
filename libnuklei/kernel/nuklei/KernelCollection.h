@@ -123,6 +123,10 @@ namespace nuklei {
    *
    * If the intermediary results that a method requires have not been computed,
    * the method throws an exception.
+   *
+   * @section iterators Sample Iterators, Sort Iterators
+   *
+   * http://trsl.sourceforge.net
    */
   class KernelCollection
     {
@@ -245,11 +249,7 @@ namespace nuklei {
       /**
        * @brief Returns an iterator that iterates through @p sampleSize kernels.
        *
-       * The probability that a given kernel is chosen is proportional
-       * to its weight. <b>This iterator does not return a sample of
-       * the density, it returns a sample of the kernels. To get
-       * samples from the density, the returned kernels need to be
-       * sampled exactly once each.</b>
+       * This is the @c const version of #sampleBegin()
        */
       const_sample_iterator sampleBegin(size_t sampleSize) const;
 
