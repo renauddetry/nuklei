@@ -1,3 +1,17 @@
+# 
+# 
+# 
+# 
+# This file defines how the Nuklei build system should build
+# the examples. Users (you) do not need to worry about this
+# file to compile your own nuklei-dependent programs, or the
+# examples. Each example source file contains a simple
+# command line which can be used to build it.
+# 
+# 
+# 
+# 
+
 import os
 import fnmatch
 from os.path import join

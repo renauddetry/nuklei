@@ -126,7 +126,30 @@ namespace nuklei {
    *
    * @section iterators Sample Iterators, Sort Iterators
    *
-   * http://trsl.sourceforge.net
+   * KernelCollection provides iterators over a random permutation of its
+   * elements (#sampleBegin()), and over a sorted permutation of its elements
+   * (#sortBegin()). One will note that KernelCollection does not provide
+   * sampleEnd() or sortEnd() methods. Ends are provided by the iterators
+   * themselves, and should be accessed as follows:
+   * @code
+   * nuklei::KernelCollection kc = ...;
+   * for (nuklei::KernelCollection::const_sample_iterator i = as_const(kc).sampleBegin(5);
+   *      i != i.end(); ++i) // note i.end() instead of kc.end()
+   * {
+   *   // *i returns a reference to a datapoint/kernel of kc
+   *   // i.index() returns the index (in kc) of that element.
+   * }
+   * for (nuklei::KernelCollection::const_sort_iterator i = as_const(kc).sortBegin(5);
+   *      i != i.end(); ++i) // note i.end() instead of kc.end()
+   * {
+   *   // *i returns a reference to a datapoint/kernel of kc
+   *   // i.index() returns the index (in kc) of that element.
+   * }
+   * @endcode
+   *
+   * These iterators are implemented with <a
+   * href="http://trsl.sourceforge.net">the TRSL library</a>. Refer to the doc
+   * of TRSL for more information.
    */
   class KernelCollection
     {
@@ -234,13 +257,21 @@ namespace nuklei {
         is_picked, const_iterator> const_sample_iterator;
       
       /**
-       * @brief Returns an iterator that iterates through @p sampleSize kernels.
+       * @brief Returns an iterator that iterates through @p sampleSize kernels
+       * selected randomly.
        *
-       * The probability that a given kernel is chosen is proportional
-       * to its weight. <b>This iterator does not return a sample of
-       * the density, it returns a sample of the kernels. To get
-       * samples from the density, the returned kernels need to be
-       * sampled exactly once each.</b>
+       * Iterates through @p sampleSize kernels. The probability that a kernel
+       * is selected is proportional to its weight: The probability that the @f$
+       * i^{th} @f$ kernel returned by the iterator is the @f$ l^{th} @f$ kernel
+       * of the KernelCollection is proportional to the weight of the @f$ l^{th}
+       * @f$ kernel, as @f[ P(i = \ell) \propto w_{\ell}. @f]
+       *
+       * <b>This iterator does not return samples of the density! It returns
+       * a random subset of the kernels. To get samples from the density, one
+       * needs to get exactly one sample from each kernel returned by the
+       * iterator.</b>
+       *
+       * See @ref iterators for more details.
        *
        * This method runs in @f$ O(n+\textrm{sampleSize}) @f$ time, where
        * @f$ n @f$ is the number of kernels in the collection.
@@ -249,7 +280,7 @@ namespace nuklei {
       /**
        * @brief Returns an iterator that iterates through @p sampleSize kernels.
        *
-       * This is the @c const version of #sampleBegin()
+       * This is the @c const version of #sampleBegin().
        */
       const_sample_iterator sampleBegin(size_t sampleSize) const;
 
@@ -269,11 +300,15 @@ namespace nuklei {
       /**
        * @brief Returns an iterator that iterates through the @p sortSize
        * kernels of highest weight, in order of decreasing weight.
+       *
+       * See @ref iterators for more details.
        */
       sort_iterator sortBegin(size_t sortSize);
       /**
        * @brief Returns an iterator that iterates through the @p sortSize
        * kernels of highest weight, in order of decreasing weight.
+       *
+       * This is the @c const version of #sortBegin().
        */
       const_sort_iterator sortBegin(size_t sortSize) const;
       

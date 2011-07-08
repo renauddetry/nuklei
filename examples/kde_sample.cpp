@@ -61,26 +61,8 @@ int main(int argc, char ** argv)
     // Sample from the density: //
     // ------------------------ //
     
-    // The `sample_iterator' iterates through `nSamples' datapoints supporting the
-    // density. The probability that a given datapoint is chosen is proportional to
-    // its weight.
-    // Note that as_const forces calling
-    // KernelCollection::sampleBegin()const. Without as_const, it is
-    // KernelCollection::sampleBegin() that is called, which invalidates helper
-    // strucutures.
-    nuklei::KernelCollection::const_sample_iterator i = as_const(density).sampleBegin(nSamples);
-    
-    for (; i != i.end(); ++i) // note i.end() instead of density.end()
-    {
-      // `*i' returns a reference to a datapoint/kernel of `density'
-      const nuklei::kernel::base& p = *i;
-      
-      // Now we need to draw a sample from the that kernel
-      nuklei::kernel::base::ptr s = p.polySample();
-      // And add it to the set of samples
-      samples.add(*s);
-    }
-    
+    samples = density.sample(nSamples);
+        
     // -------------------------- //
     // Write the samples to disk: //
     // -------------------------- //

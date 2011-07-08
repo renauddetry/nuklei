@@ -15,7 +15,7 @@ Please read the following sections carefully before committing new code to the r
 
 - Avoid importing namespaces directly into the top namespace in implementation files. Imports within the body of a function are ok, but avoiding them is better.
 
-- Use "bracket" include directives, i.e., use
+- Use @<bracket@> include directives, i.e., use
 @code
 #include <lib/header.h>
 @endcode
@@ -73,8 +73,7 @@ struct C
 
 @section coding_well Writing Good C++
 
-C++ provides the programmer with a lot of freedom, which brings flexibility, but also danger.
+C++ provides the programmer with a lot of freedom, which brings flexibility, but also danger :-)
 
-In research, many of us (including me) learn C++ on-the-job. Unfortunately, C++ is not easy to learn that way, as it allows one to write strange constructs that compile but that will run differently than expected. An extremely valuable source for avoiding sneaky bugs is the <a href="http://www.parashift.com/c++-faq-lite/">c++-faq</a>. It's perfect for us: it doesn't teach C++ from zero, instead it draws attention onto all the pesky subtleties that are difficult to catch when learning on-the-job.
-
+The <a href="http://www.parashift.com/c++-faq-lite/">c++-faq</a> draws attention to many subtle issues that can arise in C++.
 */
