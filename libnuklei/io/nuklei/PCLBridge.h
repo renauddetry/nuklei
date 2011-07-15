@@ -126,7 +126,7 @@ namespace nuklei {
     
     cloud.width    = kc.size();
     cloud.height   = 1;
-    cloud.is_dense = false;
+    cloud.is_dense = true; // all points coming from Nuklei should be valid.
         
     for (KernelCollection::const_iterator i = kc.begin();
          i != kc.end(); ++i)

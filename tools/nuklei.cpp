@@ -64,11 +64,6 @@ const CommandList commands[] = {
     call: &evaluate
   },
   {
-    command: "size",
-    help: "",
-    call: &size
-  },
-  {
     command: "test",
     help: "",
     call: &test

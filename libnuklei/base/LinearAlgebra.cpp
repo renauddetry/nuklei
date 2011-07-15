@@ -4,6 +4,8 @@
 
 /** @file */
 
+#include <boost/algorithm/string.hpp>
+
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_linalg.h>
@@ -12,6 +14,7 @@
 
 namespace nuklei
 {
+  
   namespace la
   {
     void eigenDecomposition(Matrix3 &eVectors, Vector3& eValues, const Matrix3& sym)
@@ -124,5 +127,52 @@ namespace nuklei
     }
   
   }
+  
+  std::ostream& operator<<(std::ostream &out, const GMatrix &m)
+  {
+    for (int i = 0; i < m.GetRows(); ++i)
+    {
+      for (int j = 0; j < m.GetColumns(); ++j)
+        NUKLEI_ASSERT(out << m(i,j) << " ");
+      NUKLEI_ASSERT(out << "\n");
+    }
+    out << std::flush;
+    return out;
+  }
+
+  std::istream& operator>>(std::istream &in, GMatrix &m)
+  {
+    std::vector< std::vector<double> > rows;
+    std::string line;
+    int ntok = -1;
+    while (std::getline(in, line))
+    {
+      std::vector<std::string> tokens;
+      boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+      if (tokens.back() == "")
+        tokens.pop_back();
+      
+      if (ntok == -1)
+        ntok = tokens.size();
+      else
+        NUKLEI_ASSERT(ntok == tokens.size());
+      
+      if (tokens.size() == 0)
+        break;
+      
+      rows.push_back(std::vector<double>());
+      for (std::vector<std::string>::const_iterator i = tokens.begin();
+           i != tokens.end(); ++i)
+        rows.back().push_back(numify<double>(*i));
+    }
+    
+    m.SetSize(rows.size(), ntok);
+    for (int i = 0; i < m.GetRows(); ++i)
+      for (int j = 0; j < m.GetColumns(); ++j)
+        m(i,j) = rows.at(i).at(j);
+    
+    return in;
+  }
+
 
 }

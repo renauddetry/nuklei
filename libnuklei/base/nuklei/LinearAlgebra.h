@@ -138,6 +138,9 @@ namespace nuklei {
     return in;
   }
 
+  std::ostream& operator<<(std::ostream &out, const GMatrix &m);
+  std::istream& operator>>(std::istream &in, GMatrix &m);
+
 }
 
 

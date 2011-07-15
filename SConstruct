@@ -102,7 +102,7 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('qpl', 'Activates QPL code', 'no',
                allowed_values = ('yes', 'no')),
-  EnumVariable('use_openmp', 'Enables OpenMP. Does not do anything at the moment.', 'no',
+  EnumVariable('use_openmp', 'Use OpenMP sync instead of pthread mutexes.', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
                allowed_values = ('yes', 'no')),
@@ -373,7 +373,7 @@ SConscript('build_scripts/SConscheck.py',
            exports = 'conf')
 env = conf.Finish()
 
-env.Append(CPPDEFINES = [ ('BUILDTYPE', "\\\"" + env['BuildType'] + "\\\"") ])
+env.Append(CPPDEFINES = [ ('NUKLEI_BUILDTYPE', "\\\"" + env['BuildType'] + "\\\"") ])
 
 # darwin specific stuff
 if env['PLATFORM'] == 'darwin':

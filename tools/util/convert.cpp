@@ -15,6 +15,7 @@
 #include <nuklei/SerializedKernelObservationIO.h>
 #include <nuklei/Serial.h>
 #include <nuklei/nullable.h>
+#include <nuklei/ProgressIndicator.h>
 
 using namespace nuklei;
 
@@ -30,13 +31,14 @@ void convert(const std::vector<std::string>& files,
              const Observation::Type outType = Observation::UNKNOWN,
              boost::shared_ptr<RegionOfInterest> roi = boost::shared_ptr<RegionOfInterest>(),
              const int nObs = -1,
+             const double minDist = 0,
              const int removePlane = 0,
              bool makeR3xS2P = false,
              const std::string &filterRGB = "",
              const std::string &setRGB = "",
              const Color::Type colorToLoc = Color::UNKNOWN)
 {
-  bool storeInKc = removePlane > 0 || nObs >= 0 ||
+  bool storeInKc = removePlane > 0 || nObs >= 0 || minDist > 0 || minDist == -1 ||
     normalizePose || !normalizingTransfoFile.empty() ||
     normalizeScale || !normalizingScaleFile.empty() ||
     makeR3xS2P ||
@@ -357,7 +359,74 @@ void convert(const std::vector<std::string>& files,
         observations.push_back(boost::shared_ptr<Observation>(new SerializedKernelObservation(colorKernel)));
       }
     }
-  
+    
+    double minDist2 = minDist;
+    
+    if (minDist2 == -1)
+    {
+      std::vector<Vector3> posVec;
+      for (std::vector< boost::shared_ptr<Observation> >::const_iterator
+           i = observations.begin();
+           i != observations.end(); ++i)
+        posVec.push_back((*i)->getKernel()->getLoc());
+      
+      ProgressIndicator pi(observations.size(),
+                           "Computing maximum distance between two nearest neighbors: ");
+      for (std::vector<Vector3>::const_iterator
+           i = posVec.begin();
+           i != posVec.end(); ++i)
+      {
+        double nnDist = -1;
+        for (std::vector<Vector3>::const_iterator
+             j = posVec.begin();
+             j != posVec.end(); ++j)
+        {
+          if (i == j) continue;
+          double d = (*i-*j).SquaredLength();
+          if ( nnDist == -1 || d < nnDist )
+          {
+            nnDist = d;
+          }
+        }
+        nnDist = std::sqrt(nnDist);
+        if (minDist2 == -1 || nnDist > minDist2)
+          minDist2 = nnDist;
+        pi.inc();
+      }
+      std::cout << "Max distance between two nearest neighbors: " << minDist2 << std::endl;
+    }
+    
+    if (minDist2 > 0)
+    {
+      std::vector< boost::shared_ptr<Observation> > tmp = observations;
+      observations.clear();
+      std::vector<Vector3> posVec;
+      ProgressIndicator pi(tmp.size(), "Filtering points: ");
+      for (std::vector< boost::shared_ptr<Observation> >::const_iterator
+           i = tmp.begin();
+           i != tmp.end(); ++i)
+      {
+        bool cnt = false;
+        Vector3 iLoc = (*i)->getKernel()->getLoc();
+        for (std::vector<Vector3>::const_iterator
+             j = posVec.begin();
+             j != posVec.end(); ++j)
+        {
+          if ( (iLoc - *j).SquaredLength() < minDist2*minDist2 )
+          {
+            cnt = true;
+            break;
+          }
+        }
+        if (!cnt)
+        {
+          observations.push_back(*i);
+          posVec.push_back(iLoc);
+        }
+        pi.inc();
+      }
+    }
+    
     if (nObs >= 0)
     {
 #if NUKLEI_TRSL_VERSION_NR < 100030000
@@ -483,6 +552,12 @@ int convert(int argc, char ** argv)
     ("n", "num_obs",
      "Number of output observations.",
      false, -1, "int", cmd);
+
+  TCLAP::ValueArg<int> minDistArg
+  ("", "min_dist",
+   "In the output set, points are at least separated by the value of this "
+   "argument.",
+   false, 0, "float", cmd);
 
   TCLAP::ValueArg<int> removePlaneArg
     ("", "remove_plane",
@@ -620,7 +695,7 @@ int convert(int argc, char ** argv)
           typeFromName<Observation>(inTypeArg.getValue()),
           typeFromName<Observation>(outTypeArg.getValue()),
           roi,
-          nObsArg.getValue(),
+          nObsArg.getValue(), minDistArg.getValue(),
           removePlaneArg.getValue(),
           makeR3xs2pArg.getValue(),
           filterRGBArg.getValue(),

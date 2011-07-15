@@ -219,82 +219,9 @@ int homogeneous_subset(int argc, char ** argv)
 {
   NUKLEI_TRACE_BEGIN();
 
-  /* Parse command line arguments */
-
-  TCLAP::CmdLine cmd(INFOSTRING + "Resampling App." );
-
-  /* Standard arguments */
-
-  TCLAP::ValueArg<int> niceArg
-    ("", "nice",
-     "Proccess priority.",
-     false, NICEINC, "int", cmd);
-
-  /* Custom arguments */
-
-  TCLAP::UnlabeledValueArg<std::string> inFileArg
-    ("input",
-     "Input.",
-     true, "", "filename", cmd);
-
-  TCLAP::UnlabeledValueArg<std::string> outFileArg
-    ("output",
-     "Output.",
-     true, "", "filename", cmd);
-  
-  TCLAP::ValueArg<int> nObsArg
-    ("n", "num_obs",
-     "Number of output observations.",
-     true, -1, "int", cmd);
-
-  TCLAP::ValueArg<double> minDistArg
-    ("d", "min_dist",
-     "Min distance in resampling.",
-     true, 0, "float", cmd);
-
-  cmd.parse( argc, argv );
-
-  NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
-
-  NUKLEI_ASSERT(nObsArg.getValue() >= 0);
-
-  std::auto_ptr<ObservationReader> reader =
-    ObservationReader::createReader(inFileArg.getValue());
-
-  KernelCollection kc, sample;
-  readObservations(*reader, kc);
-  
-  ProgressIndicator pi(nObsArg.getValue());
-  for (KernelCollection::const_sample_iterator i = as_const(kc).sampleBegin(kc.size());
-       i != i.end(); ++i)
-  {
-    //sample.setKernelLocH(minDistArg.getValue() / 2);
-    //sample.buildKdTree();
-    kernel::r3 k;
-    k.loc_ = i->getLoc();
-    if (i->hasDescriptor()) k.setDescriptor(i->getDescriptor());
-    //if (sample.evaluationAt(k) > 0) continue;
-    bool cnt = false;
-    for (KernelCollection::iterator j = sample.begin(); j != sample.end(); ++j)
-    {
-      if ((j->getLoc()-k.loc_).Length() < minDistArg.getValue())
-      {
-        cnt = true;
-        break;
-      }
-    }
-    if (cnt) continue;
-    sample.add(*i);
-    pi.inc();
-    if (int(sample.size()) >= nObsArg.getValue()) break;
-  }
-  if (int(sample.size()) != nObsArg.getValue())
-    NUKLEI_WARN("Sample size is " << sample.size() << " != " << nObsArg.getValue());
- 
-  KernelWriter writer(outFileArg.getValue());
-  writer.init();
-  writeObservations(writer, sample);
-  writer.writeBuffer();
+  std::cout << "This app is obsolete. See \n"
+  "  nuklei conv --min_dist DIST FILE1 FILE2\n"
+  "instead." << std::endl;
 
   return 0;
   

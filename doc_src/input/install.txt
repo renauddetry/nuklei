@@ -37,8 +37,9 @@ Nuklei is exclusively written in C++.
 - BLAS and LAPACK
 
 <b>Optional nonstandard libraries:</b>
-- OpenCV 1+
+- OpenCV 1.0+
 - CGAL 3.3+
+- PCL 1.0+
 
 @section install_proc Build and Install
 
@@ -96,7 +97,7 @@ $ pkg-config --cflags --libs nuklei
 On my system, this command produces
 
 @verbatim
--I/usr/local/devel/include -L/usr/local/devel/lib -DNUKLEI_ENABLE_GPL -DNUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR -DBUILDTYPE=\"deploy\" -lnuklei -lboost_system-mt -lboost_serialization-mt -lboost_iostreams-mt -lboost_thread-mt -lboost_filesystem-mt
+-I/usr/local/devel/include -L/usr/local/devel/lib -DNUKLEI_ENABLE_GPL -DNUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR -lnuklei -lboost_system-mt -lboost_serialization-mt -lboost_iostreams-mt -lboost_thread-mt -lboost_filesystem-mt
 @endverbatim
 
 @section install_doc Building the Documentation

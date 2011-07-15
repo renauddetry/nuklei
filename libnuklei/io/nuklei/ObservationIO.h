@@ -108,6 +108,13 @@ namespace nuklei {
    */
   void readObservations(const std::string &s, KernelCollection &kc,
                         Observation::Type& t);
+  /**
+   * @brief Reads the file @p s (@em no automatic type detection) and stores the
+   * read data into @p kc. @p t is the format in which the data is stored.
+   */
+  void readObservationsWithSpecificFormat(const std::string &s,
+                                          KernelCollection &kc,
+                                          const Observation::Type& t);
   
   /** @brief Base class for kernel writer and point writer classes. */
   class ObservationWriter : boost::noncopyable
