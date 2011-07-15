@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cmath>
 #include <boost/tuple/tuple.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <nuklei/PLYObservationIO.h>
 #include <nuklei/PLYObservation.h>
@@ -42,35 +43,54 @@ namespace nuklei {
       throw ObservationIOError(std::string("Could not open file ") +
                                    observationFileName_ + " for reading.");
     try {
-      // So far, we only read PLY that *begin* with verticies.
-      if ( !(in_
-             >> Match("ply")
-             >> Match("format")
-             >> Match("ascii")
-             >> Match("1.0")
-             >> Match("element")
-             >> Match("vertex")
-             >> n_
-             >> Match("property")
-             >> Match("float")
-             >> Match("x")
-             >> Match("property")
-             >> Match("float")
-             >> Match("y")
-             >> Match("property")
-             >> Match("float")
-             >> Match("z")
-             ) )
-        throw ObservationIOError("Non-PLY format.");
-      NUKLEI_ASSERT(n_ >= 0);
-      for (;;)
+      // Note: we only read PLY that *begin* with verticies.
+
+      
+      std::string line;
+      if (!std::getline(in_, line) || line != "ply")
+        throw ObservationIOError("Non-PLY format (PLY must start with a line `ply'.");
+      
+      bool format = false, px = false, py = false, pz = false, header = false;
+      while (std::getline(in_, line))
       {
-        NUKLEI_ASSERT(std::getline(in_, dump));
-        if (dump == "end_header")
+        std::vector<std::string> tokens;
+        boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+        if (tokens.back() == "")
+          tokens.pop_back();
+        
+        if (tokens.size() == 1 && tokens.front() == "end_header")
+        {
+          header = true;
           break;
+        }
+        
+        if (tokens.size() == 0) continue;
+        
+        if (tokens.front() == "comment") continue;
+        else if (line == "format ascii 1.0") format = true;
+        else if (tokens.front() == "element" && tokens.size() >= 3 &&
+            tokens.at(1) == "vertex")
+        {
+          n_ = numify<int>(tokens.at(2));
+        }
+        else if (tokens.front() == "property" && tokens.size() >= 3 &&
+            tokens.at(2) == "x")
+          px = true;
+        else if (tokens.front() == "property" && tokens.size() >= 3 &&
+            tokens.at(2) == "y")
+          py = true;
+        else if (tokens.front() == "property" && tokens.size() >= 3 &&
+            tokens.at(2) == "z")
+          pz = true;
       }
-    } catch (Error &e) {
+      if ( n_ < 0 || !header )
         throw ObservationIOError("Non-PLY format.");
+      
+      if (!format || !px || !py || !pz)
+        NUKLEI_WARN("Unsupported PLY header. PLY parsing may not work as expected.");
+      
+    } catch (Error &e) {
+      throw ObservationIOError("Non-PLY format.");
     }
     index_ = 0;
     NUKLEI_TRACE_END();
