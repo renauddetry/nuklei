@@ -104,18 +104,54 @@ namespace nuklei {
   void readObservations(const std::string &s, KernelCollection &kc);
   /**
    * @brief Reads the file @p s (with automatic type detection) and stores the
-   * read data into @p kc. @p t is set to the format of the file @p s.
+   * read data into @p kc.
+   *
+   * @p t is set to the format of the file @p s.
    */
   void readObservations(const std::string &s, KernelCollection &kc,
                         Observation::Type& t);
   /**
    * @brief Reads the file @p s (@em no automatic type detection) and stores the
-   * read data into @p kc. @p t is the format in which the data is stored.
+   * read data into @p kc.
+   *
+   * @p t is the format in which the data is stored.
    */
   void readObservationsWithSpecificFormat(const std::string &s,
                                           KernelCollection &kc,
                                           const Observation::Type& t);
-  
+
+  /**
+   * @brief Reads a single observation from file @p s (with automatic type
+   * detection), and returns it.
+   *
+   * This method check that the file @p s contains a single observation. If it
+   * is not the case, an exception is thrown.
+   */
+  kernel::base::ptr readSingleObservation(const std::string &s);
+  /**
+   * @brief Reads a single observation from file @p s (with automatic type
+   * detection), and returns it.
+   *
+   * @p t is set to the format of the file @p s.
+   *
+   * This method check that the file @p s contains a single observation. If it
+   * is not the case, an exception is thrown.
+   */
+  kernel::base::ptr readSingleObservation(const std::string &s,
+                                          Observation::Type& t);
+  /**
+   * @brief Reads a single observation from file @p s (@em no automatic type
+   * detection), and returns it.
+   *
+   * @p t is the format in which the data is stored.
+   *
+   * This method check that the file @p s contains a single observation. If it
+   * is not the case, an exception is thrown.
+   */
+  kernel::base::ptr
+  readSingleObservationWithSpecificFormat(const std::string &s,
+                                          const Observation::Type& t);
+
   /** @brief Base class for kernel writer and point writer classes. */
   class ObservationWriter : boost::noncopyable
     {
@@ -141,7 +177,13 @@ namespace nuklei {
   void writeObservations(ObservationWriter &w, const KernelCollection &kc);  
   /** @brief Writes the content of @p kc to file @p s, using file format @p t. */
   void writeObservations(const std::string &s, const KernelCollection &kc,
-                         const Observation::Type &t = Observation::NUKLEI);  
+                         const Observation::Type &t = Observation::NUKLEI);
+  /**
+   * @brief Writes @p k to file @p s, using file format @p t.
+   */
+  void writeSingleObservation(const std::string &s, const KernelCollection &kc,
+                              const Observation::Type &t = Observation::NUKLEI);  
+
 }
 
 #endif

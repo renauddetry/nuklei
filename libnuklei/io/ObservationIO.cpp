@@ -384,6 +384,32 @@ namespace nuklei {
   }
 
 
+  kernel::base::ptr readSingleObservation(const std::string &s)
+  {
+    Observation::Type t;
+    return readSingleObservation(s, t);
+  }
+
+  kernel::base::ptr readSingleObservation(const std::string &s,
+                                          Observation::Type& t)
+  {
+    KernelCollection kc;
+    readObservations(s, kc, t);
+    if (kc.size() != 1)
+      NUKLEI_THROW("File `" << s << "' does not contain a single observation.");
+    return kc.front().clone();
+  }
+  
+  kernel::base::ptr
+  readSingleObservationWithSpecificFormat(const std::string &s,
+                                          const Observation::Type& t)
+  {
+    KernelCollection kc;
+    readObservationsWithSpecificFormat(s, kc, t);
+    if (kc.size() != 1)
+      NUKLEI_THROW("File `" << s << "' does not contain a single observation.");
+    return kc.front().clone();
+  }
   
   void writeObservations(ObservationWriter &w, const KernelCollection &kc)
   {
@@ -398,4 +424,13 @@ namespace nuklei {
     nuklei::writeObservations(*writer, kc);
     writer->writeBuffer();
   }
+  
+  void writeSingleObservation(const std::string &s, const kernel::base &k,
+                              const Observation::Type &t = Observation::NUKLEI)
+  {
+    KernelCollection kc;
+    kc.add(k);
+    writeObservations(s, kc, t);
+  }
+
 }
