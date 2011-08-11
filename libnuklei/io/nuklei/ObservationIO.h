@@ -181,7 +181,7 @@ namespace nuklei {
   /**
    * @brief Writes @p k to file @p s, using file format @p t.
    */
-  void writeSingleObservation(const std::string &s, const KernelCollection &kc,
+  void writeSingleObservation(const std::string &s, const kernel::base &k,
                               const Observation::Type &t = Observation::NUKLEI);  
 
 }

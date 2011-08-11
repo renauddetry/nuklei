@@ -480,9 +480,9 @@ namespace nuklei {
       el->SetAttribute("y", l[1]);
       el->SetAttribute("z", l[2]);
       el = append(loc, "Cartesian3DCovariance");
-      el->SetText(stringify(cov.GetRow(0)) + " " +
-                  stringify(cov.GetRow(1)) + " " +
-                  stringify(cov.GetRow(2)));
+      el->SetText(stringify(Vector3(cov.GetRow(0))) + " " +
+                  stringify(Vector3(cov.GetRow(1))) + " " +
+                  stringify(Vector3(cov.GetRow(2))));
     }
 
     {

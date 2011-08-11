@@ -426,7 +426,7 @@ namespace nuklei {
   }
   
   void writeSingleObservation(const std::string &s, const kernel::base &k,
-                              const Observation::Type &t = Observation::NUKLEI)
+                              const Observation::Type &t)
   {
     KernelCollection kc;
     kc.add(k);
