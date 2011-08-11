@@ -51,6 +51,10 @@ The @ref background section introduces the mathematical concepts applied in Nukl
 
 Other resources are available on the <a href="modules.html">Modules</a> page. The central Nuklei classes are KernelCollection and the kernel classes (kernel::base and its subclasses).
 
+@section index_links Links
+
+The <a href="http://code.google.com/p/bingham/">Bingham statistics library</a> provides another open-source implementation of probability distributions on @f$ SO(3) @f$ data. More specifically, <em>The Bingham statistics library contains implementations of the Bingham distribution for directional (axial) statistics on the unit spheres S1, S2, and S3. In addition, finite element approximations are available via tessellations of S2 and S3.</em> If you are looking for an anisotropic, parametric distribution on @f$ SO(3) @f$, check it out at <a href="http://code.google.com/p/bingham/">http://code.google.com/p/bingham/</a>.
+
 
 @section index_license License
 
