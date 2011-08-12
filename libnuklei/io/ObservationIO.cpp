@@ -16,6 +16,7 @@
 #include <nuklei/BuiltinVTKObservationIO.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/TxtObservationIO.h>
+#include <nuklei/IisObservationIO.h>
 
 namespace nuklei {
 
@@ -127,6 +128,13 @@ namespace nuklei {
 
     try {
       reader = createReader(arg, Observation::NUKLEI);
+      return reader;
+    } catch (ObservationIOError &e) {
+      errorsCat += "\n" + std::string(e.what());
+    }
+    
+    try {
+      reader = createReader(arg, Observation::IIS);
       return reader;
     } catch (ObservationIOError &e) {
       errorsCat += "\n" + std::string(e.what());
@@ -253,6 +261,11 @@ namespace nuklei {
         reader.reset(new TxtReader(arg));
         break;
       }
+      case Observation::IIS:
+      {
+        reader.reset(new IisReader(arg));
+        break;
+      }
       default:
       {
         NUKLEI_THROW("Unknown format.");
@@ -341,6 +354,11 @@ namespace nuklei {
       case Observation::TXT:
       {
         writer.reset(new TxtWriter(arg));
+        break;
+      }
+      case Observation::IIS:
+      {
+        writer.reset(new IisWriter(arg));
         break;
       }
       default:

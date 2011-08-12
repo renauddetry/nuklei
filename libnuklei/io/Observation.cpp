@@ -9,6 +9,6 @@
 namespace nuklei {
   
   const std::string Observation::TypeNames[] = {
-    "serial", "nuklei", "covis3d", "osutxt", "pcd", "ply", "rif", "crd", "builtinvtk", "txt", "unknown" }; 
+    "serial", "nuklei", "covis3d", "osutxt", "pcd", "ply", "rif", "crd", "builtinvtk", "txt", "iis", "unknown" }; 
 
 }
