@@ -164,9 +164,10 @@ void convert(const std::vector<std::string>& files,
     if (makeR3xS2P)
     {
       NUKLEI_ASSERT(setRGB.empty());
-      if (writerType != Observation::SERIAL)
+      if (!(writerType == Observation::SERIAL || writerType == Observation::NUKLEI))
         NUKLEI_THROW("Normal computation only available when outputing " <<
-                   nameFromType<Observation>(Observation::SERIAL) << ".");
+                     nameFromType<Observation>(Observation::SERIAL) << "or " <<
+                     nameFromType<Observation>(Observation::NUKLEI) << ".");
     
       KernelCollection kc1;
       
@@ -629,7 +630,13 @@ int convert(int argc, char ** argv)
       NUKLEI_THROW("Please specify either " << transformationArg.getName() <<
                  " or " << quaternionRotationArg.getName() << ".");
     transfo.reset(new kernel::se3);
-    Serial::readObject(*transfo, transformationArg.getValue());
+    
+    try {
+      *transfo = kernel::se3(*readSingleObservation(transformationArg.getValue()));
+    } catch (std::exception& e)
+    {
+      Serial::readObject(*transfo, transformationArg.getValue());
+    }
   }
   else if (!invTransformationArg.getValue().empty())
   {
@@ -640,7 +647,12 @@ int convert(int argc, char ** argv)
       NUKLEI_THROW("Please specify either " << invTransformationArg.getName() <<
                  " or " << quaternionRotationArg.getName() << ".");
     kernel::se3 rt;
-    Serial::readObject(rt, invTransformationArg.getValue());
+    try {
+      rt = kernel::se3(*readSingleObservation(invTransformationArg.getValue()));
+    } catch (std::exception& e)
+    {
+      Serial::readObject(rt, invTransformationArg.getValue());
+    }
     kernel::se3 it, origin;
     it = origin.transformationFrom(rt);
     transfo.reset(new kernel::se3(it));
