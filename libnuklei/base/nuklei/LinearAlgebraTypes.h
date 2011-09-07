@@ -14,6 +14,7 @@
 #include <nuklei/Wm5/Wm5GMatrix.h>
 #include <nuklei/Wm5/Wm5Plane3.h>
 #include <nuklei/Wm5/Wm5Quaternion.h>
+#include <nuklei/Definitions.h>
 
 namespace nuklei {
 
