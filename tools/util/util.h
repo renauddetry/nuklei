@@ -16,5 +16,6 @@ int resample(int argc, char ** argv);
 int homogeneous_subset(int argc, char ** argv);
 int evaluate(int argc, char ** argv);
 int test(int argc, char ** argv);
+int invert_transfo(int argc, char ** argv);
 
 #endif

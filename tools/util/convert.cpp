@@ -755,3 +755,46 @@ int concatenate(int argc, char ** argv)
   
   NUKLEI_TRACE_END();
 }
+
+int invert_transfo(int argc, char ** argv)
+{
+  NUKLEI_TRACE_BEGIN();
+  
+  /* Parse command line arguments */
+  
+  TCLAP::CmdLine cmd(INFOSTRING + "Transfo Invert App." );
+  
+  /* Standard arguments */
+  
+  TCLAP::ValueArg<int> niceArg
+  ("", "nice",
+   "Proccess priority.",
+   false, NICEINC, "int", cmd);
+  
+  /* Custom arguments */
+  
+  TCLAP::UnlabeledValueArg<std::string> inFileArg
+  ("input",
+   "Input.",
+   true, "", "filename", cmd);
+  
+  TCLAP::UnlabeledValueArg<std::string> outFileArg
+  ("output",
+   "Output.",
+   true, "", "filename", cmd);
+  
+  cmd.parse( argc, argv );
+  
+  NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
+  
+  kernel::se3 t = kernel::se3(*readSingleObservation(inFileArg.getValue()));
+  kernel::se3 o;
+  kernel::se3 it = o.transformationFrom(t);
+  writeSingleObservation(outFileArg.getValue(), it);
+  
+  return 0;
+  
+  NUKLEI_TRACE_END();
+}
+
+

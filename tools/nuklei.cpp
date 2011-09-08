@@ -64,6 +64,11 @@ const CommandList commands[] = {
     call: &evaluate
   },
   {
+    command: "invert_transfo",
+    help: "",
+    call: &invert_transfo
+  },
+  {
     command: "test",
     help: "",
     call: &test
