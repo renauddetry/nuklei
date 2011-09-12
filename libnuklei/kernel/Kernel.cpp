@@ -114,7 +114,15 @@ namespace nuklei
       if (hasDescriptor()) p.setDescriptor(getDescriptor());
       return p;
     }
-    
+
+    kernel::se3 se3::inverseTransformation() const
+    {
+      kernel::se3 origin;
+      kernel::se3 it = origin.transformationFrom(*this);
+      if (hasDescriptor()) it.setDescriptor(getDescriptor());
+      return it;
+    }
+
     kernel::se3
     kernel::se3::linearInterpolation(const kernel::se3& k,
                                      const coord_t x) const

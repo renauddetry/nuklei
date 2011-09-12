@@ -468,6 +468,7 @@ namespace nuklei {
       kernel::se3 transformedWith(const kernel::se3& k) const;
       void makeTransformWith(const kernel::se3& k);
       kernel::se3 transformationFrom(const kernel::se3& k) const;
+      kernel::se3 inverseTransformation() const;
       
       kernel::se3 linearInterpolation(const kernel::se3& k,
                                       const coord_t x) const;
