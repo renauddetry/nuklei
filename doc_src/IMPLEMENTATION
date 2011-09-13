@@ -47,15 +47,3 @@ times faster than the virtual call to kernel::base::eval.
 
 * polymorphic kc: considerably simpler than metaprogramming
 
-* different types of contrib
-
-* things in detail:: shouldn't be used
-
-* If you don't understand a comment below, write me to clarify it.
-
-* NEVER import std. As phrased in http://www.parashift.com/c++-faq-lite/coding-standards.html#faq-27.5 , get over it and type std::. Use std even for the symbols which are also in :: (use std::cos() instead of ::cos()).
-
-* 
-
-
-
