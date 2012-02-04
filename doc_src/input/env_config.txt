@@ -1,0 +1,41 @@
+// (C) Copyright Renaud Detry       2007-2011.
+
+namespace nuklei
+{
+
+/**
+
+@ingroup using
+@defgroup using_code Coding Details
+
+*/
+
+
+/**
+
+@ingroup using_code
+@defgroup programming_paradigm Programming Paradigms and Semantics
+
+Nuklei's code follows two distinct programming paradigms. Parts of 
+Nuklei are written in generic C++, while other parts are written in object-oriented/polymorphic C++. Generic code (i.e., templates) is flexible and fast (static binding, allows for inlining). Unfortunately, generic code can quickly become obscure. Generic programming also restricts the range of programmers who will be comfortable with the code.
+
+Parts of Nuklei where performance is an issue are written in generic code. This includes kernels and all their subroutines, which have to be inlinable. 
+In parts of the code where performance is not an issue, Nuklei is written in an object-oriented/polymorphic style (i.e., virtual inheritance).
+
+Kernels are at the meeting point of polymorphic and generic programming paradigms. Each kernel (kernel::se3, kernel::r3xs2p, kernel::r3) has a statically bound interface, with copy semantics. The kernel::base class is a polymorphic wrapper, with dynamically bound procedures. Several methods defined in kernel::base start with @p poly, in order to avoid making virtual the methods of kernel::se3, kernel::r3xs2p, kernel::r3 that must remain statically linkable:
+@code
+using namespace nuklei;
+kernel::se3 k1, k2;
+k1.polyEval(k2) // Slow evaluation - virtual table lookup necessary.
+k1.eval(k2) // Fast evaluation - the method can be inlined.
+kernel::base& k = k1;
+k.polyEval(k2) // Again, slow evaluation.
+k.eval(k2) // Compilation error - the base class only has the virtual methods.
+@endcode
+The template kernel::implementation_prototype binds the polymorphic wrapper to static implementations. kernel::implementation_prototype follows the CRTP trick to avoid clutter in derived kernels. Note that the kernel::implementation_prototype trick doesn't currently support class hierarchies taller than 3 (e.g., a class that inherits from kernel::se3 will not work properly). If you need to do such a thing, <a href="http://www.csc.kth.se/~detryr/">talk to me</a>.
+
+
+
+*/
+
+}
