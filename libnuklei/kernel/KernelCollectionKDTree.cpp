@@ -27,7 +27,7 @@ namespace nuklei {
     deco_.insert(NSTREE_KEY, tree);
     
 #else
-    NUKLEI_THROW("This function requires QPL-licensed code.");
+    NUKLEI_THROW("This function requires QPL-licensed code. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }

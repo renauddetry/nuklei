@@ -198,8 +198,9 @@ void convert(const std::vector<std::string>& files,
         RGBColor c (1,0,0);
         if (std::fabs(dp.get<1>()[0]-dp.get<1>()[1]) / std::fabs(dp.get<1>()[1]-dp.get<1>()[2]) < 2)
         {
-          if (dynamic_cast<VisualDescriptor*>(&k.getDescriptor()) != NULL)
-            dynamic_cast<VisualDescriptor&>(k.getDescriptor()).setColor(c);
+          if (i->hasDescriptor())
+            if (dynamic_cast<VisualDescriptor*>(&k.getDescriptor()) != NULL)
+              dynamic_cast<VisualDescriptor&>(k.getDescriptor()).setColor(c);
         }
         else
         {
@@ -554,7 +555,7 @@ int convert(int argc, char ** argv)
      "Number of output observations.",
      false, -1, "int", cmd);
 
-  TCLAP::ValueArg<int> minDistArg
+  TCLAP::ValueArg<double> minDistArg
   ("", "min_dist",
    "In the output set, points are at least separated by the value of this "
    "argument.",

@@ -88,7 +88,7 @@ namespace nuklei
     return boost::make_tuple(eigenVectors, eigenValues, conditionNumber);
     
 #else
-    NUKLEI_THROW("This function requires QPL-licensed code.");
+    NUKLEI_THROW("This function requires QPL-licensed code. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     
     NUKLEI_TRACE_END();
