@@ -17,7 +17,7 @@ namespace nuklei {
   class Observation
     {
     public:
-      typedef enum { SERIAL, NUKLEI, COVIS3D, OSUTXT, PCD, PLY, RIF, CRD, BUILTINVTK, TXT, IIS, UNKNOWN } Type;
+      typedef enum { SERIAL, NUKLEI, COVIS3D, OSUTXT, PCD, PLY, RIF, CRD, OFF, BUILTINVTK, TXT, IIS, UNKNOWN } Type;
       static const Type defaultType = SERIAL;
       static const std::string TypeNames[];
 

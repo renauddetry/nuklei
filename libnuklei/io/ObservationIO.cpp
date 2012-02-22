@@ -12,6 +12,7 @@
 #include <nuklei/PLYObservationIO.h>
 #include <nuklei/RIFObservationIO.h>
 #include <nuklei/CrdObservationIO.h>
+#include <nuklei/OffObservationIO.h>
 #include <nuklei/SerializedKernelObservationIO.h>
 #include <nuklei/BuiltinVTKObservationIO.h>
 #include <nuklei/KernelCollection.h>
@@ -183,6 +184,13 @@ namespace nuklei {
     }
 
     try {
+      reader = createReader(arg, Observation::OFF);
+      return reader;
+    } catch (ObservationIOError &e) {
+      errorsCat += "\n" + std::string(e.what());
+    }
+
+    try {
       reader = createReader(arg, Observation::BUILTINVTK);
       return reader;
     } catch (ObservationIOError &e) {
@@ -244,6 +252,11 @@ namespace nuklei {
       case Observation::CRD:
       {
         reader.reset(new CrdReader(arg));
+        break;
+      }
+      case Observation::OFF:
+      {
+        reader.reset(new OffReader(arg));
         break;
       }
       case Observation::SERIAL:
@@ -338,6 +351,11 @@ namespace nuklei {
       case Observation::CRD:
       {
         writer.reset(new CrdWriter(arg));
+        break;
+      }
+      case Observation::OFF:
+      {
+        writer.reset(new OffWriter(arg));
         break;
       }
       case Observation::SERIAL:
