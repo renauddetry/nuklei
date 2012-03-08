@@ -22,13 +22,13 @@ namespace nuklei {
   OsuTxtObservation::OsuTxtObservation(const kernel::r3& k) : k_(k)
   {}
     
-  void OsuTxtObservation::setLoc(Location loc)
+  void OsuTxtObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location OsuTxtObservation::getLoc() const { return k_.loc_; }
+  Vector3 OsuTxtObservation::getLoc() const { return k_.loc_; }
   
   void OsuTxtObservation::setWeight(weight_t weight)
   {

@@ -23,13 +23,13 @@ namespace nuklei {
   CrdObservation::CrdObservation(const kernel::r3& k) : k_(k)
   {}
     
-  void CrdObservation::setLoc(Location loc)
+  void CrdObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location CrdObservation::getLoc() const { return k_.loc_; }
+  Vector3 CrdObservation::getLoc() const { return k_.loc_; }
   
   void CrdObservation::setWeight(weight_t weight)
   {

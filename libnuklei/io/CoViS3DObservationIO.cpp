@@ -169,7 +169,7 @@ namespace nuklei {
         NUKLEI_ASSERT(primitiveElement->Value() == "Location");
         {
           ticpp::Element* el = primitiveElement->FirstChildElement("Cartesian3D");
-          Location l;
+          Vector3 l;
           el->GetAttribute("x", &l[0]);
           el->GetAttribute("y", &l[1]);
           el->GetAttribute("z", &l[2]);
@@ -208,7 +208,7 @@ namespace nuklei {
         {
           ElementPtr el = dirGamma->FirstChildElement("GammaVector");
           el = el->FirstChildElement("Cartesian3D");
-          Location l;
+          Vector3 l;
           el->GetAttribute("x", &l[0]);
           el->GetAttribute("y", &l[1]);
           el->GetAttribute("z", &l[2]);
@@ -295,7 +295,7 @@ namespace nuklei {
       // Careful:  LS.normal_vector_plane_C is a Vector!
       
       std::string s;
-      Location l;
+      Vector3 l;
       NUKLEI_ASSERT(in_ >> s && s == "l");
       
       //2 3 4: LS.X() LS.Y() LS.Z()
@@ -338,7 +338,7 @@ namespace nuklei {
       //directionVectorLineSegmentL[0]
       //directionVectorLineSegmentL[1]
       //directionVectorLineSegmentL[2]
-      Direction dummy;
+      Vector3 dummy;
       NUKLEI_ASSERT(in_ >> dummy[0] && in_ >> dummy[1] && in_ >> dummy[2]);
       
       
@@ -472,7 +472,7 @@ namespace nuklei {
     {
       ElementPtr loc = append(primitive, "Location");
       ElementPtr el = append(loc, "Cartesian3D");
-      Location l = observation.getLoc();
+      Vector3 l = observation.getLoc();
       Matrix3 cov;
       if (observation.getCovMatrix().isDefined()) cov = *observation.getCovMatrix();
       else cov = Matrix3::IDENTITY;
@@ -494,7 +494,7 @@ namespace nuklei {
         Matrix3 ori;
         la::copyRotation(ori, se3k->ori_);
         Vector3 l = ori.GetColumn(1);
-        //Location l = observation.getGamma();
+        //Vector3 l = observation.getGamma();
         el->SetAttribute("x", l[0]);
         el->SetAttribute("y", l[1]);
         el->SetAttribute("z", l[2]);

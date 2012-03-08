@@ -23,13 +23,13 @@ namespace nuklei {
   OffObservation::OffObservation(const kernel::r3& k) : k_(k)
   {}
     
-  void OffObservation::setLoc(Location loc)
+  void OffObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location OffObservation::getLoc() const { return k_.loc_; }
+  Vector3 OffObservation::getLoc() const { return k_.loc_; }
   
   void OffObservation::setWeight(weight_t weight)
   {

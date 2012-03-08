@@ -47,8 +47,8 @@ namespace nuklei {
       BuiltinVTKObservation(const kernel::r3& k);
       ~BuiltinVTKObservation() {};
     
-      void setLoc(Location loc);
-      Location getLoc() const;
+      void setLoc(Vector3 loc);
+      Vector3 getLoc() const;
   
       void setWeight(weight_t weight);
       weight_t getWeight() const;

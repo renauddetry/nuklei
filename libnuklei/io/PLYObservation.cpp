@@ -22,13 +22,13 @@ namespace nuklei {
   PLYObservation::PLYObservation(const kernel::r3& k) : k_(k)
   {}
     
-  void PLYObservation::setLoc(Location loc)
+  void PLYObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location PLYObservation::getLoc() const { return k_.loc_; }
+  Vector3 PLYObservation::getLoc() const { return k_.loc_; }
   
   void PLYObservation::setWeight(weight_t weight)
   {

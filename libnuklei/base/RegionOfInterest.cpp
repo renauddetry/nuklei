@@ -30,7 +30,7 @@ namespace nuklei
   void BoxROI::setCenterAxesSize(const std::string &centerSize)
   {
     std::istringstream is(centerSize);
-    Location center, axis1, axis2;
+    Vector3 center, axis1, axis2;
     for (unsigned int i = 0; i < 3; ++i)
       NUKLEI_ASSERT(is >> center[i]);
     for (unsigned int i = 0; i < 3; ++i)

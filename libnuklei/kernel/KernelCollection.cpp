@@ -252,8 +252,8 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-  void KernelCollection::transformWith(const Location &translation,
-                                   const Rotation &rotation)
+  void KernelCollection::transformWith(const Vector3 &translation,
+                                   const Quaternion &rotation)
   {
     NUKLEI_TRACE_BEGIN();
     kernel::se3 transfo;

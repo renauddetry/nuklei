@@ -36,15 +36,15 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-  void CoViS3DObservation::setLoc(Location loc)
+  void CoViS3DObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location CoViS3DObservation::getLoc() const { return k_.loc_; }
+  Vector3 CoViS3DObservation::getLoc() const { return k_.loc_; }
   
-  void CoViS3DObservation::setDirection(Location direction)
+  void CoViS3DObservation::setDirection(Vector3 direction)
   {
     NUKLEI_TRACE_BEGIN();
     NUKLEI_ASSERT_AFE_TOL(direction.Length(), 1, TOL);
@@ -53,14 +53,14 @@ namespace nuklei {
     k_.dir_ = direction;
     NUKLEI_TRACE_END();
   }
-  Location CoViS3DObservation::getDirection() const { return k_.dir_; }
+  Vector3 CoViS3DObservation::getDirection() const { return k_.dir_; }
   void CoViS3DObservation::setPhiPsi(coord_t phi, coord_t psi)
   {
     NUKLEI_TRACE_BEGIN();
     NUKLEI_RANGE_CHECK(phi, - M_PI, M_PI);
     NUKLEI_RANGE_CHECK(psi, -M_PI, 2*M_PI);
 
-    Location l;
+    Vector3 l;
     // This is the way Nico does it
     l[0] = std::sin( phi ) * std::cos( psi );
     l[1] = - std::sin( phi ) * std::sin( psi );

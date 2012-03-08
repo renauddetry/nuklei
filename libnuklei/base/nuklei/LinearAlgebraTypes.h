@@ -26,13 +26,6 @@ namespace nuklei {
   typedef nuklei_wmf::GMatrix<coord_t> GMatrix;
   typedef nuklei_wmf::Plane3<coord_t> Plane3;
 
-  typedef Vector3 Direction;
-  typedef Vector3 Location;
-  typedef Vector3 Translation;
-
-  typedef Quaternion Rotation;
-  typedef Rotation Orientation;
-
 }
 
 #endif

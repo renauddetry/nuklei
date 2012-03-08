@@ -22,13 +22,13 @@ namespace nuklei {
   RIFObservation::RIFObservation(const kernel::r3& k) : k_(k)
   {}
     
-  void RIFObservation::setLoc(Location loc)
+  void RIFObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location RIFObservation::getLoc() const { return k_.loc_; }
+  Vector3 RIFObservation::getLoc() const { return k_.loc_; }
   
   void RIFObservation::setWeight(weight_t weight)
   {

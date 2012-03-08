@@ -357,8 +357,8 @@ namespace nuklei {
       /** @brief Transforms the data with @p t. */
       void transformWith(const kernel::se3& t);
       /** @brief Transforms the data with the provided translation and rotation. */
-      void transformWith(const Location &translation,
-                         const Rotation &rotation);
+      void transformWith(const Vector3 &translation,
+                         const Quaternion &rotation);
 
       /**
        * @brief Computes the local differential properties of the nearest

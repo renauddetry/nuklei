@@ -38,11 +38,11 @@ namespace nuklei {
       CoViS3DObservation(const kernel::r3xs2p& k);
       ~CoViS3DObservation() {};
     
-      void setLoc(Location loc);
-      Location getLoc() const;
+      void setLoc(Vector3 loc);
+      Vector3 getLoc() const;
   
-      void setDirection(Location direction);
-      Location getDirection() const;
+      void setDirection(Vector3 direction);
+      Vector3 getDirection() const;
       void setPhiPsi(coord_t phi, coord_t psi);
       coord_pair getPhiPsi() const;
     

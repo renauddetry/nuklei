@@ -65,7 +65,7 @@ namespace nuklei {
   class BoxROI : public RegionOfInterest
   {
   public:
-    BoxROI(const Vector3 &centerLoc, const Orientation &centerOri,
+    BoxROI(const Vector3 &centerLoc, const Quaternion &centerOri,
            const Vector3 &edgeLengths) :
     centerLoc_(centerLoc), centerOri_(centerOri), edgeLengths_(edgeLengths) {}
     
@@ -79,7 +79,7 @@ namespace nuklei {
     bool contains_(const Vector3 &v) const;
   private:
     Vector3 centerLoc_;
-    Orientation centerOri_;
+    Quaternion centerOri_;
     Vector3 edgeLengths_;
   };
   

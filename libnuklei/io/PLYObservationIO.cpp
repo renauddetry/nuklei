@@ -55,6 +55,8 @@ namespace nuklei {
       {
         std::vector<std::string> tokens;
         boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
+        if (tokens.front() == "")
+          tokens.erase(tokens.begin());
         if (tokens.back() == "")
           tokens.pop_back();
         

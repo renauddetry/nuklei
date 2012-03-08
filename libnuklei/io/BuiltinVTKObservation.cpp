@@ -24,13 +24,13 @@ namespace nuklei {
   BuiltinVTKObservation::BuiltinVTKObservation(const kernel::r3& k) : k_(k)
   {}
     
-  void BuiltinVTKObservation::setLoc(Location loc)
+  void BuiltinVTKObservation::setLoc(Vector3 loc)
   {
     NUKLEI_TRACE_BEGIN();
     k_.loc_ = loc;
     NUKLEI_TRACE_END();
   }
-  Location BuiltinVTKObservation::getLoc() const { return k_.loc_; }
+  Vector3 BuiltinVTKObservation::getLoc() const { return k_.loc_; }
   
   void BuiltinVTKObservation::setWeight(weight_t weight)
   {
