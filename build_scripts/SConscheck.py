@@ -80,13 +80,20 @@ if conf.env['UseCIMG']:
 if conf.env['PLATFORM'] == 'darwin':
   conf.env.Append(FRAMEWORKS = [ 'vecLib' ])
 elif conf.env['PLATFORM'] == 'posix':
-  if not conf.CheckLib('lapack', language = 'C++') or \
-     not conf.CheckLib('cblas', language = 'C++'):
-    print 'A BLAS/LAPACK library is required.'
-    print 'Please check your e.g. Atlas installation.'
+  if not conf.CheckLib('lapack', language = 'C++'):
+    print 'A LAPACK library is required.'
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
-  conf.env.Append(LIBS = [ 'lapack', 'cblas' ])
+  conf.env.Append(LIBS = [ 'lapack' ])
+  if not conf.CheckLib('cblas', language = 'C++'):
+    if not conf.CheckLib('blas', language = 'C++'):
+      print 'A BLAS library is required.'
+      print '** For more information, refer to the INSTALL document **'
+      Exit(1)
+    else:
+      conf.env.Append(LIBS = [ 'blas' ])
+  else:
+    conf.env.Append(LIBS = [ 'cblas' ])
 else:
   print 'Unknown platform.'
   Exit(1)
