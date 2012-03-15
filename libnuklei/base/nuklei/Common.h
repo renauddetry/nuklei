@@ -89,14 +89,14 @@ assert(expression)
 # define NUKLEI_ASSERT_AFE(e1, e2) \
 { \
 double tol = 1e-6; \
-if (!(afe(e1, e2, tol))) \
-NUKLEI_THROW(stringify(e1, 20, 0) << " != " << stringify(e2, 20, 0) << " (TOL=" << tol << ")"); \
+if (!(nuklei::afe(e1, e2, tol))) \
+NUKLEI_THROW(nuklei::stringify(e1, 20, 0) << " != " << nuklei::stringify(e2, 20, 0) << " (TOL=" << tol << ")"); \
 }
   
 # define NUKLEI_ASSERT_AFE_TOL(e1, e2, tol) \
 { \
-if (!(afe(e1, e2, tol))) \
-NUKLEI_THROW(stringify(e1, 20, 0) << " != " << stringify(e2, 20, 0) << " (TOL=" << tol << ")"); \
+if (!(nuklei::afe(e1, e2, tol))) \
+NUKLEI_THROW(nuklei::stringify(e1, 20, 0) << " != " << nuklei::stringify(e2, 20, 0) << " (TOL=" << tol << ")"); \
 }
   
   /** @brief String (C string) file:line. */

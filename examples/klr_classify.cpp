@@ -93,8 +93,8 @@ int main(int argc, char ** argv)
     int nSuccess = 0;
     for (unsigned i = 0; i < testData.size(); ++i)
     {
-      if (m(0,i) > .5 && testLabels.at(i) == 1 ||
-          m(1,i) > .5 && testLabels.at(i) == 2)
+      if ((m(0,i) > .5 && testLabels.at(i) == 1) ||
+          (m(1,i) > .5 && testLabels.at(i) == 2)    )
         nSuccess++;
     }
     
