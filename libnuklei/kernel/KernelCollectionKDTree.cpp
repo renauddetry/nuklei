@@ -14,20 +14,19 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_ENABLE_QPL
-    using namespace cgal_userdef_neighbor_search_types;
+    using namespace cgal_neighbor_search_types;
     
     boost::shared_ptr<Tree> tree(new Tree);
     for (const_iterator i = as_const(*this).begin(); i != as_const(*this).end(); ++i)
     {
       Vector3 loc = i->getLoc();
-      tree->insert(FlexiblePoint(loc.X(), loc.Y(), loc.Z(),
-                                 std::distance(as_const(*this).begin(), i)));
+      tree->insert(Point_d(loc.X(), loc.Y(), loc.Z()));
     }
     if (deco_.has_key(NSTREE_KEY)) deco_.erase(NSTREE_KEY);
     deco_.insert(NSTREE_KEY, tree);
     
 #else
-    NUKLEI_THROW("This function requires QPL-licensed code. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }

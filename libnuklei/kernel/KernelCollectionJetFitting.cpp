@@ -35,7 +35,7 @@ namespace nuklei
 
 #ifdef NUKLEI_ENABLE_QPL
 
-    using namespace cgal_userdef_neighbor_search_types;
+    using namespace cgal_neighbor_search_types;
     using namespace cgal_jet_fitting_types;
     
     if (!deco_.has_key(NSTREE_KEY))
@@ -43,15 +43,16 @@ namespace nuklei
 
     boost::shared_ptr<Tree> tree(deco_.get< boost::shared_ptr<Tree> >(NSTREE_KEY));
       
+    Point_d center(loc.X(), loc.Y(), loc.Z());
 
     std::vector<DPoint> in_points;
-    K_neighbor_search search(*tree,
-                             FlexiblePoint(loc.X(), loc.Y(), loc.Z()),
-                             16+1);
+    K_neighbor_search search(*tree, center, 16+1);
     NUKLEI_ASSERT(search.begin() != search.end());
     for (K_neighbor_search::iterator i = search.begin(); i != search.end(); ++i)
+    {
       in_points.push_back(DPoint(i->first.x(), i->first.y(), i->first.z()));
-
+    }
+    
     size_t d_fitting = 4;
     size_t d_monge = 4;
 
@@ -88,7 +89,7 @@ namespace nuklei
     return boost::make_tuple(eigenVectors, eigenValues, conditionNumber);
     
 #else
-    NUKLEI_THROW("This function requires QPL-licensed code. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     
     NUKLEI_TRACE_END();

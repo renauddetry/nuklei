@@ -58,7 +58,7 @@ Nuklei is exclusively written in C++.
 @verbatim
 ./scons.py qpl=yes
 @endverbatim
- - Required for: Required for some methods of nuklei::KernelCollection (convex hulls, computing surface normals, plane fitting, search trees other than k-d trees). If at some point your program complains that <em>This function requires QPL-licensed code</em>, enable CGAL support.
+ - Required for: Required for some methods of nuklei::KernelCollection (convex hulls, computing surface normals, plane fitting, search trees other than k-d trees). If at some point your program complains that <em>This function requires CGAL</em>, enable CGAL support.
 - PCL 1.0+
  - Enabled with:
 @verbatim

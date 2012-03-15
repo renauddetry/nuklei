@@ -73,11 +73,11 @@ namespace nuklei
 
   namespace cgal_neighbor_search_types
   {
-    typedef CGAL::Simple_cartesian<FlexiblePoint::value_type> K;
+    typedef CGAL::Simple_cartesian<coord_t> K;
     typedef K::Point_3 Point_d;
-    typedef CGAL::Search_traits_3<K> TreeTraits;
-    typedef CGAL::Orthogonal_k_neighbor_search<TreeTraits> Neighbor_search;
-    typedef Neighbor_search::Tree Tree;
+    typedef CGAL::Search_traits_3<K> Traits;
+    typedef CGAL::Orthogonal_k_neighbor_search<Traits> K_neighbor_search;
+    typedef K_neighbor_search::Tree Tree;
   }
 
   namespace cgal_userdef_neighbor_search_types
