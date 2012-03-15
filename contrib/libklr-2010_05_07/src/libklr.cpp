@@ -55,7 +55,7 @@ void Clibklr::train(double *Ktrain, int *label){
   double *Ltemp;
   double *Kones;
   double *mKtrain;
-  double *Ytemp;
+  //double *Ytemp;
   double alpha0;
   double kmax;
   double kmax2;
@@ -70,7 +70,7 @@ void Clibklr::train(double *Ktrain, int *label){
   Kones = malloc_double(c*c);
   prob  = malloc_double(c*n);
   mKtrain = malloc_double(n);
-  Ytemp = malloc_double(c*n);
+  //Ytemp = malloc_double(c*n);
   Y     = malloc_double(c*n); 
   
   yconst(label,Y,c,n);
