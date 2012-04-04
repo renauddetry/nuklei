@@ -369,7 +369,7 @@ namespace nuklei {
     double determinant(const GMatrix &m);
     GMatrix inverse(const GMatrix &m);
     
-    Vector3 project(const Plane3& plane, const Vector3& point);
+    //Vector3 project(const Plane3& plane, const Vector3& point);
     
     
     /**

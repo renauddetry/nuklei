@@ -116,22 +116,22 @@ namespace nuklei
 
   namespace la
   {
-    Vector3 project(const Plane3& plane, const Vector3& point)
-    {
-      NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_QPL
-      //fixme: this is easy to do without CGAL.
-      // so do it without CGAL.
-      using namespace cgal_pca_types;
-      
-      Plane_3 cplane(plane.Normal.X(), plane.Normal.Y(), plane.Normal.Z(), -plane.Constant);
-      Point_3 proj = cplane.projection(Point_3(point[0], point[1], point[2]));
-      return Vector3(proj[0], proj[1], proj[2]);
-#else
-      NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
-#endif
-      NUKLEI_TRACE_END();
-    }  
+//    Vector3 project(const Plane3& plane, const Vector3& point)
+//    {
+//      NUKLEI_TRACE_BEGIN();
+//#ifdef NUKLEI_ENABLE_QPL
+//      //fixme: this is easy to do without CGAL.
+//      // so do it without CGAL.
+//      using namespace cgal_pca_types;
+//      
+//      Plane_3 cplane(plane.Normal.X(), plane.Normal.Y(), plane.Normal.Z(), -plane.Constant);
+//      Point_3 proj = cplane.projection(Point_3(point[0], point[1], point[2]));
+//      return Vector3(proj[0], proj[1], proj[2]);
+//#else
+//      NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+//#endif
+//      NUKLEI_TRACE_END();
+//    }  
   }
 }
 
