@@ -42,24 +42,24 @@ Nuklei doesn't require anything more than the standard development tools (GNUmak
 Nuklei is exclusively written in C++.
 
 <b>Required nonstandard libraries:</b>
-- <a href="http://www.boost.org/">Boost</a>. Boost libraries are updated often. Version 1.38 and above should be fine. I'm currently using 1.41.
+- <a href="http://www.boost.org/">Boost</a>, version 1.38 and above (tested up to 1.49).
 - <a href="http://www.gnu.org/software/gsl/">GSL</a>. Version 1.8 and above should be ok.
-- BLAS and LAPACK
+- BLAS and LAPACK.
 
 <b>Optional nonstandard libraries:</b>
-- OpenCV 1.0+.
+- OpenCV 1.0+ (tested up to v2.1).
  - Enabled with:
 @verbatim
 ./scons.py use_opencv=yes
 @endverbatim
  - Required for: Currently, only required if one makes use of the class PlaneProjection.
-- CGAL 3.3+.
+- CGAL 3.3+ (tested up to v4.0).
  - Enabled with:
 @verbatim
 ./scons.py qpl=yes
 @endverbatim
  - Required for: Required for some methods of nuklei::KernelCollection (convex hulls, computing surface normals, plane fitting, search trees other than k-d trees). If at some point your program complains that <em>This function requires CGAL</em>, enable CGAL support.
-- PCL 1.0+
+- PCL 1.0+ (tested up to v1.5).
  - Enabled with:
 @verbatim
 ./scons.py use_pcl=yes
