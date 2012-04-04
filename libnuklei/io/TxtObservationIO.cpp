@@ -110,6 +110,17 @@ namespace nuklei {
         k.loc_ = Vector3(numify<double>(tokens.at(0)), numify<double>(tokens.at(1)), numify<double>(tokens.at(2)));
         observation->setKernel(k);
       }
+      else if (tokens.size() == 6)
+      {
+        kernel::r3xs2p k;
+        k.loc_ = Vector3(numify<double>(tokens.at(0)), numify<double>(tokens.at(1)), numify<double>(tokens.at(2)));
+        k.dir_ = la::normalized(Vector3(numify<double>(tokens.at(3)),
+                                        numify<double>(tokens.at(4)),
+                                        numify<double>(tokens.at(5))
+                                        )
+                                );
+        observation->setKernel(k);
+      }
       else if (tokens.size() == 7)
       {
         kernel::se3 k;
@@ -178,6 +189,14 @@ namespace nuklei {
         if (k != NULL)
         {
           ofs << stringify(k->loc_, PRECISION) << std::endl;
+          continue;
+        }
+      }
+      {
+        kernel::r3xs2p* k = dynamic_cast<kernel::r3xs2p*>(&*i);
+        if (k != NULL)
+        {
+          ofs << stringify(k->loc_, PRECISION) << " " << stringify(k->dir_, PRECISION) << std::endl;
           continue;
         }
       }

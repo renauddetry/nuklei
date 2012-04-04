@@ -164,10 +164,15 @@ void convert(const std::vector<std::string>& files,
     if (makeR3xS2P)
     {
       NUKLEI_ASSERT(setRGB.empty());
-      if (!(writerType == Observation::SERIAL || writerType == Observation::NUKLEI))
+      if (!(writerType == Observation::SERIAL ||
+            writerType == Observation::NUKLEI ||
+            writerType == Observation::TXT ||
+            writerType == Observation::PCD))
         NUKLEI_THROW("Normal computation only available when outputing " <<
                      nameFromType<Observation>(Observation::SERIAL) << "or " <<
-                     nameFromType<Observation>(Observation::NUKLEI) << ".");
+                     nameFromType<Observation>(Observation::NUKLEI) << "or " <<
+                     nameFromType<Observation>(Observation::TXT) << "or " <<
+                     nameFromType<Observation>(Observation::PCD) << ".");
     
       KernelCollection kc1;
       
