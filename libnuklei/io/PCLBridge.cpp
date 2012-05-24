@@ -22,7 +22,7 @@ namespace nuklei {
     kernel::r3 k;
     k.loc_ = Vector3(p.x, p.y, p.z);
     ColorDescriptor d;
-    const uint32_t rgb = static_cast<const uint32_t>(p.rgb);
+    const uint32_t rgb = *reinterpret_cast<const int*>(&p.rgb);
     uint8_t r = (rgb >> 16) & 0x0000ff;
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
@@ -56,7 +56,7 @@ namespace nuklei {
     k.loc_ = Vector3(p.x, p.y, p.z);
     k.dir_ = Vector3(p.normal_x, p.normal_y, p.normal_z);
     ColorDescriptor d;
-    const uint32_t rgb = static_cast<const uint32_t>(p.rgb);
+    const uint32_t rgb = *reinterpret_cast<const int*>(&p.rgb);
     uint8_t r = (rgb >> 16) & 0x0000ff;
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
@@ -90,7 +90,7 @@ namespace nuklei {
     const RGBColor c(d.getColor());
     uint8_t r = c.R()*255, g = c.G()*255, b = c.B()*255;
     uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
-    p.rgb = static_cast<float>(rgb);
+    p.rgb = *reinterpret_cast<float*>(&rgb);
   }
   
   void pclPointFromNukleiKernel(pcl::PointXYZRGB& p, const kernel::base& k)
@@ -137,7 +137,7 @@ namespace nuklei {
     const RGBColor c(d.getColor());
     uint8_t r = c.R()*255, g = c.G()*255, b = c.B()*255;
     uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
-    p.rgb = static_cast<float>(rgb);
+    p.rgb = *reinterpret_cast<float*>(&rgb);
   }
   
   void pclPointFromNukleiKernel(pcl::PointXYZRGBNormal& p, const kernel::base& k)
