@@ -23,7 +23,7 @@ namespace nuklei_wmf
     typedef void* MutexType;
 }
 //----------------------------------------------------------------------------
-#elif defined(__LINUX__) || defined(__APPLE__)
+#elif defined(__LINUX__) || defined(__linux__) || defined(__APPLE__)
 //----------------------------------------------------------------------------
 // Mutex type for Linux/Apple.  The file pthread.h exposes only native data
 // types, so including it here does not suck in lots of extra stuff.

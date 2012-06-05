@@ -97,7 +97,7 @@ typedef unsigned __int64    uint64_t;
 //----------------------------------------------------------------------------
 // PC Linux platform
 //----------------------------------------------------------------------------
-#if defined(__LINUX__)
+#if defined(__LINUX__) || defined(__linux__)
 
 // Support for standard integer types.
 #include <inttypes.h>
