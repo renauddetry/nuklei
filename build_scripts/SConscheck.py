@@ -101,7 +101,7 @@ else:
 
 # CGAL
 
-if conf.env['EnableQPL']:
+if conf.env['UseCGAL']:
   if not conf.CheckCXXHeader('CGAL/version.h') or \
      not conf.CheckLib('CGAL', language = 'C++'):
     print 'Please check your CGAL installation.'
@@ -110,7 +110,7 @@ if conf.env['EnableQPL']:
   else:
     # Note: CGAL may need the following:
     # 'CGALcore++', 'CGALPDB', 'mpfr', 'gmpxx', 'gmp'
-    conf.env.Append(CPPDEFINES = ['NUKLEI_ENABLE_QPL'])
+    conf.env.Append(CPPDEFINES = ['NUKLEI_USE_CGAL'])
     conf.env.Append(LIBS = [ 'CGAL' ])
 
 # GSL

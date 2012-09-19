@@ -14,7 +14,7 @@ namespace nuklei
   KernelCollection::linearLeastSquarePlaneFit() const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
     using namespace cgal_pca_types;
     std::list<Point_3> points;
     for (const_iterator i = begin(); i != end(); ++i)
@@ -60,7 +60,7 @@ namespace nuklei
   KernelCollection::ransacPlaneFit(coord_t inlinerThreshold, unsigned nSeeds) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
     using namespace cgal_pca_types;
     
     Plane_3 bestPlane(Point_3(1,0,0), Point_3(0,1,0), Point_3(0,0,0));
@@ -119,7 +119,7 @@ namespace nuklei
 //    Vector3 project(const Plane3& plane, const Vector3& point)
 //    {
 //      NUKLEI_TRACE_BEGIN();
-//#ifdef NUKLEI_ENABLE_QPL
+//#ifdef NUKLEI_USE_CGAL
 //      //fixme: this is easy to do without CGAL.
 //      // so do it without CGAL.
 //      using namespace cgal_pca_types;

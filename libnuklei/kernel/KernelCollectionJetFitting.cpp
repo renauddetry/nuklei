@@ -6,7 +6,7 @@
 
 #include "KernelCollectionTypes.h"
 
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
 // CGAL jet fitting
 #include <CGAL/Monge_via_jet_fitting.h>
 #include <CGAL/Cartesian.h>
@@ -17,7 +17,7 @@
 namespace nuklei
 {
   
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
   namespace cgal_jet_fitting_types
   {
     typedef double                   DFT;
@@ -33,7 +33,7 @@ namespace nuklei
   {
     NUKLEI_TRACE_BEGIN();
 
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
 
     using namespace cgal_neighbor_search_types;
     using namespace cgal_jet_fitting_types;

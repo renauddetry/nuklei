@@ -83,7 +83,7 @@ namespace nuklei
         return distx*distx+disty*disty+distz*distz;
       }
 
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
       template <class TreeTraits>
       value_type min_distance_to_rectangle(const FlexiblePoint& p,
                const CGAL::Kd_tree_rectangle<TreeTraits>& b) const

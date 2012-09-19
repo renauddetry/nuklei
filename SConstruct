@@ -100,11 +100,13 @@ opts.AddVariables(
   ('CXX', 'Sets the c++ compiler command', cxx),
   EnumVariable('gpl', 'Activates GPL code', 'yes',
                allowed_values = ('yes', 'no')),
-  EnumVariable('qpl', 'Activates QPL code', 'no',
+  EnumVariable('qpl', 'Obsolete option. Use use_cgal=yes instead.', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_openmp', 'Use OpenMP sync instead of pthread mutexes.', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('use_cgal', 'Enables functions that depend on CGAL', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_pcl', 'Enables functions that depend on PCL', 'no',
                allowed_values = ('yes', 'no')),
@@ -114,17 +116,6 @@ opts.AddVariables(
 )
 
 opts.Update(env)
-
-env['BuildType'] = env['bt']
-env['EnableGPL'] = env['gpl'] == 'yes'
-env['EnableQPL'] = env['qpl'] == 'yes'
-env['UseOpenMP'] = env['use_openmp'] == 'yes'
-env['UseOpenCV'] = env['use_opencv'] == 'yes'
-env['UsePCL'] = env['use_pcl'] == 'yes'
-env['UseCIMG'] = env['use_cimg'] == 'yes'
-
-# this is obsolete, should not be used.
-env['InstallPrefix'] = env['prefix']
 
 red = ''
 green = ''
@@ -136,6 +127,29 @@ if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
   green = '\033[0;32m'
   blue = '\033[0;34m'
   defColor = '\033[0m'
+
+env['BuildType'] = env['bt']
+env['EnableGPL'] = env['gpl'] == 'yes'
+
+if env['qpl'] == 'yes':
+  print red + "Warning: qpl=yes is an obsolete build option. The qpl option used " + \
+    "to enable the then-QPL-licenced library CGAL. CGAL is now GPL, which makes " + \
+    "everything easier. The qpl option is is being removed " + \
+    "from your build config file, and replaced by use_cgal=yes. Please avoid " + \
+    "setting qpl=yes on the command line as well." + defColor
+  env['qpl'] = 'no'
+  env['use_cgal'] = 'yes'
+  opts.Save(conf_file, env)
+  Exit(1)
+
+env['UseCGAL'] = env['use_cgal'] == 'yes'
+env['UseOpenMP'] = env['use_openmp'] == 'yes'
+env['UseOpenCV'] = env['use_opencv'] == 'yes'
+env['UsePCL'] = env['use_pcl'] == 'yes'
+env['UseCIMG'] = env['use_cimg'] == 'yes'
+
+# this is obsolete, should not be used.
+env['InstallPrefix'] = env['prefix']
 
 if env['BuildType'] == 'deploy':
   buildColor = green
@@ -157,10 +171,6 @@ if env['UseCIMG']:
   if not env['EnableGPL']:
     print red + "CIMG is GPL. GPL needs to be enabled to enable CIMG." + defColor
     Exit(1)
-
-if env['EnableQPL'] and env['EnableGPL']:
-  print red + "Warning: GPL and QPL are incompatible. Programs built with these settings break both GPL and QPL terms." + defColor
-
 
 opts.Save(conf_file, env)
 

@@ -7,7 +7,7 @@
 #ifndef NUKLEI_KERNEL_COLLECTION_TYPES_H
 #define NUKLEI_KERNEL_COLLECTION_TYPES_H
 
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
 // CGAL search tree
 #include <CGAL/basic.h>
 #include <CGAL/Search_traits.h>
@@ -37,7 +37,7 @@
 
 #include "KernelCollectionFlexiblePoint.h"
 
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
 
 namespace CGAL {
   template <>
@@ -58,7 +58,7 @@ namespace nuklei
     typedef KDTree::KDTree< 3, FlexiblePoint, FlexiblePoint::Accessor > Tree;
   }
 
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
   namespace cgal_convex_hull_types
   {
     //typedef CGAL::Gmpz RT;

@@ -56,7 +56,7 @@ Nuklei is exclusively written in C++.
 - CGAL 3.3+ (tested up to v4.0).
  - Enabled with:
 @verbatim
-./scons.py qpl=yes
+./scons.py use_cgal=yes
 @endverbatim
  - Required for: Required for some methods of nuklei::KernelCollection (convex hulls, computing surface normals, plane fitting, search trees other than k-d trees). If at some point your program complains that <em>This function requires CGAL</em>, enable CGAL support.
 - PCL 1.0+ (tested up to v1.5).

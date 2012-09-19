@@ -13,7 +13,7 @@ namespace nuklei {
   void KernelCollection::buildNeighborSearchTree()
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_ENABLE_QPL
+#ifdef NUKLEI_USE_CGAL
     using namespace cgal_neighbor_search_types;
     
     boost::shared_ptr<Tree> tree(new Tree);
