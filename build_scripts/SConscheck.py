@@ -78,7 +78,7 @@ if conf.env['UseCIMG']:
 # BLAS, LAPACK
 
 if conf.env['PLATFORM'] == 'darwin':
-  conf.env.Append(FRAMEWORKS = [ 'vecLib' ])
+  conf.env.Append(FRAMEWORKS = [ 'Accelerate' ])
 elif conf.env['PLATFORM'] == 'posix':
   if not conf.CheckLib('lapack', language = 'C++'):
     print 'A LAPACK library is required.'
