@@ -41,6 +41,7 @@ namespace nuklei {
     int ntok = -1;
     while (std::getline(in_, line))
     {
+      cleanLine(line);
       std::vector<std::string> tokens;
       boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
       if (tokens.front() == "")
@@ -57,13 +58,18 @@ namespace nuklei {
         if (ntok == -1) ntok = 3;
         else if (ntok != 3) throw ObservationIOError("Wrong number of tokens.");
       }
+      else if (tokens.size() == 6)
+      {
+        if (ntok == -1) ntok = 7;
+        else if (ntok != 7) throw ObservationIOError("Wrong number of tokens.");
+      }
       else if (tokens.size() == 7)
       {
         if (ntok == -1) ntok = 7;
         else if (ntok != 7) throw ObservationIOError("Wrong number of tokens.");
       }
       else {
-        throw ObservationIOError("Wrong number of tokens on line");
+        throw ObservationIOError("Wrong number of tokens on line (" + stringify(tokens.size()) + ")");
       }
     }
     
@@ -92,6 +98,7 @@ namespace nuklei {
     
     while (std::getline(in_, line))
     {
+      cleanLine(line);      
       std::auto_ptr<TxtObservation> observation(new TxtObservation);
 
       std::vector<std::string> tokens;
@@ -134,7 +141,7 @@ namespace nuklei {
         observation->setKernel(k);
       }
       else {
-        NUKLEI_THROW("Wrong number of tokens on line");
+        NUKLEI_THROW("Wrong number of tokens on line (" << tokens.size() << ")");
       }
       
       return std::auto_ptr<Observation>(observation);

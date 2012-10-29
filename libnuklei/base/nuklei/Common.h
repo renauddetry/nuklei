@@ -312,6 +312,13 @@ throw nuklei::Error(e, __PRETTY_FUNCTION__, NUKLEI_HERE()); \
     return x;
   }
   
+  inline std::string& cleanLine(std::string& line)
+  {
+    if(!line.empty() && *line.rbegin() == '\r')
+      line.erase( line.length()-1, 1);
+    return line;
+  }
+  
 }
 
 #endif

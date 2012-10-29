@@ -43,7 +43,7 @@ namespace nuklei {
     try {
       std::string line;
       while (std::getline(in_, line))
-        if (line == "|") break;
+        if (cleanLine(line) == "|") break;
       NUKLEI_ASSERT(line == "|");
       rows_ = columns_ = -1;
       if ( !(in_ >> Match("float") >> Match("ascii") >> rows_ >> columns_) )

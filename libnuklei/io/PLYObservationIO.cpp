@@ -47,12 +47,13 @@ namespace nuklei {
 
       
       std::string line;
-      if (!std::getline(in_, line) || line != "ply")
+      if (!std::getline(in_, line) || cleanLine(line) != "ply")
         throw ObservationIOError("Non-PLY format (PLY must start with a line `ply'.");
       
       bool format = false, px = false, py = false, pz = false, header = false;
       while (std::getline(in_, line))
       {
+        cleanLine(line);
         std::vector<std::string> tokens;
         boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
         if (tokens.front() == "")
@@ -122,6 +123,7 @@ namespace nuklei {
     std::string line;
     
     NUKLEI_ASSERT(std::getline(in_, line));
+    cleanLine(line);
 
     std::istringstream iss(line);
     

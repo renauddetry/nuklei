@@ -81,6 +81,8 @@ namespace nuklei {
       {
         coord_t cvalue = 0;
         const KernelType &densityPoint = static_cast<const KernelType&>(at(i->idx()));
+        writeSingleObservation("/tmp/densityPoint", densityPoint, Observation::TXT);
+        writeSingleObservation("/tmp/evalPoint", evalPoint, Observation::TXT);
         cvalue = densityPoint.eval(evalPoint);
         if (strategy == MAX_EVAL) value = std::max(value, cvalue);
         else if (strategy == SUM_EVAL) value += cvalue;

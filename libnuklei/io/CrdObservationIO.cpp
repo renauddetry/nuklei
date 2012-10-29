@@ -44,6 +44,7 @@ namespace nuklei {
       std::string firstline;
       if (! std::getline(in_, firstline) )
         throw ObservationIOError("Input does not look like CRD (file read error).");
+      cleanLine(firstline);
       if (firstline == "syncpc")
       {
         if (! std::getline(in_, firstline) )
@@ -97,6 +98,7 @@ namespace nuklei {
     
     while (std::getline(in_, line))
     {
+      cleanLine(line);
       std::istringstream iss(line);
       
       std::auto_ptr<CrdObservation> observation(new CrdObservation);

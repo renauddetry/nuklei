@@ -147,6 +147,7 @@ namespace nuklei
     int ntok = -1;
     while (std::getline(in, line))
     {
+      cleanLine(line);
       std::vector<std::string> tokens;
       boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
       if (tokens.front() == "")

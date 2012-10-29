@@ -41,6 +41,7 @@ namespace nuklei {
       std::string firstline;
       if (! std::getline(in_, firstline) )
         throw ObservationIOError("Input does not look like OFF (file read error).");
+      cleanLine(firstline);
       if (firstline != "OFF")
         throw ObservationIOError("Input does not look like OFF (marker error).");
       if (! std::getline(in_, firstline) )
@@ -79,6 +80,7 @@ namespace nuklei {
       {
         throw ObservationIOError("Unexpected end of file.");
       }
+      cleanLine(line);
 
       std::istringstream iss(line);
       
