@@ -11,8 +11,34 @@ namespace nuklei {
 Short answer: no.
 
 Long answer:
--# There is no access synchronization in Nuklei class methods (an object should therefore not be accessed simultaneously from multiple threads).
+-# There is no access synchronization in Nuklei methods. An object should therefore not be accessed simultaneously from multiple threads.
 -# Many Nuklei procedures require the generation of random numbers. Random numbers are provided by the GSL. The GSL random generator is held in a single global variable (see @p nuklei::randomRng in Random.cpp). I am unaware of synchronization mechanisms in GSL to prevent concurrent access to a random generator. Hence, concurrent calls to Nuklei procedures is dangerous.
+
+@section faq_quaternion_norm What can I do if Nuklei quits and complains that FastNegExp is not correctly used?
+
+For instance, what if I get the following error:
+@code
+libnuklei/base/nuklei/Math.h:72: T nuklei::FastNegExp(T) [with T = double]:
+Assertion `0-1e-6 < fValue' failed
+@endcode
+
+Short answer: Try normalizing all the quaternions you give to Nuklei:
+
+@code
+double qw = ..., qx = ..., qy = ..., qz = ...; // Values produced by non-Nuklei code.
+kernel::se3 k;
+k.ori_.W() = qw;
+k.ori_.X() = qx;
+k.ori_.Y() = qy;
+k.ori_.Z() = qz;
+k.ori_ = la::normalized(k.ori_); // Make sure to have unit quaternions
+@endcode
+
+Long answer:
+
+Nuklei expects that the data it receives is well-formed to an error of 1e-6. Providing Nuklei with a unit quaternion, or unit vector, whose norm is larger/smaller than 1 by more than 1e-6 will trigger exceptions at various places in the code.
+
+When operating on quaternions, their value may drift away from normality. At places where it can afford it, Nuklei performs re-normalization of its data. Where it cannot, it checks that the data is ok. If not, it quits. Even though this behavior can appear quite strict, it often helps finding bugs. I have thus decided to leave it as is for the moment.
 
 */
 
