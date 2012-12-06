@@ -58,7 +58,7 @@ namespace nuklei {
 #ifdef NUKLEI_USE_CIMG
       NUKLEI_ASSERT(image_.get() != NULL); return *image_;
 #else
-      return 0;
+      NUKLEI_THROW("This function requires CIMG.");
 #endif
     }
     
