@@ -135,8 +135,8 @@ if env['qpl'] == 'yes':
   print red + "Warning: qpl=yes is an obsolete build option. The qpl option used " + \
     "to enable the then-QPL-licenced library CGAL. CGAL is now GPL, which makes " + \
     "everything easier. The qpl option is is being removed " + \
-    "from your build config file, and replaced by use_cgal=yes. Please avoid " + \
-    "setting qpl=yes on the command line as well." + defColor
+    "from your build config file, and replaced by use_cgal=yes. The option qpl=yes " + \
+    "is deprecated. Please run scons again to build." + defColor
   env['qpl'] = 'no'
   env['use_cgal'] = 'yes'
   opts.Save(conf_file, env)
