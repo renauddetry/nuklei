@@ -80,12 +80,11 @@ if conf.env['UseCIMG']:
 if conf.env['PLATFORM'] == 'darwin':
   conf.env.Append(FRAMEWORKS = [ 'Accelerate' ])
 elif conf.env['PLATFORM'] == 'posix':
-  # It seems LAPACK is not needed anymore.
-  #  if not conf.CheckLib('lapack', language = 'C++'):
-  #    print 'A LAPACK library is required.'
-  #    print '** For more information, refer to the INSTALL document **'
-  #    Exit(1)
-  #  conf.env.Append(LIBS = [ 'lapack' ])
+  if not conf.CheckLib('lapack', language = 'C++'):
+    print 'A LAPACK library is required.'
+    print '** For more information, refer to the INSTALL document **'
+    Exit(1)
+  conf.env.Append(LIBS = [ 'lapack' ])
   if not conf.CheckLib('cblas', language = 'C++'):
     if not conf.CheckLib('blas', language = 'C++'):
       print 'A BLAS library is required.'
