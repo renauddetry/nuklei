@@ -19,6 +19,8 @@ git clone git://nuklei.git.sourceforge.net/gitroot/nuklei/nuklei
 
 At the top level directory (named <em>nuklei</em> if the line above was used to download the code), type
 
+<!-- apt-get install libblas-dev liblapack-dev -->
+
 @verbatim
 ./scons.py install
 @endverbatim
