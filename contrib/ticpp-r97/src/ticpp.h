@@ -124,7 +124,10 @@ namespace ticpp
 		virtual bool Visit( const TiXmlText& text );
 		/// @internal
 		virtual bool Visit( const TiXmlComment& comment );
-
+    
+    // Avoid warning
+    using TiXmlVisitor::Visit;
+    
 	public:
 		/// Visit a document.
 		virtual bool VisitEnter( const Document& /*doc*/ )			{ return true; }
