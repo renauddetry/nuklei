@@ -106,9 +106,8 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('use_pcl', 'Enables functions that depend on PCL', 'no',
                allowed_values = ('yes', 'no')),
-  EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'yes',
+  EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'no',
                allowed_values = ('yes', 'no'))
-  # nice -n 18 distcc nice -n 18 i686-apple-darwin8-g++-4.0.1
 )
 
 opts.Update(env)
