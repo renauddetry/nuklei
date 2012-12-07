@@ -43,11 +43,8 @@ conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
 if conf.env['UseCIMG']:
   conf.env.Append(CPPDEFINES = ['NUKLEI_USE_CIMG'])
   conf.env.Prepend(CPPPATH = [ '$CImg_include' ])
-  if conf.env['BuildType'] == 'develop':
-    conf.env.Append(CPPDEFINES = [ ('cimg_debug', 2) ])
-  else:
-    conf.env.Append(CPPDEFINES = [ ('cimg_debug', 1) ])
-    conf.env.Append(CPPDEFINES = [ ('cimg_display_type', 0) ])
+  conf.env.Append(CPPDEFINES = [ ('cimg_verbosity', 1) ])
+  conf.env.Append(CPPDEFINES = [ ('cimg_display', 0) ])
 
   have_imconvert = conf.CheckIMConvert()
   have_libjpeg = conf.CheckCXXHeader( [ 'stdio.h', 'sys/types.h', 'jpeglib.h' ] ) and \
