@@ -11,8 +11,8 @@ install:
 examples:
 	./scons.py install
 
-push:
-	git push origin master
+sf:
+	git push sourceforge master
 
 doc:
 	doxygen doc_src/Doxyfile
