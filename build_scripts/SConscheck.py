@@ -3,14 +3,7 @@ import fnmatch
 
 Import('conf')
 
-# Global contributions
-
-# Adding to CCFLAGS instead of CPPPATH prevents scons from hashing everything inside
-conf.env.Append(CCFLAGS = [ '-I/usr/X11R6/include' ])
-conf.env.Append(LIBPATH = [ '/usr/X11R6/lib' ])
-
 # Local contributions
-
 
 if conf.env['UseCIMG']:
   conf.env['CImg_include'] = '#/contrib/CImg/include'
@@ -236,5 +229,5 @@ if conf.env['UseOpenMP']:
 
 
 # These are simply expected...
-conf.env.Append(LIBS = [ 'X11', 'z', 'pthread', 'm' ])
+conf.env.Append(LIBS = [ 'z', 'pthread', 'm' ])
 
