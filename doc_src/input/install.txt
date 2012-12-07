@@ -33,20 +33,30 @@ At the top level directory (named <em>nuklei</em> if the line above was used to 
 - Linux
 - MacOS X
 
-<b>Supported compiler:</b>
+<b>Supported compilers:</b>
 - GCC 4
+- LLVM/clang
 
-Nuklei also compiles with LLVM/clang 2.8+ (LLVM/clang 2.9+ on Ubuntu). However, the boost serialization library and CGAL are not yet fully compatible with LLVM, and runtime issues may arise.
-
-<b>System requirements:</b>
-Nuklei doesn't require anything more than the standard development tools (GNUmake, python, pkg-config, bash, ...).
+Note that some older versions of the libraries that can be used by Nuklei will not work with clang (e.g., PCL <1.6).
 
 Nuklei is exclusively written in C++.
+
+<b>System requirements:</b>
+As usual, GNUmake, python, pkg-config, bash.
 
 <b>Required nonstandard libraries:</b>
 - <a href="http://www.boost.org/">Boost</a>, version 1.38 and above (tested up to 1.49).
 - <a href="http://www.gnu.org/software/gsl/">GSL</a>. Version 1.8 and above should be ok.
-- BLAS and LAPACK.
+- BLAS and LAPACK:
+ - OS X: Bundled by default
+ - Linux: most distributions have packages for libblas and liblapack. On Ubuntu,
+   @verbatim apt-get install libblas-dev liblapack-dev @endverbatim
+   Note that you must install the -dev packages, as the libblas3gf package does not install /usr/lib/libblas.so.
+
+If you are using Ubuntu:
+@verbatim
+sudo apt-get install gcc g++ make pkg-config python libgsl0-dev libblas-dev liblapack-dev libboost-all-dev
+@endverbatim
 
 <b>Optional nonstandard libraries:</b>
 - OpenCV 1.0+ (tested up to v2.1).
