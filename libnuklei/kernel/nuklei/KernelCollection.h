@@ -423,6 +423,56 @@ namespace nuklei {
        * Precede by a call to #buildConvexHull(). See @ref intermediary.
        */
       bool isWithinConvexHull(const kernel::base& k) const;
+      /**
+       * @brief Builds a mesh from kernel positions. See @ref intermediary.
+       */
+      void buildMesh();
+      void saveMeshToOffFile(const std::string& filename) const;
+      /**
+       * @brief Assuming that the points in this collection form the surface of
+       * an object, this function computes whether a point @p p is visible from
+       * @p viewpoint, or if it is occluded by the object.
+       *
+       * This function requires prior computation of a surface mesh from the
+       * points of the collection. See buildMesh().
+       *
+       * This function computes whether a segment linking @p viewpoint to @p p
+       * intersects with the mesh.
+       *
+       * If @p tolerance is greater than 0, the function computes whether a
+       * segment linking @p viewpoint to \f[ viewpoint + (p - viewpoint)
+       * \frac{|p-viewpoint|-tolerance}{|p-viewpoint|} \f] intersects with the mesh.
+       */
+      bool isVisibleFrom(const Vector3& p, const Vector3& viewpoint,
+                         const coord_t& tolerance = 4.) const;
+      /**
+       * @brief Assuming that the points in this collection form the surface of
+       * an object, this function returns the indices of points visible from
+       * @p viewpoint.
+       *
+       * See isVisibleFrom() for more details.
+       */
+      std::vector<int> partialView(const Vector3& viewpoint,
+                                   const coord_t& tolerance = 4.) const;
+      /**
+       * @brief Partial View Iterator type.
+       *
+       * See #partialViewBegin().
+       */
+      typedef nuklei_trsl::reorder_iterator<const_iterator> const_partialview_iterator;
+
+      /**
+       * @brief Assuming that the points in this collection form the surface of
+       * an object, this function returns an iterator that iterates through the
+       * kernels that are visible from @p viewpoint.
+       *
+       * See isVisibleFrom() for more details.
+       *
+       * See @ref iterators for more details.
+       */
+      const_partialview_iterator
+      partialViewBegin(const Vector3& viewpoint,
+                       const coord_t& tolerance = 4.) const;
       
       // Density-related methods
             
@@ -492,6 +542,8 @@ namespace nuklei {
       const static int HULL_KEY;
       const static int KDTREE_KEY;
       const static int NSTREE_KEY;
+      const static int MESH_KEY;
+      const static int AABBTREE_KEY;
 
       void invalidateHelperStructures();
 
@@ -500,6 +552,9 @@ namespace nuklei {
                                   const EvaluationStrategy strategy) const;
       
       kernel::base::ptr deviation(const kernel::base &center) const;
+      template<typename C>
+      C partialView(const Vector3& viewpoint,
+                    const coord_t& tolerance = 4.) const;
       
       friend class boost::serialization::access;
       template<class Archive>

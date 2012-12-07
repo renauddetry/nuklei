@@ -23,6 +23,8 @@ namespace nuklei {
   const int KernelCollection::HULL_KEY          = 0;
   const int KernelCollection::KDTREE_KEY        = 1;
   const int KernelCollection::NSTREE_KEY        = 2;
+  const int KernelCollection::MESH_KEY          = 3;
+  const int KernelCollection::AABBTREE_KEY      = 4;
 
   std::istream& operator>>(std::istream &in, KernelCollection &v)
   {
