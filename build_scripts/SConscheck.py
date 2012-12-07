@@ -3,14 +3,7 @@ import fnmatch
 
 Import('conf')
 
-# Global contributions
-
-# Adding to CCFLAGS instead of CPPPATH prevents scons from hashing everything inside
-conf.env.Append(CCFLAGS = [ '-I/usr/X11R6/include' ])
-conf.env.Append(LIBPATH = [ '/usr/X11R6/lib' ])
-
 # Local contributions
-
 
 if conf.env['UseCIMG']:
   conf.env['CImg_include'] = '#/contrib/CImg/include'
@@ -43,11 +36,8 @@ conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
 if conf.env['UseCIMG']:
   conf.env.Append(CPPDEFINES = ['NUKLEI_USE_CIMG'])
   conf.env.Prepend(CPPPATH = [ '$CImg_include' ])
-  if conf.env['BuildType'] == 'develop':
-    conf.env.Append(CPPDEFINES = [ ('cimg_debug', 2) ])
-  else:
-    conf.env.Append(CPPDEFINES = [ ('cimg_debug', 1) ])
-    conf.env.Append(CPPDEFINES = [ ('cimg_display_type', 0) ])
+  conf.env.Append(CPPDEFINES = [ ('cimg_verbosity', 1) ])
+  conf.env.Append(CPPDEFINES = [ ('cimg_display', 0) ])
 
   have_imconvert = conf.CheckIMConvert()
   have_libjpeg = conf.CheckCXXHeader( [ 'stdio.h', 'sys/types.h', 'jpeglib.h' ] ) and \
@@ -268,5 +258,5 @@ if conf.env['UseOpenMP']:
 
 
 # These are simply expected...
-conf.env.Append(LIBS = [ 'X11', 'z', 'pthread', 'm' ])
+conf.env.Append(LIBS = [ 'z', 'pthread', 'm' ])
 

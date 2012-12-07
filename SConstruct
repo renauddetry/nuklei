@@ -34,8 +34,6 @@ build_dir = 'scons_build'
 # those files will also not be included in tar backups
 dirtyFiles = ['.DS_Store', '.gdb_history']
 
-enable_gpl=1
-
 # Search for all subdirectories containing a SConscript.
 parts = []
 for root, dirs, files in os.walk('.'):
@@ -98,8 +96,6 @@ opts.AddVariables(
                allowed_values = ('deploy', 'develop', 'profile'),
                map={'opt':'deploy', 'debug':'develop'}),
   ('CXX', 'Sets the c++ compiler command', cxx),
-  EnumVariable('gpl', 'Activates GPL code', 'yes',
-               allowed_values = ('yes', 'no')),
   EnumVariable('qpl', 'Obsolete option. Use use_cgal=yes instead.', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_openmp', 'Use OpenMP sync instead of pthread mutexes.', 'no',
@@ -110,9 +106,8 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('use_pcl', 'Enables functions that depend on PCL', 'no',
                allowed_values = ('yes', 'no')),
-  EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'yes',
+  EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'no',
                allowed_values = ('yes', 'no'))
-  # nice -n 18 distcc nice -n 18 i686-apple-darwin8-g++-4.0.1
 )
 
 opts.Update(env)
@@ -129,7 +124,6 @@ if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
   defColor = '\033[0m'
 
 env['BuildType'] = env['bt']
-env['EnableGPL'] = env['gpl'] == 'yes'
 
 if env['qpl'] == 'yes':
   print red + "Warning: qpl=yes is an obsolete build option. The qpl option used " + \
@@ -162,15 +156,6 @@ print 'Install prefix currently set to `' + blue + \
       env['prefix'] + defColor + '\'.'
 print 'C++ compiler currently set to `' + blue + \
       env['CXX'] + defColor + '\'.'
-
-if not env['EnableGPL']:
-  print red + "The whole Nuklei codebase is currently distributed under GPL. GPL code thus cannot be disabled." + defColor
-  Exit(1)
-
-if env['UseCIMG']:
-  if not env['EnableGPL']:
-    print red + "CIMG is GPL. GPL needs to be enabled to enable CIMG." + defColor
-    Exit(1)
 
 opts.Save(conf_file, env)
 
