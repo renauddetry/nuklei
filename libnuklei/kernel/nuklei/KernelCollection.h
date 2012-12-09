@@ -444,7 +444,7 @@ namespace nuklei {
        * \frac{|p-viewpoint|-tolerance}{|p-viewpoint|} \f] intersects with the mesh.
        */
       bool isVisibleFrom(const Vector3& p, const Vector3& viewpoint,
-                         const coord_t& tolerance = 4.) const;
+                         const coord_t& tolerance = FLOATTOL) const;
       /**
        * @brief Assuming that the points in this collection form the surface of
        * an object, this function returns the indices of points visible from
@@ -453,7 +453,7 @@ namespace nuklei {
        * See isVisibleFrom() for more details.
        */
       std::vector<int> partialView(const Vector3& viewpoint,
-                                   const coord_t& tolerance = 4.) const;
+                                   const coord_t& tolerance = FLOATTOL) const;
       /**
        * @brief Partial View Iterator type.
        *
@@ -472,7 +472,7 @@ namespace nuklei {
        */
       const_partialview_iterator
       partialViewBegin(const Vector3& viewpoint,
-                       const coord_t& tolerance = 4.) const;
+                       const coord_t& tolerance = FLOATTOL) const;
       
       // Density-related methods
             
@@ -554,7 +554,7 @@ namespace nuklei {
       kernel::base::ptr deviation(const kernel::base &center) const;
       template<typename C>
       C partialView(const Vector3& viewpoint,
-                    const coord_t& tolerance = 4.) const;
+                    const coord_t& tolerance) const;
       
       friend class boost::serialization::access;
       template<class Archive>
