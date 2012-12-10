@@ -126,7 +126,7 @@ if conf.env['UseCGAL']:
         eigen3dict['CPPPATH'] = []
         conf.env.MergeFlags(eigen3dict)
         conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_EIGEN3' ])
-      elif: taucsFound:
+      elif taucsFound:
         conf.env.Append(LIBS = [ 'taucs' ])
         conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_TAUCS' ])
       else:
