@@ -428,6 +428,7 @@ namespace nuklei {
        */
       void buildMesh();
       void saveMeshToOffFile(const std::string& filename) const;
+      void readMeshFromOffFile(const std::string& filename);
       /**
        * @brief Assuming that the points in this collection form the surface of
        * an object, this function computes whether a point @p p is visible from

@@ -270,6 +270,25 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
   
+  void KernelCollection::readMeshFromOffFile(const std::string& filename)
+  {
+    NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_CGAL
+    boost::shared_ptr<SimplePolyhedron> poly(new SimplePolyhedron);
+    std::ifstream in(filename.c_str());
+    CGAL::scan_OFF(in, *poly, true /* verbose */);
+    if(!in || !poly->is_valid() || poly->empty())
+    {
+      NUKLEI_THROW("Cannot read mesh.");
+    }
+    if (deco_.has_key(MESH_KEY)) deco_.erase(MESH_KEY);
+    deco_.insert(MESH_KEY, poly);
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
+    NUKLEI_TRACE_END();
+  }
+
   
 }
 
