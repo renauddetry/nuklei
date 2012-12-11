@@ -69,6 +69,11 @@ const CommandList commands[] = {
     call: &invert_transfo
   },
   {
+    command: "partial_view",
+    help: "",
+    call: &partial_view
+  },
+  {
     command: "test",
     help: "",
     call: &test
