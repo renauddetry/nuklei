@@ -45,23 +45,10 @@ int kde(int argc, char ** argv)
      "Output.",
      true, "", "filename", cmd);
   
-  TCLAP::SwitchArg adaptiveArg
-    ("a", "adaptive",
-     "Use adaptive (vs median) width computation.", cmd);
-
-  TCLAP::ValueArg<unsigned> kthNearestArg
-    ("k", "kth_nearest",
-     "K in KNN.",
-     false, KDE_KTH_NEAREST_NEIGHBOR, "int", cmd);
-
-  TCLAP::ValueArg<coord_t> maxWidthArg
-    ("m", "max_width",
-     "Max. location width.",
-     false, -1, "float", cmd);
-
   TCLAP::ValueArg<coord_t> fixedWidthArg
     ("f", "fixed_width",
-     "Fixed location width.",
+     "Fixed location width. Obsolete argument. Please use --fixed_loc_width "
+     "instead.",
      false, -1, "float", cmd);
 
   TCLAP::ValueArg<coord_t> fixedLocWidthArg
@@ -106,10 +93,7 @@ int kde(int argc, char ** argv)
   {
     NUKLEI_THROW("Not implemented.");
   }
-  
-  std::cout << "Median loc width: " << w.first << "\n" <<
-    "Median ori width: " << w.second << std::endl;
-  
+    
   writeObservations(outFileArg.getValue(), kc);
 
   return 0;
