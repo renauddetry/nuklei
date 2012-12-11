@@ -109,6 +109,21 @@ namespace view_types {
 
 namespace nuklei {
   
+  static void buildAABBTree(decoration<int>& deco, const int aabbKey,
+                            SimplePolyhedron& poly)
+  {
+    using namespace view_types;
+    
+    boost::shared_ptr<Tree> tree(new Tree);
+    
+    // constructs AABB tree
+    tree.reset(new Tree(poly.facets_begin(),poly.facets_end()));
+    tree->accelerate_distance_queries();
+    
+    if (deco.has_key(aabbKey)) deco.erase(aabbKey);
+    deco.insert(aabbKey, tree);
+  }
+  
   void KernelCollection::buildMesh()
   {
     NUKLEI_TRACE_BEGIN();
@@ -237,19 +252,7 @@ namespace nuklei {
     if (deco_.has_key(MESH_KEY)) deco_.erase(MESH_KEY);
     deco_.insert(MESH_KEY, poly);
     
-    {
-      using namespace view_types;
-      
-      boost::shared_ptr<Tree> tree(new Tree);
-    
-      // constructs AABB tree
-      tree.reset(new Tree(poly->facets_begin(),poly->facets_end()));
-      tree->accelerate_distance_queries();
-    
-      if (deco_.has_key(AABBTREE_KEY)) deco_.erase(AABBTREE_KEY);
-      deco_.insert(AABBTREE_KEY, tree);
-    }
-    
+    buildAABBTree(deco_, AABBTREE_KEY, *poly);
 #else
     NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
@@ -283,6 +286,7 @@ namespace nuklei {
     }
     if (deco_.has_key(MESH_KEY)) deco_.erase(MESH_KEY);
     deco_.insert(MESH_KEY, poly);
+    buildAABBTree(deco_, AABBTREE_KEY, *poly);
 #else
     NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
