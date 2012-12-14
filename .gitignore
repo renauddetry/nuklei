@@ -1,1 +1,4 @@
 *.pyc
+/scons.build
+/cmake.build
+/doc_generated
