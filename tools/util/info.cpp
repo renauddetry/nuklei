@@ -24,7 +24,7 @@ int info(int argc, char ** argv)
   
   /* Parse command line arguments */
   
-  TCLAP::CmdLine cmd(INFOSTRING + "Convert App." );
+  TCLAP::CmdLine cmd(INFOSTRING + "Info App." );
   
   /* Standard arguments */
   
