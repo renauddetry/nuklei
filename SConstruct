@@ -28,7 +28,7 @@ conf_file = env['projectName'] + '-' + env['PLATFORM'] + '.conf'
 SConscriptName = 'SConscript.py'
 
 # directory in which build files will be written
-build_dir = 'scons_build'
+build_prefix = 'scons.build'
 
 # files to be removed when cleaning at top dir
 # those files will also not be included in tar backups
@@ -41,6 +41,24 @@ for root, dirs, files in os.walk('.'):
       parts.append(os.path.normpath(root))
   if '.svn' in dirs:
       dirs.remove('.svn')
+
+import shlex
+import subprocess
+import os
+
+def system_ret(cmd):
+  return subprocess.Popen(shlex.split(cmd), stdout = subprocess.PIPE, stderr = subprocess.PIPE).communicate()[0]
+try:
+  branch = system_ret("git status")
+except OSError:
+  print "Running Git didn't work. Is git installed?"
+  branch = ''
+
+if branch.find("# On branch") == 0:
+  branch = branch.replace("# On branch ", "")
+  branch = branch[:branch.find('\n')]
+else:
+  branch = ""
 
 ################
 ## procedures ##
@@ -91,7 +109,7 @@ opts.AddVariables(
    boost_libraries_name_format),
   ('build_dir',
    'Path to the build directory.',
-   build_dir),
+   build_prefix),
   EnumVariable('bt', 'Sets the build type', 'deploy',
                allowed_values = ('deploy', 'develop', 'profile'),
                map={'opt':'deploy', 'debug':'develop'}),
@@ -107,6 +125,10 @@ opts.AddVariables(
   EnumVariable('use_pcl', 'Enables functions that depend on PCL', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('branch_in_build_dir', 'This option is for Nuklei developers only. " + \
+               "It tells SCons to use the name of the current git branch in build " + \
+               "directory', 'no',
                allowed_values = ('yes', 'no'))
 )
 
@@ -145,6 +167,11 @@ env['UseCIMG'] = env['use_cimg'] == 'yes'
 # this is obsolete, should not be used.
 env['InstallPrefix'] = env['prefix']
 
+if env['branch_in_build_dir'] == 'yes':
+  env['BuildDirectory'] = join(env['build_dir'], branch)
+else:
+  env['BuildDirectory'] = env['build_dir']
+
 if env['BuildType'] == 'deploy':
   buildColor = green
 else:
@@ -166,11 +193,11 @@ Help(opts.GenerateHelpText(env))
 ## basic environment setup (to be completed in SConscript's) ##
 ###############################################################
 
-sconsign_file = join(env['build_dir'],
+sconsign_file = join(env['BuildDirectory'],
                      'sconsign-' + env['PLATFORM'] + '_' + env['BuildType'])
-configure_dir = join(env['build_dir'],
+configure_dir = join(env['BuildDirectory'],
                      'sconf_temp-' + env['PLATFORM'] + '_' + env['BuildType'])
-configure_log_file = join(env['build_dir'],
+configure_log_file = join(env['BuildDirectory'],
                           'config-' + env['PLATFORM'] + '_' + env['BuildType'] + '.log')
 
 env.SConsignFile(sconsign_file)
@@ -183,12 +210,12 @@ if ARGUMENTS.get('fullclean', 0):
 #env.SetOption('max_drift', 4)
 
 # local products recipients
-env['BinDir'] = join('#' + env['build_dir'], 'bin')
-env['ObjDir'] = join('#' + env['build_dir'], 'obj')
-env['HdrDir'] = join('#' + env['build_dir'], 'include')
-env['LibDir'] = join('#' + env['build_dir'], 'lib')
-env['DocDir'] = join('#' + env['build_dir'], 'doc')
-env['TarDir'] = join('#' + env['build_dir'], 'tar')
+env['BinDir'] = join('#' + env['BuildDirectory'], 'bin')
+env['ObjDir'] = join('#' + env['BuildDirectory'], 'obj')
+env['HdrDir'] = join('#' + env['BuildDirectory'], 'include')
+env['LibDir'] = join('#' + env['BuildDirectory'], 'lib')
+env['DocDir'] = join('#' + env['BuildDirectory'], 'doc')
+env['TarDir'] = join('#' + env['BuildDirectory'], 'tar')
 
 # platform/build-dependant local recipients
 env['BinDir'] = join(env['BinDir'], env['PLATFORM'], env['BuildType'])
@@ -450,7 +477,7 @@ if env['TarDir'].lstrip('#') in COMMAND_LINE_TARGETS:
 # generation of a .pc file
 pkgConfigAction = env.Action(buildPkgConfigFile, verbosePkgConfigFile,
                              varlist = [ 'projectName', 'PkgCCflags', 'PkgCLibs' ])
-pcfile = env.Command(join(env['build_dir'], env['projectName'] + '.pc'), None, pkgConfigAction)
+pcfile = env.Command(join(env['BuildDirectory'], env['projectName'] + '.pc'), None, pkgConfigAction)
 env.Install(dir = join(env['LibInstallDir'], 'pkgconfig'), source = pcfile)
 
 env.Prepend(LIBPATH = [ '$LibDir' ])
