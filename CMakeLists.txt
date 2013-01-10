@@ -4,6 +4,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 SET(PROJECT_NAMESPACE nuklei)
 SET(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/build_scripts/cmake/")
 
 ADD_DEFINITIONS(-Wall)
 ADD_DEFINITIONS(-Wno-c++11-extensions -Wno-unused-variable -Wno-unneeded-internal-declaration)
@@ -49,7 +50,6 @@ SET(PROJECT_LIBS ${PROJECT_LIBS} gsl)
 # Boost:
 
 set(Boost_USE_STATIC_RUNTIME    OFF)
-#set(Boost_DIR /usr/local/static/boost_1_51_0)
 find_package(Boost 1.36.0 COMPONENTS system serialization filesystem thread iostreams)
 
 if(Boost_FOUND)
