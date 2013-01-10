@@ -58,8 +58,14 @@ int partial_view(int argc, char ** argv)
 
   TCLAP::ValueArg<double> tolArg
   ("t", "tolerance",
-   "File containing the viewpoint X Y Z coordinates.",
+   "Tolerance t in distsance from a point to the mesh. If a point is at "
+   "distance t behind the mesh (with respect to the viewpoint), it is "
+   "considered visible.",
    false, FLOATTOL, "float", cmd);
+
+  TCLAP::SwitchArg colorizeArg
+  ("c", "colorize_only",
+   "Instead of ignoring occluded points, colorize them.", cmd);
 
   cmd.parse( argc, argv );
   
@@ -79,14 +85,37 @@ int partial_view(int argc, char ** argv)
   NUKLEI_ASSERT(tol >= 0);
   
   KernelCollection view;
-  KernelCollection::const_partialview_iterator viewIterator =
-  kc.partialViewBegin(viewpoint, tol);
-  for (KernelCollection::const_partialview_iterator i = viewIterator;
-       i != i.end(); ++i)
-    view.add(*i);
+  for (KernelCollection::const_iterator i = as_const(kc).begin();
+       i != as_const(kc).end(); ++i)
+  {
+    if (kc.isVisibleFrom(i->getLoc(), viewpoint, tol))
+    {
+      view.add(*i);
+      if (colorizeArg.getValue())
+      {
+        RGBColor blue(0, 0, 1);
+        ColorDescriptor d;
+        d.setColor(blue);
+        view.back().setDescriptor(d);
+      }
+    }
+    else
+    {
+      if (colorizeArg.getValue())
+      {
+        view.add(*i);
+        RGBColor red(1, 0, 0);
+        ColorDescriptor d;
+        d.setColor(red);
+        view.back().setDescriptor(d);
+      }
+    }
+  }
+  if (colorizeArg.getValue())
+    writeObservations(outFileArg.getValue(), view, Observation::SERIAL);
+  else
+    writeObservations(outFileArg.getValue(), view);
 
-  writeObservations(outFileArg.getValue(), view);
-  
   return 0;
   
   NUKLEI_TRACE_END();

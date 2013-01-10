@@ -99,7 +99,7 @@ namespace nuklei {
         visible = true;
     }
     if (num_inter > 1 && visible)
-      std::cerr << "strange " << target <<  std::endl;
+      NUKLEI_INFO("Strange visibility at" << target);
     
     return visible;
     
@@ -174,23 +174,23 @@ namespace nuklei {
   }
   
   
-  KernelCollection::const_sort_iterator KernelCollection::partialViewBegin(const Vector3& viewpoint,
-                                                                           const coord_t& tolerance) const
+  KernelCollection::const_partialview_iterator KernelCollection::partialViewBegin(const Vector3& viewpoint,
+                                                                                  const coord_t& tolerance) const
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CGAL
     
-    typedef const_sort_iterator::index_container
+    typedef const_partialview_iterator::index_container
     index_container;
-    typedef const_sort_iterator::index_container_ptr
+    typedef const_partialview_iterator::index_container_ptr
     index_container_ptr;
-    typedef const_sort_iterator::index_t
+    typedef const_partialview_iterator::index_t
     index_t;
     
     index_container_ptr index_collection(new index_container);
     *index_collection = partialView< index_container >(viewpoint, tolerance);
     
-    return const_sort_iterator(begin(), index_collection);
+    return const_partialview_iterator(begin(), index_collection);
 #else
     NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
