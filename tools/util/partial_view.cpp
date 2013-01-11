@@ -93,9 +93,9 @@ int partial_view(int argc, char ** argv)
       view.add(*i);
       if (colorizeArg.getValue())
       {
-        RGBColor blue(0, 0, 1);
+        RGBColor c(0, 0, 1);
         ColorDescriptor d;
-        d.setColor(blue);
+        d.setColor(c);
         view.back().setDescriptor(d);
       }
     }
@@ -104,9 +104,9 @@ int partial_view(int argc, char ** argv)
       if (colorizeArg.getValue())
       {
         view.add(*i);
-        RGBColor red(1, 0, 0);
+        RGBColor c(0, 1, 0);
         ColorDescriptor d;
-        d.setColor(red);
+        d.setColor(c);
         view.back().setDescriptor(d);
       }
     }
