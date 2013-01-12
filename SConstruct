@@ -126,9 +126,9 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('use_cimg', 'Enables functions that depend on CIMG', 'no',
                allowed_values = ('yes', 'no')),
-  EnumVariable('branch_in_build_dir', 'This option is for Nuklei developers only. " + \
-               "It tells SCons to use the name of the current git branch in build " + \
-               "directory', 'no',
+  EnumVariable('branch_in_build_dir', 'This option is for Nuklei developers only. ' + \
+               'It tells SCons to use the name of the current git branch in build ' + \
+               'directory', 'no',
                allowed_values = ('yes', 'no'))
 )
 
