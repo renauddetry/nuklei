@@ -24,8 +24,13 @@ const CommandList commands[] = {
     call: &help
   },
   {
-    command: "conv",
+    command: "convert",
     help: "Transformation and concatenation.",
+    call: &convert
+  },
+  {
+    command: "conv",
+    help: "Shortcut for convert.",
     call: &convert
   },
   {
