@@ -121,3 +121,48 @@ int partial_view(int argc, char ** argv)
   NUKLEI_TRACE_END();
 }
 
+
+int create_mesh(int argc, char ** argv)
+{
+  NUKLEI_TRACE_BEGIN();
+  
+  /* Parse command line arguments */
+  
+  TCLAP::CmdLine cmd(INFOSTRING + "Create Mesh App." );
+  
+  /* Standard arguments */
+  
+  TCLAP::ValueArg<int> niceArg
+  ("", "nice",
+   "Proccess priority.",
+   false, NICEINC, "int", cmd);
+  
+  /* Custom arguments */
+  
+  TCLAP::UnlabeledValueArg<std::string> inFileArg
+  ("input",
+   "Input point cloud.",
+   true, "", "filename", cmd);
+  
+  TCLAP::UnlabeledValueArg<std::string> outFileArg
+  ("output",
+   "Output point cloud = partial view of input from viewpoint.",
+   true, "", "filename", cmd);
+    
+  cmd.parse( argc, argv );
+  
+  NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
+  
+  KernelCollection kc;
+  readObservations(inFileArg.getValue(), kc);
+  
+  kc.buildMesh();
+  
+  kc.saveMeshToOffFile(outFileArg.getValue());
+  
+  return 0;
+  
+  NUKLEI_TRACE_END();
+}
+
+

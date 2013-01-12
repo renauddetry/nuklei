@@ -74,6 +74,11 @@ const CommandList commands[] = {
     call: &partial_view
   },
   {
+    command: "create_mesh",
+    help: "",
+    call: &create_mesh
+  },
+  {
     command: "test",
     help: "",
     call: &test
