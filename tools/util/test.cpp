@@ -44,33 +44,6 @@ int test(int argc, char ** argv)
   
   NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
   
-  Quaternion q(1, 0, 0, 0);
-  
-  {
-    Quaternion r;
-    r.FromAxisAngle(Vector3::UNIT_Z, M_PI/2);
-    q = r * q;
-    std::cout << la::normalized(q) << std::endl;
-  }
-
-  {
-    Quaternion r;
-    r.FromAxisAngle(Vector3::UNIT_Z, M_PI);
-    std::cout << la::normalized(r*q) << std::endl;
-  }
-
-  {
-    Quaternion r;
-    r.FromAxisAngle(Vector3::UNIT_Y, 90. / 180*M_PI);
-    std::cout << la::normalized(r*q) << std::endl;
-  }
-
-  {
-    Quaternion r;
-    r.FromAxisAngle(Vector3::UNIT_Y, -90. / 180*M_PI);
-    std::cout << la::normalized(r*q) << std::endl;
-  }
-
   return 0;
   
   NUKLEI_TRACE_END();
