@@ -95,6 +95,37 @@ namespace nuklei
     NUKLEI_TRACE_END();
   }
 
+  void KernelCollection::computeSurfaceNormals()
+  {
+    KernelCollection kc2;
+    
+    if (!deco_.has_key(NSTREE_KEY))
+      NUKLEI_THROW("Undefined neighbor search tree. "
+                   "Call buildNeighborSearchTree() first.");
+    
+    int skipped = 0;
+    for (KernelCollection::const_iterator i = as_const(*this).begin();
+         i != as_const(*this).end(); ++i)
+    {
+      kernel::r3xs2p k;
+      k.loc_ = i->getLoc();
+      boost::tuple<Matrix3, Vector3, coord_t> dp =
+      localLocationDifferential(k.loc_);
+      if (dp.get<2>() == 0)
+      {
+        skipped++;
+        continue;
+      }
+      k.dir_ = dp.get<0>().GetColumn(2);
+      k.setWeight(i->getWeight());
+      if (i->hasDescriptor()) k.setDescriptor(i->getDescriptor());
+      kc2.add(k);
+    }
+    if (skipped > 0)
+      NUKLEI_WARN("Skipped " << skipped << " kernels for which "
+                  "CGAL couldn't compute local diff.");
+    *this = kc2;
+  }
 }
 
 

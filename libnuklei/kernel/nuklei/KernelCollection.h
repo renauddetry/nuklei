@@ -402,6 +402,20 @@ namespace nuklei {
       std::vector<Vector3> get3DPointCloud() const;
 
       /**
+       * @brief Computes surface normals at all points. After running this
+       * method, all kernels are nuklei::kernel::r3xs2p.
+       *
+       * The orientations/directions that may be associated to the kernels
+       * prior to calling this method are ignored and replaced with the normals
+       * computed from local neighbors.
+       *
+       * This function requires a neighbor search tree. Its call must thus be
+       * preceded by a call to #buildNeighborSearchTree(). See @ref
+       * intermediary.
+       */
+      void computeSurfaceNormals();
+
+      /**
        * @brief Builds a kd-tree of the kernel positions and stores the tree
        * internally. See @ref intermediary.
        */
