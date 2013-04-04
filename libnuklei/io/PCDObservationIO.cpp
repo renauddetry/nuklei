@@ -55,29 +55,47 @@ namespace nuklei {
         throw ObservationIOError("File " +
                                  observationFileName_ +
                                  " does not appear to be PCD.");
-    }
-    
-    try {
-      pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloud
-      (new pcl::PointCloud<pcl::PointXYZRGBNormal>);
       
-      if (pcl::io::loadPCDFile<pcl::PointXYZRGBNormal>
-          (observationFileName_, *cloud) == -1)
-        throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
-      else
-        kc_ = nukleiFromPcl(*cloud, true);
-    } catch (std::exception& e) {
-      try {
-        pcl::PointCloud<pcl::PointNormal>::Ptr cloud
-        (new pcl::PointCloud<pcl::PointNormal>);
-        
-        if (pcl::io::loadPCDFile<pcl::PointNormal>
-            (observationFileName_, *cloud) == -1)
-          throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
+      if (!std::getline(ifs, line) || !std::getline(ifs, line) ||
+          line.size() < 1)
+        throw ObservationIOError("File " +
+                                 observationFileName_ +
+                                 " does not appear to be PCD.");
+      
+      if (line.find("normal_x") != std::string::npos)
+      {
+        if (line.find("rgb") != std::string::npos ||
+            line.find("r g b") != std::string::npos)
+        {
+          // Normals & RGB
+          pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr cloud
+          (new pcl::PointCloud<pcl::PointXYZRGBNormal>);
+          
+          if (pcl::io::loadPCDFile<pcl::PointXYZRGBNormal>
+              (observationFileName_, *cloud) == -1)
+            throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
+          else
+            kc_ = nukleiFromPcl(*cloud, true);
+        }
         else
-          kc_ = nukleiFromPcl(*cloud, true);
-      } catch (std::exception& e) {
-        try {
+        {
+          // Normals
+          pcl::PointCloud<pcl::PointNormal>::Ptr cloud
+          (new pcl::PointCloud<pcl::PointNormal>);
+          
+          if (pcl::io::loadPCDFile<pcl::PointNormal>
+              (observationFileName_, *cloud) == -1)
+            throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
+          else
+            kc_ = nukleiFromPcl(*cloud, true);
+        }
+      }
+      else
+      {
+        if (line.find("rgb") != std::string::npos ||
+            line.find("r g b") != std::string::npos)
+        {
+          // RGB
           pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud
           (new pcl::PointCloud<pcl::PointXYZRGB>);
           
@@ -86,22 +104,22 @@ namespace nuklei {
             throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
           else
             kc_ = nukleiFromPcl(*cloud, true);
-        } catch (std::exception& e) {
-          try {
-            pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
-            (new pcl::PointCloud<pcl::PointXYZ>);
-            
-            if (pcl::io::loadPCDFile<pcl::PointXYZ>
-                (observationFileName_, *cloud) == -1)
-              throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
-            else
-              kc_ = nukleiFromPcl(*cloud, true);
-          } catch (std::exception& e) {
-            throw ObservationIOError(e.what());
-          }
+        }
+        else
+        {
+          // only xyz
+          pcl::PointCloud<pcl::PointXYZ>::Ptr cloud
+          (new pcl::PointCloud<pcl::PointXYZ>);
+          
+          if (pcl::io::loadPCDFile<pcl::PointXYZ>
+              (observationFileName_, *cloud) == -1)
+            throw ObservationIOError("PCL cannot read file `" + observationFileName_ + "'.");
+          else
+            kc_ = nukleiFromPcl(*cloud, true);
         }
       }
     }
+    
     idx_ = 0;
 #else
     throw ObservationIOError("This method requires PCL.");

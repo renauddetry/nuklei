@@ -41,7 +41,7 @@ namespace nuklei {
   {
     kernel::r3xs2p k;
     k.loc_ = Vector3(p.x, p.y, p.z);
-    k.dir_ = Vector3(p.normal_x, p.normal_y, p.normal_z);
+    k.dir_ = la::normalized(Vector3(p.normal_x, p.normal_y, p.normal_z));
     return k;
   }
   
@@ -54,7 +54,7 @@ namespace nuklei {
   {
     kernel::r3xs2p k;
     k.loc_ = Vector3(p.x, p.y, p.z);
-    k.dir_ = Vector3(p.normal_x, p.normal_y, p.normal_z);
+    k.dir_ = la::normalized(Vector3(p.normal_x, p.normal_y, p.normal_z));
     ColorDescriptor d;
     const uint32_t rgb = *reinterpret_cast<const int*>(&p.rgb);
     uint8_t r = (rgb >> 16) & 0x0000ff;
