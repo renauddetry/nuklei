@@ -14,7 +14,7 @@ const double WHITE_NOISE_POWER = 1e-4;
 
 namespace nuklei
 {
-    
+
   // Temperature function (cooling factor)
   static inline coord_t Ti(const unsigned i, const unsigned F)
   {
