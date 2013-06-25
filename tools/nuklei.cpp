@@ -89,6 +89,11 @@ const CommandList commands[] = {
     call: &test
   },
   {
+    command: "pe",
+    help: "",
+    call: &mcmc_pose_estimation
+  },
+  {
     command: NULL,
     help: NULL,
     call: NULL

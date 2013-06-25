@@ -17,6 +17,7 @@ int homogeneous_subset(int argc, char ** argv);
 int evaluate(int argc, char ** argv);
 int test(int argc, char ** argv);
 int invert_transfo(int argc, char ** argv);
+int mcmc_pose_estimation(int argc, char ** argv);
 int partial_view(int argc, char ** argv);
 int create_mesh(int argc, char ** argv);
 
