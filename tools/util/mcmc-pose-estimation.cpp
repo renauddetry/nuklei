@@ -217,7 +217,8 @@ namespace nuklei
 #pragma omp critical(pe_merge_poses)
       {
         poses.add(tmp);
-        std::cout << "Finished chain " << i << std::endl;
+        std::cout << "Finished chain " << i << " with score " <<
+          tmp.getWeight() << std::endl;
       }
     }
     
