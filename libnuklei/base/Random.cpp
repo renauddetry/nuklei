@@ -15,9 +15,13 @@
 #include <nuklei/Common.h>
 #include <nuklei/Log.h>
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
 
 #ifdef NUKLEI_USE_OPENMP
 #define NUKLEI_RANDOM_SYNC_OMP
+#include <omp.h>
 #else
 #define NUKLEI_RANDOM_SYNC_MUTEX
 #endif
@@ -29,6 +33,8 @@ namespace nuklei {
   
   static boost::mutex mutex;
   
+  static std::vector<boost::mt19937>* generators;
+  
   bool Random::initialized_ = Random::init();
   
   bool Random::init()
@@ -36,17 +42,7 @@ namespace nuklei {
     const gsl_rng_type * T;
     gsl_rng_env_setup();
     T = gsl_rng_default;
-    {
-#if defined(NUKLEI_RANDOM_SYNC_OMP)
-#  pragma omp critical(nuklei_randomRng)
-#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
-#elif defined(NUKLEI_RANDOM_SYNC_NONE)
-#else
-#  error Undefined random sync method
-#endif
-      randomRng = gsl_rng_alloc(T);
-    }
+    randomRng = gsl_rng_alloc(T);
     unsigned seed = 0;
     const char * envVal = getenv("NUKLEI_RANDOM_SEED");
     if (envVal != NULL)
@@ -62,6 +58,12 @@ namespace nuklei {
       else
         seed = time(NULL)*getpid();
     }
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+    generators = new std::vector<boost::mt19937>();
+    generators->resize(omp_get_max_threads());
+#else
+    generators = NULL;
+#endif
     Random::seed(seed);
     return true;
   }
@@ -75,17 +77,14 @@ namespace nuklei {
     //BSD implementation of rand differs from random.
     srand(s);
 #endif
-#if defined(NUKLEI_RANDOM_SYNC_OMP)
-#  pragma omp critical(nuklei_randomRng)
-#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
-#elif defined(NUKLEI_RANDOM_SYNC_NONE)
-#else
-#  error Undefined random sync method
-#endif
     gsl_rng_set(randomRng, s);
+    if (generators)
+      for (int i = 0; i < generators->size(); ++i)
+      {
+        generators->at(i).seed(s+i);
+      }
   }
-    
+  
   //This function returns a double precision floating point number
   //uniformly distributed in the range [0,1). The range includes 0.0 but
   //excludes 1.0.
@@ -120,7 +119,17 @@ namespace nuklei {
   {
     unsigned long int r;
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
+#ifndef NUKLEI_SYNC_UNIFORM_INT_GENERATOR
+    {
+      boost::uniform_int<> dist(0, n-1);
+      boost::variate_generator<boost::mt19937&, boost::uniform_int<> >
+      die(generators->at(omp_get_thread_num()), dist);
+      r = die();
+      return r;
+    }
+#else
 #  pragma omp critical(nuklei_randomRng)
+#endif
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
       boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
