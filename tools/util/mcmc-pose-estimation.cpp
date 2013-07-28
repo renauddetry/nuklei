@@ -7,6 +7,7 @@
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
 #include <nuklei/ProgressIndicator.h>
+#include <nuklei/Stopwatch.h>
 #include <tclap/CmdLine.h>
 
 const bool WEIGHTED_SUM_EVIDENCE_EVAL = false;
@@ -14,7 +15,7 @@ const double WHITE_NOISE_POWER = 1e-4;
 
 namespace nuklei
 {
-
+  
   // Temperature function (cooling factor)
   static inline coord_t Ti(const unsigned i, const unsigned F)
   {
@@ -54,7 +55,7 @@ namespace nuklei
     {
       indices.push_back(i.index());
     }
-    std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);    
+    std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
     
     // Next chain state
     kernel::se3 next;
@@ -197,9 +198,9 @@ namespace nuklei
   }
   
   static kernel::se3 estimatePose(const KernelCollection &objectEvidence,
-                           const KernelCollection &sceneEvidence,
-                           const int nChains,
-                           const int n)
+                                  const KernelCollection &sceneEvidence,
+                                  const int nChains,
+                                  const int n)
   {
     KernelCollection poses;
     coord_t objectSize = objectEvidence.moments()->getLocH();
@@ -218,11 +219,11 @@ namespace nuklei
       {
         poses.add(tmp);
         std::cout << "Finished chain " << i << " with score " <<
-          tmp.getWeight() << std::endl;
+        tmp.getWeight() << std::endl;
       }
     }
     
-    return kernel::se3(*poses.sortBegin(1));    
+    return kernel::se3(*poses.sortBegin(1));
   }
   
 }
@@ -284,13 +285,20 @@ int mcmc_pose_estimation(int argc, char ** argv)
     SwitchArg lightArg
     ("", "light",
      "Limit the scene model to 10000 points, for speed.", cmd);
-
+    
     SwitchArg accurateScoreArg
     ("s", "accurate_score",
      "Recompute the matching score using all input points (instead of using N points as given by -n N).", cmd);
     
-    cmd.parse( argc, argv );
+    SwitchArg timeArg
+    ("", "time",
+     "Print computation time.", cmd);
     
+    cmd.parse( argc, argv );
+    Stopwatch sw("");
+    if (!timeArg.getValue())
+      sw.setOutputType(Stopwatch::QUIET);
+
     // ------------- //
     // Read-in data: //
     // ------------- //
@@ -302,30 +310,39 @@ int mcmc_pose_estimation(int argc, char ** argv)
     if (objectEvidence.size() == 0 || sceneEvidence.size() == 0)
       NUKLEI_THROW("Empty input cloud.");
     
-      if (computeNormalsArg.getValue())
+    if (computeNormalsArg.getValue())
+    {
+      std::cout << "Computing normals for object model..." << std::endl;
+      objectEvidence.buildNeighborSearchTree();
+      objectEvidence.computeSurfaceNormals();
+      std::cout << "Computing normals for object model... done." << std::endl;
+    }
+    else
+    {
+      if (objectEvidence.front().polyType() == kernel::base::R3)
       {
-        std::cout << "Computing normals for object model..." << std::endl;
-        objectEvidence.buildNeighborSearchTree();
-        objectEvidence.computeSurfaceNormals();
-        std::cout << "Computing normals for object model... done." << std::endl;
-      }
-      else
         std::cout << "Warning: object model is an R3 cloud. " <<
         "Pose estimation will be suboptimal. Use --normals to fix this." <<
         std::endl;
-
-    if (computeNormalsArg.getValue())
-      {
-        std::cout << "Computing normals for scene model..." << std::endl;
-        sceneEvidence.buildNeighborSearchTree();
-        sceneEvidence.computeSurfaceNormals();
-        std::cout << "Computing normals for scene model... done." << std::endl;
       }
-      else
+    }
+    
+    if (computeNormalsArg.getValue())
+    {
+      std::cout << "Computing normals for scene model..." << std::endl;
+      sceneEvidence.buildNeighborSearchTree();
+      sceneEvidence.computeSurfaceNormals();
+      std::cout << "Computing normals for scene model... done." << std::endl;
+    }
+    else
+    {
+      if (sceneEvidence.front().polyType() == kernel::base::R3)
+      {
         std::cout << "Warning: scene model is an R3 cloud. " <<
         "Pose estimation will be suboptimal. Use --normals to fix this." <<
         std::endl;
-    
+      }
+    }
     if (objectEvidence.front().polyType() != sceneEvidence.front().polyType())
       NUKLEI_THROW("Input point clouds must be defined on the same domain.");
     
@@ -340,13 +357,13 @@ int mcmc_pose_estimation(int argc, char ** argv)
       }
       sceneEvidence = tmp;
     }
-
+    
     if (sceneEvidence.size() > 10000)
       std::cout << "Warning: Scene model has more than 10000 points. "
       "To keep computation time low, keep the model under 10000 points. "
       "Use --light to fix this." << std::endl;
     
-      
+    
     // Kernel widths, for position and orientation:
     const double locH = (locHArg.getValue()<=0
                          ?
@@ -382,6 +399,8 @@ int mcmc_pose_estimation(int argc, char ** argv)
     else
       n = nArg.getValue();
     
+    sw.lap("data read");
+    
     // ------------------------------- //
     // Prepare density for evaluation: //
     // ------------------------------- //
@@ -395,7 +414,11 @@ int mcmc_pose_estimation(int argc, char ** argv)
     sceneEvidence.computeKernelStatistics();
     sceneEvidence.buildKdTree();
     
+    sw.lap("k-d tree");
+    
     kernel::se3 t = estimatePose(objectEvidence, sceneEvidence, nChains, n);
+    
+    sw.lap("alignment");
     
     if (accurateScoreArg.getValue())
     {
@@ -427,6 +450,8 @@ int mcmc_pose_estimation(int argc, char ** argv)
       objectEvidence.transformWith(t);
       writeObservations(alignedObjectEvidenceFileArg.getValue(), objectEvidence);
     }
+    
+    sw.lap("accurate score & output");
     
     return 0;
   }
