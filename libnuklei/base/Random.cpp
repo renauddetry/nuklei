@@ -16,7 +16,8 @@
 #include <nuklei/Log.h>
 
 #include <boost/random.hpp>
-#include <boost/array.hpp>
+
+//#define NUKLEI_USE_BOOST_RANDOM_GEN
 
 #ifdef NUKLEI_USE_OPENMP
 #define NUKLEI_RANDOM_SYNC_OMP
@@ -105,8 +106,8 @@ namespace nuklei {
   {
     double r;
 #ifdef NUKLEI_USE_BOOST_RANDOM_GEN
-    boost::uniform_01 dist;
-    boost::variate_generator<boost::mt19937&, boost::uniform_01 >
+    boost::uniform_01<> dist;
+    boost::variate_generator<boost::mt19937&, boost::uniform_01<> >
     die(generators->at(nuklei_thread_num()), dist);
     r = die();
 #else
@@ -170,8 +171,8 @@ namespace nuklei {
   {
     double r;
 #ifdef NUKLEI_USE_BOOST_RANDOM_GEN
-    boost::normal_distribution dist(0, sigma);
-    boost::variate_generator<boost::mt19937&, boost::normal_distribution >
+    boost::normal_distribution<> dist(0, sigma);
+    boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
     die(generators->at(nuklei_thread_num()), dist);
     r = die();
 #else
@@ -208,13 +209,13 @@ namespace nuklei {
     Vector2 dir;
 #ifdef NUKLEI_USE_BOOST_RANDOM_GEN
     const int dim = 2;
-    typedef boost::uniform_on_sphere<double, boost::array<double, dim> > dist_t;
+    typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
     dist_t dist(dim);
     boost::variate_generator<boost::mt19937&, dist_t >
     die(generators->at(nuklei_thread_num()), dist);
-    boost::array<double, dim> r = die();
-    dird.X() = r[0];
-    dird.Y() = r[1];
+    std::vector<double> r = die();
+    dir.X() = r.at(0);
+    dir.Y() = r.at(1);
 #else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
@@ -234,14 +235,14 @@ namespace nuklei {
     Vector3 dir;
 #ifdef NUKLEI_USE_BOOST_RANDOM_GEN
     const int dim = 3;
-    typedef boost::uniform_on_sphere<double, boost::array<double, dim> > dist_t;
+    typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
     dist_t dist(dim);
     boost::variate_generator<boost::mt19937&, dist_t >
     die(generators->at(nuklei_thread_num()), dist);
-    boost::array<double, dim> r = die();
-    dird.X() = r[0];
-    dird.Y() = r[1];
-    dird.Z() = r[2];
+    std::vector<double> r = die();
+    dir.X() = r.at(0);
+    dir.Y() = r.at(1);
+    dir.Z() = r.at(2);
 #else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
