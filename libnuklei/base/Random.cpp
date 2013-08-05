@@ -51,6 +51,8 @@ namespace nuklei {
   
   static boost::mutex mutex;
   
+  // generators must be a pointer. If not, its construtor may be called after
+  // init() is called, which will destroy the generators setup in init().
   static std::vector<boost::mt19937>* generators;
   
   bool Random::initialized_ = Random::init();
