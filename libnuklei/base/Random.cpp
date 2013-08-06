@@ -15,16 +15,34 @@
 #include <nuklei/Common.h>
 #include <nuklei/Log.h>
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#include <boost/random.hpp>
+
+//#define NUKLEI_USE_BOOST_RANDOM_GEN
 
 #ifdef NUKLEI_USE_OPENMP
 #define NUKLEI_RANDOM_SYNC_OMP
 #include <omp.h>
+static inline int nuklei_thread_num()
+{
+  return omp_get_thread_num();
+}
+static inline int nuklei_max_threads()
+{
+  return omp_get_max_threads();
+}
 #else
 #define NUKLEI_RANDOM_SYNC_MUTEX
+static inline int nuklei_thread_num()
+{
+  return 0;
+}
+static inline int nuklei_max_threads()
+{
+  return 1;
+}
 #endif
+
+
 
 namespace nuklei {
   
@@ -33,6 +51,8 @@ namespace nuklei {
   
   static boost::mutex mutex;
   
+  // generators must be a pointer. If not, its construtor may be called after
+  // init() is called, which will destroy the generators setup in init().
   static std::vector<boost::mt19937>* generators;
   
   bool Random::initialized_ = Random::init();
@@ -58,12 +78,8 @@ namespace nuklei {
       else
         seed = time(NULL)*getpid();
     }
-#if defined(NUKLEI_RANDOM_SYNC_OMP)
     generators = new std::vector<boost::mt19937>();
-    generators->resize(omp_get_max_threads());
-#else
-    generators = NULL;
-#endif
+    generators->resize(nuklei_max_threads());
     Random::seed(seed);
     return true;
   }
@@ -91,6 +107,12 @@ namespace nuklei {
   double Random::uniform()
   {
     double r;
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    boost::uniform_01<> dist;
+    boost::variate_generator<boost::mt19937&, boost::uniform_01<> >
+    die(generators->at(nuklei_thread_num()), dist);
+    r = die();
+#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
@@ -100,6 +122,7 @@ namespace nuklei {
 #  error Undefined random sync method
 #endif
     r = gsl_rng_uniform(randomRng);
+#endif
     return r;
   }
   
@@ -118,26 +141,28 @@ namespace nuklei {
   unsigned long int Random::uniformInt(unsigned long int n)
   {
     unsigned long int r;
-#if defined(NUKLEI_RANDOM_SYNC_OMP)
-#ifndef NUKLEI_SYNC_UNIFORM_INT_GENERATOR
-    {
-      boost::uniform_int<> dist(0, n-1);
-      boost::variate_generator<boost::mt19937&, boost::uniform_int<> >
-      die(generators->at(omp_get_thread_num()), dist);
-      r = die();
-      return r;
-    }
-#else
-#  pragma omp critical(nuklei_randomRng)
-#endif
-#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
-#elif defined(NUKLEI_RANDOM_SYNC_NONE)
-#else
-#  error Undefined random sync method
-#endif
-    r = gsl_rng_uniform_int(randomRng, n);
+    boost::uniform_int<> dist(0, n-1);
+    boost::variate_generator<boost::mt19937&, boost::uniform_int<> >
+    die(generators->at(nuklei_thread_num()), dist);
+    r = die();
     return r;
+// GSL has trouble with concurrent random number generation:
+//   - if a single generator is used, it must be mutexed.
+//   - using one random generator per thread is somehow very slow
+// Random::uniformInt is used *a lot*, everytime a KernelCollection is
+// iterated in random order. Using a mutex here entirely breaks multithreading
+// (n threads on n cpus takes as much time as the same work on a single cpu).
+// As a result we force boost.
+//#if defined(NUKLEI_RANDOM_SYNC_OMP)
+//#  pragma omp critical(nuklei_randomRng)
+//#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+//      boost::unique_lock<boost::mutex> lock(mutex);
+//#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+//#else
+//#  error Undefined random sync method
+//#endif
+//    r = gsl_rng_uniform_int(randomRng, n);
+//    return r;
   }
   
   //This function returns a Gaussian random variate, with mean zero and
@@ -147,6 +172,12 @@ namespace nuklei {
   double Random::gaussian(double sigma)
   {
     double r;
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    boost::normal_distribution<> dist(0, sigma);
+    boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
+    die(generators->at(nuklei_thread_num()), dist);
+    r = die();
+#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
@@ -156,6 +187,7 @@ namespace nuklei {
 #  error Undefined random sync method
 #endif
     r = gsl_ran_gaussian(randomRng, sigma);
+#endif
     return r;
   }
   
@@ -176,7 +208,17 @@ namespace nuklei {
   
   Vector2 Random::uniformDirection2d()
   {
-    Vector2 dird;
+    Vector2 dir;
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    const int dim = 2;
+    typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
+    dist_t dist(dim);
+    boost::variate_generator<boost::mt19937&, dist_t >
+    die(generators->at(nuklei_thread_num()), dist);
+    std::vector<double> r = die();
+    dir.X() = r.at(0);
+    dir.Y() = r.at(1);
+#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
@@ -185,14 +227,25 @@ namespace nuklei {
 #else
 #  error Undefined random sync method
 #endif
-    gsl_ran_dir_2d(randomRng, &dird.X(), &dird.Y());
-    Vector2 dir(dird.X(), dird.Y());
+    gsl_ran_dir_2d(randomRng, &dir.X(), &dir.Y());
+#endif
     return dir;
   }
   
   Vector3 Random::uniformDirection3d()
   {
-    Vector3 dird;
+    Vector3 dir;
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    const int dim = 3;
+    typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
+    dist_t dist(dim);
+    boost::variate_generator<boost::mt19937&, dist_t >
+    die(generators->at(nuklei_thread_num()), dist);
+    std::vector<double> r = die();
+    dir.X() = r.at(0);
+    dir.Y() = r.at(1);
+    dir.Z() = r.at(2);
+#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
@@ -201,8 +254,8 @@ namespace nuklei {
 #else
 #  error Undefined random sync method
 #endif
-    gsl_ran_dir_3d(randomRng, &dird.X(), &dird.Y(), &dird.Z());
-    Vector3 dir(dird.X(), dird.Y(), dird.Z());
+    gsl_ran_dir_3d(randomRng, &dir.X(), &dir.Y(), &dir.Z());
+#endif
     return dir;
   }
   
