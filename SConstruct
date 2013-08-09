@@ -416,7 +416,7 @@ if env['CXX'].find('clang++') >= 0:
 if env['BuildType'] == 'deploy':
   env.Append(CCFLAGS = [ '-pipe', '-O3', '-Wall', '-Wno-sign-compare', '-Wno-deprecated' ])
   env.Append(CCFLAGS = extra_cxx_args)
-# May bring a 10% speedup:
+# May bring a 1% speedup:
 #  env.Append(CPPDEFINES = [ 'NDEBUG' ])
 elif env['BuildType'] == 'profile':
   env.Append(CCFLAGS = [ '-pipe', '-O3' ])
