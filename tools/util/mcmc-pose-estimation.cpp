@@ -222,7 +222,6 @@ namespace nuklei
         tmp.getWeight() << std::endl;
       }
     }
-    Random::printRandomState();
 
     return kernel::se3(*poses.sortBegin(1));
   }
@@ -440,6 +439,7 @@ int mcmc_pose_estimation(int argc, char ** argv)
         t.setWeight(t.getWeight() + w);
       }
     }
+    std::cout << t.getWeight() / objectEvidence.size() << std::endl;
     
     if (!bestTransfoArg.getValue().empty())
     {

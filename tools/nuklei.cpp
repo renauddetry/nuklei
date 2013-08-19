@@ -81,7 +81,7 @@ const CommandList commands[] = {
   {
     command: "pe",
     help: "",
-    call: &mcmc_pose_estimation
+    call: &pe
   },
   {
     command: NULL,
