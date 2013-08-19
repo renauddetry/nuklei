@@ -195,7 +195,7 @@ namespace nuklei {
       for (KernelCollection::const_partialview_iterator i = viewIterator;
            i != i.end(); ++i)
       {
-        weight_t w = sceneEvidence.evaluationAt(*i->polyTransformedWith(t),
+        weight_t w = sceneEvidence_.evaluationAt(*i->polyTransformedWith(t),
                                                 evaluationStrategy_);
         t.setWeight(t.getWeight() + w);
       }
@@ -298,9 +298,9 @@ namespace nuklei {
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
       if (!meshfile.empty())
-        objectEvidence.readMeshFromOffFile(meshfile);
+        objectEvidence_.readMeshFromOffFile(meshfile);
       else
-        objectEvidence.buildMesh();
+        objectEvidence_.buildMesh();
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -557,7 +557,7 @@ namespace nuklei {
       {
         coloredOE.add(*i);
         if (objectEvidence.isVisibleFrom(i->getLoc(),
-                                         viewpoint.getLoc(),
+                                         viewpoint_,
                                          MESHTOL))
         {
           RGBColor c(0, 0, 1);
