@@ -12,7 +12,7 @@ Short answer: no.
 
 Long answer:
 -# There is no access synchronization in Nuklei methods. An object should therefore not be accessed simultaneously from multiple threads.
--# Many Nuklei procedures require the generation of random numbers. Random numbers are provided by the GSL. The GSL random generator is held in a single global variable (see @p nuklei::randomRng in Random.cpp). I am unaware of synchronization mechanisms in GSL to prevent concurrent access to a random generator. Hence, concurrent calls to Nuklei procedures is dangerous.
+-# Many Nuklei functions/methods require the generation of random numbers. Random numbers are by Boost and the GSL. The GSL random generator is held in a single global variable (see @p nuklei::randomRng in Random.cpp). I am unaware of synchronization mechanisms in GSL to prevent concurrent access to a random generator. Hence, concurrent calls to Nuklei procedures is dangerous.
 
 @section faq_quaternion_norm What can I do if Nuklei quits and complains that FastNegExp is not correctly used?
 
