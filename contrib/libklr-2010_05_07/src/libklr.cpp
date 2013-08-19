@@ -204,7 +204,7 @@ void Clibklr::CG(double *prob,double *Ktrain, double *Y,double *Gamma,int c,int 
   double normQQ   = 0.0;
   double alpha  = 0.0;
   double beta   = 0.0;
-  double normR  = 0.0;
+  //double normR  = 0.0;
   double tparam_temp = 0.0;
   int  itrcount = 0;
 	
@@ -272,7 +272,7 @@ void Clibklr::CG(double *prob,double *Ktrain, double *Y,double *Gamma,int c,int 
 	
   itrcount = 0;
   for(k = 0; k < itrCG; k++){
-    normR = norm(R,c,n);
+    //normR = norm(R,c,n);
     itrcount++;
     
     cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, c, n, n, 1.0, Q, c, Ktrain, n, 0.0, W, c);
