@@ -45,7 +45,7 @@ namespace nuklei
   
   {
     NUKLEI_TRACE_BEGIN();
-    
+
     // Randomly select particles from the object model
     std::vector<int> indices;
     for (KernelCollection::const_sample_iterator
@@ -86,12 +86,12 @@ namespace nuklei
     weight_t weight = 0;
     
     double threshold = Random::uniform();
-    
+
     // Go through the points of the model
     for (unsigned pi = 0; pi < indices.size(); ++pi)
     {
       const kernel::base& objectPoint = objectEvidence.at(indices.at(pi));
-      
+
       kernel::base::ptr test = objectPoint.polyTransformedWith(next);
       
       weight_t w = 0;
@@ -222,7 +222,7 @@ namespace nuklei
         tmp.getWeight() << std::endl;
       }
     }
-    
+
     return kernel::se3(*poses.sortBegin(1));
   }
   
@@ -439,6 +439,7 @@ int mcmc_pose_estimation(int argc, char ** argv)
         t.setWeight(t.getWeight() + w);
       }
     }
+    std::cout << t.getWeight() / objectEvidence.size() << std::endl;
     
     if (!bestTransfoArg.getValue().empty())
     {

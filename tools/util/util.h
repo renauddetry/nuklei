@@ -20,5 +20,6 @@ int invert_transfo(int argc, char ** argv);
 int mcmc_pose_estimation(int argc, char ** argv);
 int partial_view(int argc, char ** argv);
 int create_mesh(int argc, char ** argv);
+int pe(int argc, char ** argv);
 
 #endif

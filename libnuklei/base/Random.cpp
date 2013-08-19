@@ -86,13 +86,16 @@ namespace nuklei {
   
   void Random::seed(unsigned s)
   {
-    // Libraries Nuklei depends on may make use of random numbers.
-    // Let's make sure we seed those randomly as well.
-    srandom(s);
+    if (getenv("NUKLEI_RANDOM_SEED") != NULL)
+    {
+      // Libraries Nuklei depends on may make use of random numbers.
+      // Let's make sure we seed those randomly as well.
+      srandom(s);
 #ifdef __APPLE__
-    //BSD implementation of rand differs from random.
-    srand(s);
+      //BSD implementation of rand differs from random.
+      srand(s);
 #endif
+    }
     gsl_rng_set(randomRng, s);
     if (generators)
       for (int i = 0; i < generators->size(); ++i)
@@ -318,7 +321,8 @@ namespace nuklei {
     NUKLEI_INFO("Random state: " <<
               NUKLEI_NVP(random()) << 
               "\n              " << NUKLEI_NVP(rand()) <<
-              "\n              " << NUKLEI_NVP(Random::gaussian(1.0)));
+              "\n              " << NUKLEI_NVP(Random::uniformInt(1000000)) <<
+              "\n              " << NUKLEI_NVP(Random::uniform()));
   }
   
 }

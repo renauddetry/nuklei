@@ -8,16 +8,30 @@ namespace nuklei
 @ingroup using
 @defgroup using_env Configuration
 
-The behavior of the functions implemented in Nuklei can be altered through environment variables. The two most important ones are:
+The behavior of the functions implemented in Nuklei can be altered through environment variables:
 
-- NUKLEI_LOG_LEVEL, which influences how verbose nuklei is. Typing
+- NUKLEI_LOG_LEVEL influences how verbose Nuklei is. If undefined, Nuklei assumes NUKLEI_LOG_LEVEL=0, which disables all messages from the library. NUKLEI_LOG_LEVEL can takes values between 0 and 6, which correspond to the following log levels:
+
+  - 0: none
+  - 1: fatal
+  - 2: error
+  - 3: warn
+  - 4: info
+  - 5: log
+  - 6: debug
+
+  Defining NUKLEI_LOG_LEVEL=X will enable all messages that have a level smaller or equal to X.
+
+  Note: NUKLEI_LOG_LEVEL disables messages in the Nuklei <em>library</em>. Messages will still be printed when using the <em>nuklei</em> program.
+
+- NUKLEI_RANDOM_SEED: if set to a value greater than zero, Nuklei will seed its random generators <b>and the libc random generator</b> with that value. If equal to -1, Nuklei will seed the random generators with a value based on @c time() and the process ID. If NUKLEI_RANDOM_SEED is not set, Nuklei seeds its own random generators with 0, and does not seed the libc generator.
+
+
+If you are using the BASH shell, environment variables are defined with
 @code
-export NUKLEI_LOG_LEVEL=0
+export NUKLEI_VAR=value
 @endcode
-in a shell will make Nuklei silent. The default value is 5.
-
-- NUKLEI_RANDOM_SEED: if set to a value greater than zero, Nuklei will seed its random generators with that value. If equal to -1, Nuklei will seed the random generators with a value based on @c time() and the process ID.
-
+Subsequent calls to Nuklei will see that NUKLEI_VAR is defined to <em>value</em>.
 
 */
 
