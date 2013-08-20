@@ -220,22 +220,13 @@ namespace nuklei {
                                          const bool computeNormals)
   {
     KernelCollection objectModel, sceneModel;
+    readObservations(objectFilename, objectModel);
+    readObservations(sceneFilename, sceneModel);
     Vector3 viewpoint(0, 0, 0);
-  
-#pragma omp parallel sections
+    if (partialview_)
     {
-#pragma omp section
-      readObservations(objectFilename, objectModel);
-#pragma omp section
-      readObservations(sceneFilename, sceneModel);
-#pragma omp section
-      {
-        if (partialview_)
-        {
-          NUKLEI_ASSERT(!viewpointfile.empty());
-          viewpoint = kernel::se3(*readSingleObservation(viewpointfile)).getLoc();
-        }
-      }
+      NUKLEI_ASSERT(!viewpointfile.empty());
+      viewpoint = kernel::se3(*readSingleObservation(viewpointfile)).getLoc();
     }
     load(objectModel, sceneModel, meshfile, viewpoint,
          light, computeNormals);
