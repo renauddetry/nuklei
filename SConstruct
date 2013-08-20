@@ -116,7 +116,7 @@ opts.AddVariables(
   ('CXX', 'Sets the c++ compiler command', cxx),
   EnumVariable('qpl', 'Obsolete option. Use use_cgal=yes instead.', 'no',
                allowed_values = ('yes', 'no')),
-  EnumVariable('use_openmp', 'Use OpenMP sync instead of pthread mutexes.', 'no',
+  EnumVariable('use_openmp', 'Use OpenMP sync instead of pthread mutexes.', 'yes',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
                allowed_values = ('yes', 'no')),
