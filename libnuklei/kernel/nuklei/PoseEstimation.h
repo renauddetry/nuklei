@@ -49,8 +49,8 @@ namespace nuklei {
               const bool light = true,
               const bool computeNormals = true);
     
-    void load(const KernelCollection& objectEvidence,
-              const KernelCollection& sceneEvidence,
+    void load(const KernelCollection& objectModel,
+              const KernelCollection& sceneModel,
               const std::string& meshfile = "",
               const Vector3& viewpoint = Vector3::ZERO,
               const bool light = true,
@@ -62,7 +62,7 @@ namespace nuklei {
       partialview_ = true;
     }
     
-    kernel::se3 align() const;
+    kernel::se3 modelToSceneTransformation() const;
     
     double findMatchingScore(const kernel::se3& pose) const;
     
@@ -93,9 +93,9 @@ namespace nuklei {
     kernel::se3
     mcmc(const int n) const;
     
-    KernelCollection objectEvidence_;
+    KernelCollection objectModel_;
     double objectSize_;
-    KernelCollection sceneEvidence_;
+    KernelCollection sceneModel_;
     Vector3 viewpoint_;
     IsReachable reachable_;
     bool partialview_;
@@ -110,13 +110,13 @@ namespace nuklei {
   
   
   template<class IsReachable>
-  kernel::se3 PoseEstimation<IsReachable>::align() const
+  kernel::se3 PoseEstimation<IsReachable>::modelToSceneTransformation() const
   {
     int n = -1;
     
     if (n_ <= 0)
     {
-      n = objectEvidence_.size();
+      n = objectModel_.size();
       if (n > 1000)
       {
         NUKLEI_WARN("Warning: Object model has more than 1000 points. "
@@ -163,26 +163,26 @@ namespace nuklei {
     {
       double w1 = 0, w2 = 0;
       
-      KernelCollection tmp = objectEvidence_;
+      KernelCollection tmp = objectModel_;
       tmp.transformWith(t);
       tmp.computeKernelStatistics();
       tmp.buildKdTree();
       
-      for (KernelCollection::const_iterator i = objectEvidence_.begin();
-           i != objectEvidence_.end(); ++i)
+      for (KernelCollection::const_iterator i = objectModel_.begin();
+           i != objectModel_.end(); ++i)
       {
-        w1 += sceneEvidence_.evaluationAt(*i->polyTransformedWith(t),
+        w1 += sceneModel_.evaluationAt(*i->polyTransformedWith(t),
                                           evaluationStrategy_);
       }
       
-      for (KernelCollection::const_iterator i = sceneEvidence_.begin();
-           i != sceneEvidence_.end(); ++i)
+      for (KernelCollection::const_iterator i = sceneModel_.begin();
+           i != sceneModel_.end(); ++i)
       {
         w2 += tmp.evaluationAt(*i, evaluationStrategy_);
       }
       
-      t.setWeight(w1/objectEvidence_.size());
-      //t.setWeight(std::sqrt(w1/objectEvidence_.size()*w2/objectEvidence_.size()));
+      t.setWeight(w1/objectModel_.size());
+      //t.setWeight(std::sqrt(w1/objectModel_.size()*w2/objectModel_.size()));
     }
     else
     {
@@ -191,11 +191,11 @@ namespace nuklei {
       // matching score from that.
       
       KernelCollection::const_partialview_iterator viewIterator =
-      objectEvidence_.partialViewBegin(viewpointInFrame(t), MESHTOL);
+      objectModel_.partialViewBegin(viewpointInFrame(t), MESHTOL);
       for (KernelCollection::const_partialview_iterator i = viewIterator;
            i != i.end(); ++i)
       {
-        weight_t w = sceneEvidence_.evaluationAt(*i->polyTransformedWith(t),
+        weight_t w = sceneModel_.evaluationAt(*i->polyTransformedWith(t),
                                                 evaluationStrategy_);
         t.setWeight(t.getWeight() + w);
       }
@@ -219,88 +219,88 @@ namespace nuklei {
                                          const bool light,
                                          const bool computeNormals)
   {
-    KernelCollection objectEvidence, sceneEvidence;
-    readObservations(objectFilename, objectEvidence);
-    readObservations(sceneFilename, sceneEvidence);
+    KernelCollection objectModel, sceneModel;
+    readObservations(objectFilename, objectModel);
+    readObservations(sceneFilename, sceneModel);
     Vector3 viewpoint(0, 0, 0);
     if (partialview_)
     {
       NUKLEI_ASSERT(!viewpointfile.empty());
       viewpoint = kernel::se3(*readSingleObservation(viewpointfile)).getLoc();
     }
-    load(objectEvidence, sceneEvidence, meshfile, viewpoint,
+    load(objectModel, sceneModel, meshfile, viewpoint,
          light, computeNormals);
   }
   
   
   template<class IsReachable>
-  void PoseEstimation<IsReachable>::load(const KernelCollection& objectEvidence,
-                                         const KernelCollection& sceneEvidence,
+  void PoseEstimation<IsReachable>::load(const KernelCollection& objectModel,
+                                         const KernelCollection& sceneModel,
                                          const std::string& meshfile,
                                          const Vector3& viewpoint,
                                          const bool light,
                                          const bool computeNormals)
   {
-    objectEvidence_ = objectEvidence;
-    sceneEvidence_ = sceneEvidence;
+    objectModel_ = objectModel;
+    sceneModel_ = sceneModel;
     
-    if (objectEvidence_.size() == 0 || sceneEvidence_.size() == 0)
+    if (objectModel_.size() == 0 || sceneModel_.size() == 0)
       NUKLEI_THROW("Empty input cloud.");
     
-    if (objectEvidence_.front().polyType() == kernel::base::R3)
+    if (objectModel_.front().polyType() == kernel::base::R3)
     {
       if (computeNormals)
       {
-        objectEvidence_.buildNeighborSearchTree();
-        objectEvidence_.computeSurfaceNormals();
+        objectModel_.buildNeighborSearchTree();
+        objectModel_.computeSurfaceNormals();
       }
     }
     
-    if (sceneEvidence_.front().polyType() == kernel::base::R3)
+    if (sceneModel_.front().polyType() == kernel::base::R3)
     {
       if (computeNormals)
       {
-        sceneEvidence_.buildNeighborSearchTree();
-        sceneEvidence_.computeSurfaceNormals();
+        sceneModel_.buildNeighborSearchTree();
+        sceneModel_.computeSurfaceNormals();
       }
     }
     
-    if (objectEvidence_.front().polyType() != sceneEvidence_.front().polyType())
+    if (objectModel_.front().polyType() != sceneModel_.front().polyType())
       NUKLEI_THROW("Input point clouds must be defined on the same domain.");
     
-    if (light && sceneEvidence_.size() > 10000)
+    if (light && sceneModel_.size() > 10000)
     {
       KernelCollection tmp;
       KernelCollection::sample_iterator i =
-      sceneEvidence_.sampleBegin(10000);
+      sceneModel_.sampleBegin(10000);
       for (; i != i.end(); i++)
       {
         tmp.add(*i);
       }
-      sceneEvidence_ = tmp;
+      sceneModel_ = tmp;
     }
     
-    objectSize_ = objectEvidence_.moments()->getLocH();
+    objectSize_ = objectModel_.moments()->getLocH();
     
     if (loc_h_ <= 0)
       loc_h_ = objectSize_ / 10;
     
-    sceneEvidence_.setKernelLocH(loc_h_);
-    sceneEvidence_.setKernelOriH(ori_h_);
-    objectEvidence_.setKernelLocH(loc_h_);
-    objectEvidence_.setKernelOriH(ori_h_);
+    sceneModel_.setKernelLocH(loc_h_);
+    sceneModel_.setKernelOriH(ori_h_);
+    objectModel_.setKernelLocH(loc_h_);
+    objectModel_.setKernelOriH(ori_h_);
     
-    objectEvidence_.computeKernelStatistics();
-    sceneEvidence_.computeKernelStatistics();
-    sceneEvidence_.buildKdTree();
+    objectModel_.computeKernelStatistics();
+    sceneModel_.computeKernelStatistics();
+    sceneModel_.buildKdTree();
     
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
       if (!meshfile.empty())
-        objectEvidence_.readMeshFromOffFile(meshfile);
+        objectModel_.readMeshFromOffFile(meshfile);
       else
-        objectEvidence_.buildMesh();
+        objectModel_.buildMesh();
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -340,7 +340,7 @@ namespace nuklei {
     // Randomly select particles from the object model
     std::vector<int> indices;
     for (KernelCollection::const_sample_iterator
-         i = objectEvidence_.sampleBegin(n);
+         i = objectModel_.sampleBegin(n);
          i != i.end();
          i++)
     {
@@ -362,8 +362,8 @@ namespace nuklei {
       for (int count = 0; ; ++count)
       {
         if (count == 100) return;
-        kernel::se3::ptr k2 = objectEvidence_.at(indices.front()).polySe3Proj();
-        kernel::se3::ptr k1 = sceneEvidence_.at(Random::uniformInt(sceneEvidence_.size())).polySe3Proj();
+        kernel::se3::ptr k2 = objectModel_.at(indices.front()).polySe3Proj();
+        kernel::se3::ptr k1 = sceneModel_.at(Random::uniformInt(sceneModel_.size())).polySe3Proj();
         
         nextPose = k1->transformationFrom(*k2);
         
@@ -373,7 +373,7 @@ namespace nuklei {
         {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
           bool visible =
-          objectEvidence_.isVisibleFrom(objectEvidence_.at(indices.front()).getLoc(),
+          objectModel_.isVisibleFrom(objectModel_.at(indices.front()).getLoc(),
                                         viewpointInFrame(nextPose),
                                         MESHTOL);
           if (!visible) continue;
@@ -408,7 +408,7 @@ namespace nuklei {
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
       // Fixme: we should take at most n of these:
-      indices = objectEvidence_.partialView(viewpointInFrame(nextPose),
+      indices = objectModel_.partialView(viewpointInFrame(nextPose),
                                             MESHTOL);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
@@ -419,20 +419,20 @@ namespace nuklei {
     for (unsigned pi = 0; pi < indices.size(); ++pi)
     {
       const kernel::base& objectPoint =
-      objectEvidence_.at(indices.at(pi));
+      objectModel_.at(indices.at(pi));
       
       kernel::base::ptr test = objectPoint.polyTransformedWith(nextPose);
       
       weight_t w = 0;
       if (WEIGHTED_SUM_EVIDENCE_EVAL)
       {
-        w = (sceneEvidence_.evaluationAt(*test,
+        w = (sceneModel_.evaluationAt(*test,
                                          KernelCollection::WEIGHTED_SUM_EVAL) +
-             WHITE_NOISE_POWER/sceneEvidence_.size() );
+             WHITE_NOISE_POWER/sceneModel_.size() );
       }
       else
       {
-        w = (sceneEvidence_.evaluationAt(*test, KernelCollection::MAX_EVAL) +
+        w = (sceneModel_.evaluationAt(*test, KernelCollection::MAX_EVAL) +
              WHITE_NOISE_POWER );
       }
       weight += w;
@@ -545,18 +545,18 @@ namespace nuklei {
   PoseEstimation<IsReachable>::writeAlignedModel(const std::string& filename,
                                                  const kernel::se3& t) const
   {
-    KernelCollection objectEvidence = objectEvidence_;
-    objectEvidence.transformWith(t);
+    KernelCollection objectModel = objectModel_;
+    objectModel.transformWith(t);
     
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
       KernelCollection coloredOE;
-      for (KernelCollection::const_iterator i = objectEvidence.begin();
-           i != objectEvidence.end(); ++i)
+      for (KernelCollection::const_iterator i = objectModel.begin();
+           i != objectModel.end(); ++i)
       {
         coloredOE.add(*i);
-        if (objectEvidence.isVisibleFrom(i->getLoc(),
+        if (objectModel.isVisibleFrom(i->getLoc(),
                                          viewpoint_,
                                          MESHTOL))
         {
@@ -566,11 +566,11 @@ namespace nuklei {
           coloredOE.back().setDescriptor(d);
         }
       }
-      objectEvidence = coloredOE;
+      objectModel = coloredOE;
 #endif
     }
     writeObservations(filename,
-                      objectEvidence,
+                      objectModel,
                       Observation::SERIAL);
   }
   

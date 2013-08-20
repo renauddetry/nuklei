@@ -113,17 +113,11 @@ int pe(int argc, char ** argv)
     // ------------------------------- //
     
     
-    kernel::se3 t = pe.align();
+    kernel::se3 t = pe.modelToSceneTransformation();
     
     sw.lap("alignment");
     
-    {
-      KernelCollection objectEvidence;
-      readObservations(objectFileArg.getValue(), objectEvidence);
-      
-      std::cout << "Matching score: " << t.getWeight() <<
-      " for size " << objectEvidence.size() << std::endl;
-    }
+    std::cout << "Matching score: " << t.getWeight() << std::endl;
     
     if (!bestTransfoArg.getValue().empty())
     {
