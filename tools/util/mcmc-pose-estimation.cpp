@@ -4,6 +4,8 @@
 
 /** @file */
 
+#warning This file is obsolete. It will be removed soon.
+
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
 #include <nuklei/ProgressIndicator.h>
