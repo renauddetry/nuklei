@@ -16,7 +16,7 @@
 namespace nuklei
 {
   /**
-   * Obsolete. See KernelLogisticRegressor instead.
+   * @brief Obsolete. See KernelLogisticRegressor instead.
    */
   struct KernelLogisticRegression : public KernelLogisticRegressor
   {
@@ -32,6 +32,5 @@ namespace nuklei
     KernelLogisticRegressor(data, gramMatrix, labels) {};
   };
 }
-
 
 #endif
