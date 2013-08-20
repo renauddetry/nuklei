@@ -19,7 +19,7 @@
 
 //#define NUKLEI_USE_BOOST_RANDOM_GEN
 
-#ifdef NUKLEI_USE_OPENMP
+#ifdef _OPENMP
 #define NUKLEI_RANDOM_SYNC_OMP
 #include <omp.h>
 static inline int nuklei_thread_num()
@@ -119,7 +119,7 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
@@ -144,28 +144,33 @@ namespace nuklei {
   unsigned long int Random::uniformInt(unsigned long int n)
   {
     unsigned long int r;
+    // GSL has trouble with concurrent random number generation:
+    //   - if a single generator is used, it must be mutexed.
+    //   - using one random generator per thread is somehow very slow
+    // Random::uniformInt is used *a lot*, everytime a KernelCollection is
+    // iterated in random order. Using a mutex here entirely breaks
+    // multithreading (n threads on n cpus takes as much time as the same work
+    // on a single cpu).  Multithreading will only be fast if done through
+    // OpenMP. This is because it is hard to map pthreads to a
+    // number. boost::thread::id could be used to implement nuklei_thread_num()
+    // (todo?), but random generators could not be cleaned when a thread exits.
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+#else
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+    // no need to mutex here, since we use one generator per thread.
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+    boost::unique_lock<boost::mutex> lock(mutex);
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+//    r = gsl_rng_uniform_int(randomRng, n);
+#endif
     boost::uniform_int<> dist(0, n-1);
     boost::variate_generator<boost::mt19937&, boost::uniform_int<> >
     die(generators->at(nuklei_thread_num()), dist);
     r = die();
     return r;
-// GSL has trouble with concurrent random number generation:
-//   - if a single generator is used, it must be mutexed.
-//   - using one random generator per thread is somehow very slow
-// Random::uniformInt is used *a lot*, everytime a KernelCollection is
-// iterated in random order. Using a mutex here entirely breaks multithreading
-// (n threads on n cpus takes as much time as the same work on a single cpu).
-// As a result we force boost.
-//#if defined(NUKLEI_RANDOM_SYNC_OMP)
-//#  pragma omp critical(nuklei_randomRng)
-//#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-//      boost::unique_lock<boost::mutex> lock(mutex);
-//#elif defined(NUKLEI_RANDOM_SYNC_NONE)
-//#else
-//#  error Undefined random sync method
-//#endif
-//    r = gsl_rng_uniform_int(randomRng, n);
-//    return r;
   }
   
   //This function returns a Gaussian random variate, with mean zero and
@@ -184,7 +189,7 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
@@ -200,7 +205,7 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
@@ -225,7 +230,7 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
@@ -252,7 +257,7 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-      boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
