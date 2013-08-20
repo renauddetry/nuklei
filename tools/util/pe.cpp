@@ -4,7 +4,7 @@
 
 /** @file */
 
-#include <nuklei/PoseEstimation.h>
+#include <nuklei/PoseEstimator.h>
 #include <nuklei/ProgressIndicator.h>
 #include <nuklei/Stopwatch.h>
 #include <tclap/CmdLine.h>
@@ -92,7 +92,7 @@ int pe(int argc, char ** argv)
     // Read-in data: //
     // ------------- //
     
-    PoseEstimation<> pe(locHArg.getValue(),
+    PoseEstimator<> pe(locHArg.getValue(),
                         oriHArg.getValue(),
                         nChainsArg.getValue(),
                         nArg.getValue(),

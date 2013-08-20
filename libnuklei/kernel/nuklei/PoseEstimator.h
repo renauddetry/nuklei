@@ -4,8 +4,8 @@
 
 /** @file */
 
-#ifndef NUKLEI_POSE_ESTIMATION_H
-#define NUKLEI_POSE_ESTIMATION_H
+#ifndef NUKLEI_POSE_ESTIMATOR_H
+#define NUKLEI_POSE_ESTIMATOR_H
 
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
@@ -25,9 +25,9 @@ namespace nuklei {
   };
   
   template<class IsReachable = AlwaysReachable>
-  struct PoseEstimation
+  struct PoseEstimator
   {
-    PoseEstimation(const double locH = 0,
+    PoseEstimator(const double locH = 0,
                    const double oriH = .2,
                    const int nChains = -1,
                    const int n = -1,
@@ -110,7 +110,7 @@ namespace nuklei {
   
   
   template<class IsReachable>
-  kernel::se3 PoseEstimation<IsReachable>::modelToSceneTransformation() const
+  kernel::se3 PoseEstimator<IsReachable>::modelToSceneTransformation() const
   {
     int n = -1;
     
@@ -155,7 +155,7 @@ namespace nuklei {
   
   template<class IsReachable>
   double
-  PoseEstimation<IsReachable>::findMatchingScore(const kernel::se3& pose) const
+  PoseEstimator<IsReachable>::findMatchingScore(const kernel::se3& pose) const
   {
     kernel::se3 t = pose;
     
@@ -212,7 +212,7 @@ namespace nuklei {
   }
   
   template<class IsReachable>
-  void PoseEstimation<IsReachable>::load(const std::string& objectFilename,
+  void PoseEstimator<IsReachable>::load(const std::string& objectFilename,
                                          const std::string& sceneFilename,
                                          const std::string& meshfile,
                                          const std::string& viewpointfile,
@@ -234,7 +234,7 @@ namespace nuklei {
   
   
   template<class IsReachable>
-  void PoseEstimation<IsReachable>::load(const KernelCollection& objectModel,
+  void PoseEstimator<IsReachable>::load(const KernelCollection& objectModel,
                                          const KernelCollection& sceneModel,
                                          const std::string& meshfile,
                                          const Vector3& viewpoint,
@@ -310,7 +310,7 @@ namespace nuklei {
   
   // Temperature function (cooling factor)
   template<class IsReachable>
-  double PoseEstimation<IsReachable>::Ti(const unsigned i, const unsigned F)
+  double PoseEstimator<IsReachable>::Ti(const unsigned i, const unsigned F)
   {
     {
       const double T0 = .5;
@@ -329,7 +329,7 @@ namespace nuklei {
    */
   template<class IsReachable>
   void
-  PoseEstimation<IsReachable>::metropolisHastings(kernel::se3& currentPose,
+  PoseEstimator<IsReachable>::metropolisHastings(kernel::se3& currentPose,
                                                   weight_t &currentWeight,
                                                   const weight_t temperature,
                                                   const bool firstRun,
@@ -481,7 +481,7 @@ namespace nuklei {
   
   template<class IsReachable>
   kernel::se3
-  PoseEstimation<IsReachable>::mcmc(const int n) const
+  PoseEstimator<IsReachable>::mcmc(const int n) const
   
   {
     kernel::se3 currentPose, bestPose;
@@ -531,7 +531,7 @@ namespace nuklei {
   }
   
   template<class IsReachable>
-  Vector3 PoseEstimation<IsReachable>::viewpointInFrame(kernel::se3& frame) const
+  Vector3 PoseEstimator<IsReachable>::viewpointInFrame(kernel::se3& frame) const
   {
     kernel::se3 origin;
     kernel::se3 invt = origin.transformationFrom(frame);
@@ -542,7 +542,7 @@ namespace nuklei {
   
   template<class IsReachable>
   void
-  PoseEstimation<IsReachable>::writeAlignedModel(const std::string& filename,
+  PoseEstimator<IsReachable>::writeAlignedModel(const std::string& filename,
                                                  const kernel::se3& t) const
   {
     KernelCollection objectModel = objectModel_;
