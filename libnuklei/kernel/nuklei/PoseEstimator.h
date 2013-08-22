@@ -270,6 +270,7 @@ namespace nuklei {
     
     if (light && sceneModel_.size() > 10000)
     {
+      sceneModel_.computeKernelStatistics();
       KernelCollection tmp;
       KernelCollection::sample_iterator i =
       sceneModel_.sampleBegin(10000);
