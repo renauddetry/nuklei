@@ -5,6 +5,7 @@
 /** @file */
 
 #include <nuklei/PCLBridge.h>
+#include <algorithm>
 
 namespace nuklei {
   
@@ -22,11 +23,15 @@ namespace nuklei {
     kernel::r3 k;
     k.loc_ = Vector3(p.x, p.y, p.z);
     ColorDescriptor d;
+#ifdef NUKLEI_USE_SHIFT_PCL_COLOR_ACCESS
     const uint32_t rgb = *reinterpret_cast<const int*>(&p.rgb);
     uint8_t r = (rgb >> 16) & 0x0000ff;
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
     RGBColor c(double(r)/255, double(g)/255, double(b)/255);
+#else
+    RGBColor c(double(p.r)/255, double(p.g)/255, double(p.b)/255);
+#endif
     d.setColor(c);
     k.setDescriptor(d);
     return k;
@@ -56,11 +61,15 @@ namespace nuklei {
     k.loc_ = Vector3(p.x, p.y, p.z);
     k.dir_ = la::normalized(Vector3(p.normal_x, p.normal_y, p.normal_z));
     ColorDescriptor d;
+#ifdef NUKLEI_USE_SHIFT_PCL_COLOR_ACCESS
     const uint32_t rgb = *reinterpret_cast<const int*>(&p.rgb);
     uint8_t r = (rgb >> 16) & 0x0000ff;
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
     RGBColor c(double(r)/255, double(g)/255, double(b)/255);
+#else
+    RGBColor c(double(p.r)/255, double(p.g)/255, double(p.b)/255);
+#endif
     d.setColor(c);
     k.setDescriptor(d);
     return k;
@@ -88,9 +97,17 @@ namespace nuklei {
     p.z = k.loc_.Z();
     const ColorDescriptor& d = dynamic_cast<const ColorDescriptor&>(k.getDescriptor());
     const RGBColor c(d.getColor());
-    uint8_t r = c.R()*255, g = c.G()*255, b = c.B()*255;
+    uint8_t r = std::min(c.R()*255, 255.);
+    uint8_t g = std::min(c.G()*255, 255.);
+    uint8_t b = std::min(c.B()*255, 255.);
+#ifdef NUKLEI_USE_SHIFT_PCL_COLOR_ACCESS
     uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
     p.rgb = *reinterpret_cast<float*>(&rgb);
+#else
+    p.r = r;
+    p.g = g;
+    p.b = b;
+#endif
   }
   
   void pclPointFromNukleiKernel(pcl::PointXYZRGB& p, const kernel::base& k)
@@ -135,9 +152,17 @@ namespace nuklei {
     p.normal_z = k.dir_.Z();
     const ColorDescriptor& d = dynamic_cast<const ColorDescriptor&>(k.getDescriptor());
     const RGBColor c(d.getColor());
-    uint8_t r = c.R()*255, g = c.G()*255, b = c.B()*255;
+    uint8_t r = std::min(c.R()*255, 255.);
+    uint8_t g = std::min(c.G()*255, 255.);
+    uint8_t b = std::min(c.B()*255, 255.);
+#ifdef NUKLEI_USE_SHIFT_PCL_COLOR_ACCESS
     uint32_t rgb = ((uint32_t)r << 16 | (uint32_t)g << 8 | (uint32_t)b);
     p.rgb = *reinterpret_cast<float*>(&rgb);
+#else
+    p.r = r;
+    p.g = g;
+    p.b = b;
+#endif
   }
   
   void pclPointFromNukleiKernel(pcl::PointXYZRGBNormal& p, const kernel::base& k)
