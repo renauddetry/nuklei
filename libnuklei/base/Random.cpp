@@ -54,6 +54,7 @@ namespace nuklei {
   // generators must be a pointer. If not, its construtor may be called after
   // init() is called, which will destroy the generators setup in init().
   static std::vector<boost::mt19937>* generators;
+  static std::vector<boost::shared_ptr<boost::mutex> >* mutexes;
   
   bool Random::initialized_ = Random::init();
   
@@ -80,6 +81,9 @@ namespace nuklei {
     }
     generators = new std::vector<boost::mt19937>();
     generators->resize(nuklei_max_threads());
+    mutexes = new std::vector<boost::shared_ptr<boost::mutex> >();
+    for (int i = 0; i < nuklei_max_threads(); i++)
+      mutexes->push_back(boost::shared_ptr<boost::mutex>(new boost::mutex()));
     Random::seed(seed);
     return true;
   }
@@ -159,13 +163,14 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
     // no need to mutex here, since we use one generator per thread.
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
+    //boost::unique_lock<boost::mutex> lock(mutex);
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
 #endif
 //    r = gsl_rng_uniform_int(randomRng, n);
 #endif
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
     boost::uniform_int<> dist(0, n-1);
     boost::variate_generator<boost::mt19937&, boost::uniform_int<> >
     die(generators->at(nuklei_thread_num()), dist);

@@ -8,10 +8,24 @@ namespace nuklei {
 
 @section faq_thread_safe Is Nuklei thread-safe?
 
-Short answer:
+@subsection faq_thread_safe_short Short Answer
 
--# There is no access synchronization in Nuklei methods. An object that is modified by one thread should therefore never be accessed by a concurrent thread.
+-# There is no access synchronization in Nuklei methods. An object that is modified by one thread should therefore never be accessed by a concurrent thread. However, Nuklei can be used in multiple threads, as long as objects are not read-modified by multiple threads concurrently.
 
+-# If you are using multiple threads to decrease computation time, use OpenMP, not pthreads. Using pthreads will not significantly speed up your program.
+
+@subsection faq_thread_safe_long Longer Answer
+
+Nuklei classes do not protect their data members from concurrent access. As a result, an object that is modified by one thread should never be accessed by a concurrent thread.
+
+Nuklei does make use of global variables. Global variables are used to reference the random number generators that are called in the methods of the Random class. Nuklei serializes access to the global random generators via mutexes. Therefore, it is safe to run Nuklei code in concurrent threads (provided that the data access constraint above is respected).
+
+Unfortunately, Random::uniformInt is called <em>a lot</em> in Nuklei applications, and protecting its generator with a mutex slows multithreaded applications dramatically (on a 16-core processor, running 16 threads concurrently takes five times longer than running only one of those threads alone). For this reason, Random sets up a vector of random generators, and Random::uniformInt allows OpenMP threads to each access a different generator. The index of the generator that a thread uses is given by <tt>omp_get_thread_num()</tt>. The vector of generators is initialized when the program starts, before <tt>main()</tt> is called, and its size is set to the value returned by <tt>omp_get_max_threads()</tt>. A vector of mutexes still serializes access to these generators. These mutexes should however never block as long as OpenMP is enabled and there is only a single pool of threads active at any time, or, in other words, as long as no two threads has the same <tt>omp_get_thread_num()</tt>. Naturally, the pool size should not be increased during the course of the program.
+
+<a href="http://renaud-detry.net">Contact me</a> if you want to discuss this issue further. I've been working on multithreading Nuklei for a while and I might be able to help you.
+
+
+<!--
 -# If Nuklei is compiled with
 @verbatim
 ./scons.py use_openmp=no
@@ -24,18 +38,9 @@ Short answer:
 @endverbatim
   then Nuklei objects can be created in multiple <b>OpenMP</b> threads, as long as an object that is modified by one thread is never accessed by a concurrent thread, and as long as <tt>omp_get_thread_num()</tt> returns a different value in concurrent threads, and that value belongs to @f$ [ 0, n [ @f$, where @f$ n @f$ is equal to the value that <tt>omp_get_max_threads()</tt> would return if it was called before main() (see below for more explanations). In this case, there will be a speed gain.
 
-Longer answer:
 
-Nuklei objects do not protect their members from concurrent access. As a result, an object that is modified by one thread should therefore never be accessed by a concurrent thread.
 
-Nuklei does make use of global variables. These variables are random number generators, that are used in the methods of the Random class. In all Random methods but Random::uniformInt, the global generators are protected by a mutex. Random::uniformInt is crucial in the sense that it is called often during normal Nuklei operations. As a result, protecting it with a mutex slows down computations dramatically.
-
-When Nuklei is compiled with <tt>openmp=no</tt>, Random::uniformInt is protected by a mutex, and multithreaded Nuklei executions are slow.
-
-When Nuklei is compiled with the default <tt>openmp=yes</tt>, @f$ n @f$ generators are created before the execution of <tt>main()</tt>, where @f$ n @f$ is the return value of <tt>omp_get_max_threads()</tt>. Random::uniformInt then uses <tt>omp_get_thread_num()</tt> in order to use a different generator in each thread. This will only work if there is a single pool of threads active at any time, and the pool size is never increased. Note that in this case, the other Random methods are protected with <tt>omp critical</tt> instead of mutex, and are thus not safe with pthreads.
-
-<a href="http://renaud-detry.net">Contact me</a> if you want to discuss this issue further. I've been working on multithreading Nuklei for a while and I might be able to help you.
-
+-->
 @section faq_quaternion_norm What can I do if Nuklei quits and complains that FastNegExp is not correctly used?
 
 For instance, what if I get the following error:
