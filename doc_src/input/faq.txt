@@ -10,25 +10,25 @@ namespace nuklei {
 
 Short answer:
 
--# There is no access synchronization in Nuklei methods. An object should therefore never be read-modified simultaneously from multiple threads.
+-# There is no access synchronization in Nuklei methods. An object that is modified by one thread should therefore never be accessed by a concurrent thread.
 
 -# If Nuklei is compiled with
 @verbatim
 ./scons.py use_openmp=no
 @endverbatim
-  then Nuklei objects can be created in multiple threads, as long as an object is not read-modified by multiple threads concurrently. However, <b>there will be no speed gain by using multiple threads</b>. Splitting a task in @f$ n @f$ chunks and running them in @f$ n @f$ threads will take almost the same wall time as running the @f$ n @f$ chunks successively in a single thread.
+  then Nuklei objects can be created in multiple threads, as long as an object that is modified by one thread is never accessed by a concurrent thread. However, <b>there will be no speed gain by using multiple threads</b>. Splitting a task in @f$ n @f$ chunks and running them in @f$ n @f$ threads will take almost the same wall time as running the @f$ n @f$ chunks successively in a single thread.
 
 -# If Nuklei is compiled with the default config
 @verbatim
 ./scons.py use_openmp=yes
 @endverbatim
-  then Nuklei objects can be created in multiple <b>OpenMP</b> threads, as long as they are not read-modified by multiple threads concurrently, and as long as <tt>omp_get_thread_num()</tt> returns a different value in concurrent threads, and that value belongs to @f$ [ 0, n [ @f$, where @f$ n @f$ is equal to the value that <tt>omp_get_max_threads()</tt> would return if it was called before main() (see below for more explanations). In this case, there will be a speed gain.
+  then Nuklei objects can be created in multiple <b>OpenMP</b> threads, as long as an object that is modified by one thread is never accessed by a concurrent thread, and as long as <tt>omp_get_thread_num()</tt> returns a different value in concurrent threads, and that value belongs to @f$ [ 0, n [ @f$, where @f$ n @f$ is equal to the value that <tt>omp_get_max_threads()</tt> would return if it was called before main() (see below for more explanations). In this case, there will be a speed gain.
 
 Longer answer:
 
-Nuklei objects do not protect their members from concurrent access. As a result, one object can never be read-modified from multiple threads concurrently.
+Nuklei objects do not protect their members from concurrent access. As a result, an object that is modified by one thread should therefore never be accessed by a concurrent thread.
 
-Nuklei does make use of global variables. These variables are random number generators, that are used in the methods of the Random class. In all Random methods but Random::uniformInt, the global generators are protected by a mutex. Random::uniformInt is crucial in the sence that it is called often during normal Nuklei operations. As a result, protecting it with a mutex slows down computations dramatically.
+Nuklei does make use of global variables. These variables are random number generators, that are used in the methods of the Random class. In all Random methods but Random::uniformInt, the global generators are protected by a mutex. Random::uniformInt is crucial in the sense that it is called often during normal Nuklei operations. As a result, protecting it with a mutex slows down computations dramatically.
 
 When Nuklei is compiled with <tt>openmp=no</tt>, Random::uniformInt is protected by a mutex, and multithreaded Nuklei executions are slow.
 
