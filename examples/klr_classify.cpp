@@ -12,7 +12,7 @@
 // (It may be necessary to add -I/path/to/boost/include -L/path/to/boost/lib if
 // Boost doesn't reside at a standard place.)
 
-#include <nuklei/KernelLogisticRegression.h>
+#include <nuklei/KernelLogisticRegressor.h>
 #include <nuklei/ObservationIO.h>
 
 int main(int argc, char ** argv)
@@ -82,7 +82,7 @@ int main(int argc, char ** argv)
     trainData.setKernelLocH(locH);
     trainData.setKernelOriH(oriH);
     
-    nuklei::KernelLogisticRegression klr(trainData, trainLabels);
+    nuklei::KernelLogisticRegressor klr(trainData, trainLabels);
     klr.train();
     
     // ----- //

@@ -127,7 +127,7 @@ In machine learning and statistics, kernels are used, e.g., for <a href="http://
 
 @section kernels_klr Kernel Logistic Regression
 
-KLR is implemented in KernelLogisticRegression.
+KLR is implemented in KernelLogisticRegressor.
 
 */
 

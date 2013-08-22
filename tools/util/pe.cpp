@@ -4,7 +4,7 @@
 
 /** @file */
 
-#include <nuklei/PoseEstimation.h>
+#include <nuklei/PoseEstimator.h>
 #include <nuklei/ProgressIndicator.h>
 #include <nuklei/Stopwatch.h>
 #include <tclap/CmdLine.h>
@@ -19,18 +19,18 @@ int pe(int argc, char ** argv)
     CmdLine cmd("");
     
     UnlabeledValueArg<std::string> objectFileArg
-    ("object_evidence",
+    ("object_model",
      "Object file.",
      true, "", "filename", cmd);
     
     UnlabeledValueArg<std::string> sceneFileArg
-    ("scene_evidence",
+    ("scene_model",
      "Scene file.",
      true, "", "filename", cmd);
     
-    ValueArg<std::string> alignedObjectEvidenceFileArg
+    ValueArg<std::string> alignedObjectModelFileArg
     ("", "aligned",
-     "Transformed object evidence, matching object pose.",
+     "Transformed object model, matching object pose.",
      false, "", "filename", cmd);
     
     ValueArg<int> nArg
@@ -92,7 +92,7 @@ int pe(int argc, char ** argv)
     // Read-in data: //
     // ------------- //
     
-    PoseEstimation<> pe(locHArg.getValue(),
+    PoseEstimator<> pe(locHArg.getValue(),
                         oriHArg.getValue(),
                         nChainsArg.getValue(),
                         nArg.getValue(),
@@ -113,26 +113,20 @@ int pe(int argc, char ** argv)
     // ------------------------------- //
     
     
-    kernel::se3 t = pe.align();
+    kernel::se3 t = pe.modelToSceneTransformation();
     
     sw.lap("alignment");
     
-    {
-      KernelCollection objectEvidence;
-      readObservations(objectFileArg.getValue(), objectEvidence);
-      
-      std::cout << "Matching score: " << t.getWeight() <<
-      " for size " << objectEvidence.size() << std::endl;
-    }
+    std::cout << "Matching score: " << t.getWeight() << std::endl;
     
     if (!bestTransfoArg.getValue().empty())
     {
       writeSingleObservation(bestTransfoArg.getValue(), t);
     }
     
-    if (!alignedObjectEvidenceFileArg.getValue().empty())
+    if (!alignedObjectModelFileArg.getValue().empty())
     {
-      pe.writeAlignedModel(alignedObjectEvidenceFileArg.getValue(), t);
+      pe.writeAlignedModel(alignedObjectModelFileArg.getValue(), t);
     }
     
     sw.lap("output");

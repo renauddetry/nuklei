@@ -4,7 +4,7 @@
 
 /** @file */
 
-#include <nuklei/KernelLogisticRegression.h>
+#include <nuklei/KernelLogisticRegressor.h>
 #include <nuklei/ObservationIO.h>
 #include <klr_train.h>
 
@@ -12,7 +12,7 @@ namespace nuklei
 {
   
   
-  KernelLogisticRegression::KernelLogisticRegression
+  KernelLogisticRegressor::KernelLogisticRegressor
   (const KernelCollection &data,
    const std::vector<int>& labels) :
   trainSet_(data), labels_(labels)
@@ -23,7 +23,7 @@ namespace nuklei
     NUKLEI_TRACE_END();
   }
   
-  KernelLogisticRegression::KernelLogisticRegression
+  KernelLogisticRegressor::KernelLogisticRegressor
   (const KernelCollection &data,
    const GMatrix& gramMatrix,
    const std::vector<int>& labels) :
@@ -35,7 +35,7 @@ namespace nuklei
   }
   
   
-  void KernelLogisticRegression::setData(const KernelCollection &data,
+  void KernelLogisticRegressor::setData(const KernelCollection &data,
                                          const std::vector<int>& labels)
   {
     trainSet_ = data;
@@ -44,7 +44,7 @@ namespace nuklei
     vklr_ = boost::optional<GMatrix>();
   }
   
-  void KernelLogisticRegression::computeGramMatrix()
+  void KernelLogisticRegressor::computeGramMatrix()
   {
     NUKLEI_TRACE_BEGIN();
     gramMatrix_ = GMatrix(trainSet_.size(), trainSet_.size());
@@ -59,7 +59,7 @@ namespace nuklei
     NUKLEI_TRACE_END();
   }
   
-  void KernelLogisticRegression::train(const double delta,
+  void KernelLogisticRegressor::train(const double delta,
                                        const unsigned itrNewton)
   {
     NUKLEI_TRACE_BEGIN();
@@ -79,7 +79,7 @@ namespace nuklei
   }
   
     
-  Vector2 KernelLogisticRegression::test(const kernel::base &t) const
+  Vector2 KernelLogisticRegressor::test(const kernel::base &t) const
   {
     NUKLEI_TRACE_BEGIN();
     NUKLEI_ASSERT(vklr_);
@@ -103,7 +103,7 @@ namespace nuklei
   }
   
   
-  GMatrix KernelLogisticRegression::test(const KernelCollection &testSet) const
+  GMatrix KernelLogisticRegressor::test(const KernelCollection &testSet) const
   {
     NUKLEI_TRACE_BEGIN();
     

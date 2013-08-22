@@ -78,7 +78,7 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
 
   bool hasOpenMP()
   {
-#ifdef NUKLEI_USE_OPENMP
+#ifdef _OPENMP
     return true;
 #else
     return false;
