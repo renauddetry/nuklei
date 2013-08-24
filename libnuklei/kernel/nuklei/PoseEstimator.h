@@ -7,15 +7,17 @@
 #ifndef NUKLEI_POSE_ESTIMATOR_H
 #define NUKLEI_POSE_ESTIMATOR_H
 
+#include <nuklei/parallelizer.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
+#include <boost/bind.hpp>
 
 namespace nuklei {
   
   const bool WEIGHTED_SUM_EVIDENCE_EVAL = false;
   const double MESHTOL = 4;
   const double WHITE_NOISE_POWER = 1e-4;
-
+  
   struct AlwaysReachable
   {
     bool operator() (const kernel::se3& k) const
@@ -28,11 +30,11 @@ namespace nuklei {
   struct PoseEstimator
   {
     PoseEstimator(const double locH = 0,
-                   const double oriH = .2,
-                   const int nChains = -1,
-                   const int n = -1,
-                   const IsReachable& reachable = AlwaysReachable(),
-                   const bool& partialview = false) :
+                  const double oriH = .2,
+                  const int nChains = -1,
+                  const int n = -1,
+                  const IsReachable& reachable = AlwaysReachable(),
+                  const bool& partialview = false) :
     
     reachable_(reachable), partialview_(partialview),
     evaluationStrategy_(KernelCollection::MAX_EVAL),
@@ -106,7 +108,7 @@ namespace nuklei {
     int n_;
   };
   
-
+  
   
   
   template<class IsReachable>
@@ -135,17 +137,13 @@ namespace nuklei {
       NUKLEI_WARN("Nuklei has not been compiled with OpenMP support. "
                   "Pose estimation will use a single core.");
     }
-#pragma omp parallel for
-    for (int i = 0; i < nChains_; ++i)
-    {
-      kernel::se3 tmp = mcmc(n);
-#pragma omp critical(pe_merge_poses)
-      {
-        poses.add(tmp);
-        NUKLEI_INFO("Finished chain " << i <<
-                    " with score " << tmp.getWeight());
-      }
-    }
+
+    parallelizer p(nChains_, parallelizer::FORK);
+    std::vector<kernel::se3> retv =
+    p.run<kernel::se3>(boost::bind(&PoseEstimator::mcmc, this, n));
+    for (std::vector<kernel::se3>::const_iterator i = retv.begin();
+         i != retv.end(); ++i)
+      poses.add(*i);
     
     kernel::se3 pose(*poses.sortBegin(1));
     pose.setWeight(findMatchingScore(pose));
@@ -172,7 +170,7 @@ namespace nuklei {
            i != objectModel_.end(); ++i)
       {
         w1 += sceneModel_.evaluationAt(*i->polyTransformedWith(t),
-                                          evaluationStrategy_);
+                                       evaluationStrategy_);
       }
       
       for (KernelCollection::const_iterator i = sceneModel_.begin();
@@ -196,7 +194,7 @@ namespace nuklei {
            i != i.end(); ++i)
       {
         weight_t w = sceneModel_.evaluationAt(*i->polyTransformedWith(t),
-                                                evaluationStrategy_);
+                                              evaluationStrategy_);
         t.setWeight(t.getWeight() + w);
       }
       t.setWeight(t.getWeight()/std::pow(std::distance(viewIterator, viewIterator.end()), 1.0));
@@ -213,11 +211,11 @@ namespace nuklei {
   
   template<class IsReachable>
   void PoseEstimator<IsReachable>::load(const std::string& objectFilename,
-                                         const std::string& sceneFilename,
-                                         const std::string& meshfile,
-                                         const std::string& viewpointfile,
-                                         const bool light,
-                                         const bool computeNormals)
+                                        const std::string& sceneFilename,
+                                        const std::string& meshfile,
+                                        const std::string& viewpointfile,
+                                        const bool light,
+                                        const bool computeNormals)
   {
     KernelCollection objectModel, sceneModel;
     readObservations(objectFilename, objectModel);
@@ -235,11 +233,11 @@ namespace nuklei {
   
   template<class IsReachable>
   void PoseEstimator<IsReachable>::load(const KernelCollection& objectModel,
-                                         const KernelCollection& sceneModel,
-                                         const std::string& meshfile,
-                                         const Vector3& viewpoint,
-                                         const bool light,
-                                         const bool computeNormals)
+                                        const KernelCollection& sceneModel,
+                                        const std::string& meshfile,
+                                        const Vector3& viewpoint,
+                                        const bool light,
+                                        const bool computeNormals)
   {
     objectModel_ = objectModel;
     sceneModel_ = sceneModel;
@@ -331,10 +329,10 @@ namespace nuklei {
   template<class IsReachable>
   void
   PoseEstimator<IsReachable>::metropolisHastings(kernel::se3& currentPose,
-                                                  weight_t &currentWeight,
-                                                  const weight_t temperature,
-                                                  const bool firstRun,
-                                                  const int n) const
+                                                 weight_t &currentWeight,
+                                                 const weight_t temperature,
+                                                 const bool firstRun,
+                                                 const int n) const
   {
     NUKLEI_TRACE_BEGIN();
     
@@ -375,8 +373,8 @@ namespace nuklei {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
           bool visible =
           objectModel_.isVisibleFrom(objectModel_.at(indices.front()).getLoc(),
-                                        viewpointInFrame(nextPose),
-                                        MESHTOL);
+                                     viewpointInFrame(nextPose),
+                                     MESHTOL);
           if (!visible) continue;
 #else
           NUKLEI_THROW("Requires the partial view version of Nuklei.");
@@ -410,7 +408,7 @@ namespace nuklei {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
       // Fixme: we should take at most n of these:
       indices = objectModel_.partialView(viewpointInFrame(nextPose),
-                                            MESHTOL);
+                                         MESHTOL);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -428,7 +426,7 @@ namespace nuklei {
       if (WEIGHTED_SUM_EVIDENCE_EVAL)
       {
         w = (sceneModel_.evaluationAt(*test,
-                                         KernelCollection::WEIGHTED_SUM_EVAL) +
+                                      KernelCollection::WEIGHTED_SUM_EVAL) +
              WHITE_NOISE_POWER/sceneModel_.size() );
       }
       else
@@ -544,7 +542,7 @@ namespace nuklei {
   template<class IsReachable>
   void
   PoseEstimator<IsReachable>::writeAlignedModel(const std::string& filename,
-                                                 const kernel::se3& t) const
+                                                const kernel::se3& t) const
   {
     KernelCollection objectModel = objectModel_;
     objectModel.transformWith(t);
@@ -558,8 +556,8 @@ namespace nuklei {
       {
         coloredOE.add(*i);
         if (objectModel.isVisibleFrom(i->getLoc(),
-                                         viewpoint_,
-                                         MESHTOL))
+                                      viewpoint_,
+                                      MESHTOL))
         {
           RGBColor c(0, 0, 1);
           ColorDescriptor d;
