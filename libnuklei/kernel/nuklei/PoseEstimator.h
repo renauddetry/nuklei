@@ -141,7 +141,8 @@ namespace nuklei {
 
     parallelizer p(nChains_, typeFromName<parallelizer>(PARALLELIZATION));
     std::vector<kernel::se3> retv =
-    p.run<kernel::se3>(boost::bind(&PoseEstimator::mcmc, this, n));
+    p.run<kernel::se3>(boost::bind(&PoseEstimator::mcmc, this, n),
+                       kernel::base::WeightAccessor());
     for (std::vector<kernel::se3>::const_iterator i = retv.begin();
          i != retv.end(); ++i)
       poses.add(*i);

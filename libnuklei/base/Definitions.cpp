@@ -63,8 +63,12 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
 
   defConst(unsigned, IMAGE_PROJECTION_RADIUS, 3);
 
+#ifdef __APPLE__
+  defConst(std::string, PARALLELIZATION, "fork");
+#else
   defConst(std::string, PARALLELIZATION, "openmp");
-  
+#endif
+
   defConst(bool, ENABLE_CONSOLE_BACKSPACE, true);
   
   defConst(unsigned, LOG_LEVEL, 0);

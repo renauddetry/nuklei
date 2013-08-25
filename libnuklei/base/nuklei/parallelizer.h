@@ -28,22 +28,49 @@ namespace nuklei {
                  const long long seed = 0) :
     n_(n), type_(type), seed_(seed) {}
     
-    template<typename R, typename Callable>
+    struct na_print_accessor
+    {
+      template<typename T>
+      std::string operator()(const T& t)
+      {
+        return "n/a";
+      }
+    };
+
+    struct print_accessor
+    {
+      template<typename T>
+      const T& operator()(const T& t)
+      {
+        return t;
+      }
+    };
+    
+    template
+    <typename R, typename Callable>
     std::vector<R> run(Callable callable) const
+    {
+      return run<R>(callable, na_print_accessor());
+    }
+
+    template
+    <typename R, typename Callable, typename PrintAccessor>
+    std::vector<R> run(Callable callable,
+                       PrintAccessor pa) const
     {
       switch (type_)
       {
         case OPENMP:
-          return run_openmp<R>(callable);
+          return run_openmp<R>(callable, pa);
           break;
         case FORK:
-          return run_fork<R>(callable);
+          return run_fork<R>(callable, pa);
           break;
         case PTHREAD:
-          return run_pthread<R>(callable);
+          return run_pthread<R>(callable, pa);
           break;
         case SINGLE:
-          return run_single<R>(callable);
+          return run_single<R>(callable, pa);
           break;
         default:
           NUKLEI_THROW("Unknown parallelization method.");
@@ -53,25 +80,32 @@ namespace nuklei {
     
   private:
     
-    template<typename R, typename Callable>
-    std::vector<R> run_openmp(Callable callable) const
+    template<typename R, typename Callable, typename PrintAccessor>
+    std::vector<R> run_openmp(Callable callable,
+                              PrintAccessor pa) const
     {
       std::vector<R> retv;
+#ifdef OPENMP_
 #pragma omp parallel for
+#endif
       for (int i = 0; i < n_; ++i)
       {
         R tmp = callable();
+#ifdef OPENMP_
 #pragma omp critical(nuklei_parallelizer_merge)
+#endif
         {
           retv.push_back(tmp);
-          NUKLEI_INFO("Finished OpenMP thread " << i << ".");
+          NUKLEI_INFO("Finished OpenMP thread " << i << " with value "
+                      << pa(tmp) << ".");
         }
       }
       return retv;
     }
     
-    template<typename R, typename Callable>
-    std::vector<R> run_fork(Callable callable) const
+    template<typename R, typename Callable, typename PrintAccessor>
+    std::vector<R> run_fork(Callable callable,
+                            PrintAccessor pa) const
     {
       char endpoint_name[L_tmpnam];
       std::tmpnam(endpoint_name);
@@ -121,7 +155,8 @@ namespace nuklei {
         }
         retv.push_back(tmp);
         
-        NUKLEI_INFO("Finished fork " << i);
+        NUKLEI_INFO("Finished fork " << i << " with value "
+                    << pa(tmp) << ".");
       }
       
       // clean up:
@@ -143,8 +178,9 @@ namespace nuklei {
       Callable callable_;
     };
     
-    template<typename R, typename Callable>
-    std::vector<R> run_pthread(Callable callable) const
+    template<typename R, typename Callable, typename PrintAccessor>
+    std::vector<R> run_pthread(Callable callable,
+                               PrintAccessor pa) const
     {
       std::vector<R> retv(n_);
       std::vector< boost::shared_ptr<boost::thread> > threads;
@@ -170,23 +206,27 @@ namespace nuklei {
          (boost::bind<void>(pthread_wrapper<R, Callable>(callable),
                             boost::ref(retv.at(i)))));
         threads.push_back(thread);
-        NUKLEI_INFO("Finished thread " << i << ".");
       }
       for (int i = 0; i < n_; ++i)
+      {
         threads.at(i)->join();
-      
+        NUKLEI_INFO("Finished thread " << i << " with value "
+                    << pa(retv.at(i)) << ".");
+      }
       return retv;
     }
     
-    template<typename R, typename Callable>
-    std::vector<R> run_single(Callable callable) const
+    template<typename R, typename Callable, typename PrintAccessor>
+    std::vector<R> run_single(Callable callable,
+                              PrintAccessor pa) const
     {
       std::vector<R> retv;
       for (int i = 0; i < n_; ++i)
       {
         R tmp = callable();
         retv.push_back(tmp);
-        NUKLEI_INFO("Finished slice " << i << ".");
+        NUKLEI_INFO("Finished slice " << i << " with value "
+                    << pa(tmp) << ".");
       }
       return retv;
     }
