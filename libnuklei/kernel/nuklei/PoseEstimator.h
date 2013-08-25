@@ -10,6 +10,7 @@
 #include <nuklei/parallelizer.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
+#include <nuklei/Types.h>
 #include <boost/bind.hpp>
 
 namespace nuklei {
@@ -138,7 +139,7 @@ namespace nuklei {
                   "Pose estimation will use a single core.");
     }
 
-    parallelizer p(nChains_, parallelizer::FORK);
+    parallelizer p(nChains_, typeFromName<parallelizer>(PARALLELIZATION));
     std::vector<kernel::se3> retv =
     p.run<kernel::se3>(boost::bind(&PoseEstimator::mcmc, this, n));
     for (std::vector<kernel::se3>::const_iterator i = retv.begin();

@@ -63,6 +63,8 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
 
   defConst(unsigned, IMAGE_PROJECTION_RADIUS, 3);
 
+  defConst(std::string, PARALLELIZATION, "openmp");
+  
   defConst(bool, ENABLE_CONSOLE_BACKSPACE, true);
   
   defConst(unsigned, LOG_LEVEL, 0);
