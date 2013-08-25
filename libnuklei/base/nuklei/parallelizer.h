@@ -34,20 +34,21 @@ namespace nuklei {
       switch (type_)
       {
         case OPENMP:
-          run_openmp<R>(callable);
+          return run_openmp<R>(callable);
           break;
         case FORK:
-          run_fork<R>(callable);
+          return run_fork<R>(callable);
           break;
         case PTHREAD:
-          run_pthread<R>(callable);
+          return run_pthread<R>(callable);
           break;
         case SINGLE:
-          run_single<R>(callable);
+          return run_single<R>(callable);
           break;
         default:
           NUKLEI_THROW("Unknown parallelization method.");
       }
+      return std::vector<R>();
     }
     
   private:
