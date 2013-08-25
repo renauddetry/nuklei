@@ -35,12 +35,16 @@ namespace nuklei {
       {
         case OPENMP:
           run_openmp<R>(callable);
+          break;
         case FORK:
           run_fork<R>(callable);
+          break;
         case PTHREAD:
           run_pthread<R>(callable);
+          break;
         case SINGLE:
           run_single<R>(callable);
+          break;
         default:
           NUKLEI_THROW("Unknown parallelization method.");
       }
