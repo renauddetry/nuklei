@@ -127,7 +127,7 @@ namespace nuklei {
             stream_protocol::endpoint ep(endpoint_name.native());
             stream_protocol::iostream stream(ep);
             boost::archive::binary_oarchive oa(stream);
-            oa & BOOST_SERIALIZATION_NVP(tmp);
+            oa & i & BOOST_SERIALIZATION_NVP(tmp);
           }
           
           _exit(0);
@@ -146,15 +146,16 @@ namespace nuklei {
       for (unsigned i = 0; i < n_; i++)
       {
         R tmp;
+        unsigned fork_i = 0;
         {
           stream_protocol::iostream stream;
           acceptor.accept(*stream.rdbuf());
           boost::archive::binary_iarchive ia(stream);
-          ia & BOOST_SERIALIZATION_NVP(tmp);
+          ia & fork_i & BOOST_SERIALIZATION_NVP(tmp);
         }
         retv.push_back(tmp);
         
-        NUKLEI_INFO("Finished fork " << i << " with value "
+        NUKLEI_INFO("Finished fork " << fork_i << " with value "
                     << pa(tmp) << ".");
       }
       
