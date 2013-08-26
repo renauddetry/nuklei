@@ -24,6 +24,11 @@ namespace nuklei {
     static const Type defaultType = OPENMP;
     static const std::string TypeNames[];
     
+    /**
+     * If chosing the fork()-based implementation, make sure that your program
+     * consists of a single thread at the time run() is called, or you will run
+     * into problems (Google "forking a multithreaded program" to see why).
+     */
     parallelizer(const int n,
                  const Type& type = OPENMP,
                  const unsigned long seed = 0) :
