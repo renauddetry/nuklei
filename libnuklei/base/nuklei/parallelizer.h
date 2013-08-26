@@ -85,13 +85,13 @@ namespace nuklei {
                               PrintAccessor pa) const
     {
       std::vector<R> retv;
-#ifdef OPENMP_
+#ifdef _OPENMP
 #pragma omp parallel for
 #endif
       for (int i = 0; i < n_; ++i)
       {
         R tmp = callable();
-#ifdef OPENMP_
+#ifdef _OPENMP
 #pragma omp critical(nuklei_parallelizer_merge)
 #endif
         {
