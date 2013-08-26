@@ -26,7 +26,7 @@ namespace nuklei {
     
     parallelizer(const int n,
                  const Type& type = OPENMP,
-                 const long long seed = 0) :
+                 const unsigned long seed = 0) :
     n_(n), type_(type), seed_(seed) {}
     
     struct na_print_accessor
@@ -118,7 +118,7 @@ namespace nuklei {
         if (pid == 0)
         {
           Random::seed(seed_+i); // might want to so smth if seed_ is near
-          // the max value of unsigned or long long...
+          // the max value of unsigned or unsigned long...
           
           using boost::asio::local::stream_protocol;
           
@@ -235,7 +235,7 @@ namespace nuklei {
     
     int n_;
     Type type_;
-    long long seed_;
+    unsigned long seed_;
   };
   
 }
