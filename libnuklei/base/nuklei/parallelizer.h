@@ -117,8 +117,7 @@ namespace nuklei {
         NUKLEI_ASSERT(pid >= 0);
         if (pid == 0)
         {
-          Random::seed(seed_+i); // might want to so smth if seed_ is near
-          // the max value of unsigned or unsigned long...
+          Random::seed(seed_+i); // unsigned overflow wraps around.
           
           using boost::asio::local::stream_protocol;
           
