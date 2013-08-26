@@ -240,19 +240,4 @@ namespace nuklei {
   
 }
 
-#include <sys/types.h>
-#include <sys/wait.h>
-
-namespace nuklei {
-  
-  const std::string parallelizer::TypeNames[] = { "openmp", "fork", "pthread", "single" };
-  
-  void parallelizer::reap()
-  {
-    // Reap completed child processes so that we don't end up with zombies.
-    int status = 0;
-    while (::waitpid(-1, &status, WNOHANG) > 0) {}
-  }
-  
-}
 #endif
