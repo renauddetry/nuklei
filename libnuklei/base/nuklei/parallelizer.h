@@ -11,6 +11,7 @@
 #include <nuklei/Common.h>
 #include <nuklei/BoostSerialization.h>
 
+#include <cstdlib>
 #include <boost/filesystem.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
@@ -107,8 +108,7 @@ namespace nuklei {
     std::vector<R> run_fork(Callable callable,
                             PrintAccessor pa) const
     {
-      char endpoint_name[L_tmpnam];
-      std::tmpnam(endpoint_name);
+      boost::filesystem::path endpoint_name = boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%");
       //std::vector<pid_t> pids(n_, 0);
       std::vector<R> retv;
       for (unsigned i = 0; i < n_; i++)
@@ -125,7 +125,7 @@ namespace nuklei {
           R tmp = callable();
           
           {
-            stream_protocol::endpoint ep(endpoint_name);
+            stream_protocol::endpoint ep(endpoint_name.native());
             stream_protocol::iostream stream(ep);
             boost::archive::binary_oarchive oa(stream);
             oa & BOOST_SERIALIZATION_NVP(tmp);
@@ -140,7 +140,7 @@ namespace nuklei {
       }
       
       using boost::asio::local::stream_protocol;
-      stream_protocol::endpoint ep(endpoint_name);
+      stream_protocol::endpoint ep(endpoint_name.native());
       boost::asio::io_service io_service;
       stream_protocol::acceptor acceptor(io_service, ep);
       
