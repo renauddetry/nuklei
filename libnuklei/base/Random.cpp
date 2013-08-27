@@ -17,53 +17,44 @@
 
 #include <boost/random.hpp>
 
+namespace nuklei {
+
 //#define NUKLEI_USE_BOOST_RANDOM_GEN
+#define NUKLEI_RANDOM_SYNC_MUTEX
 
 #ifdef _OPENMP
-#define NUKLEI_RANDOM_SYNC_OMP
 #include <omp.h>
-static inline int nuklei_thread_num()
-{
-  return omp_get_thread_num();
-}
-static inline int nuklei_max_threads()
-{
-  return omp_get_max_threads();
-}
+  static inline int nuklei_thread_num()
+  {
+    return omp_get_thread_num();
+  }
+  static inline int nuklei_max_threads()
+  {
+    return omp_get_max_threads();
+  }
 #else
-#define NUKLEI_RANDOM_SYNC_MUTEX
-static inline int nuklei_thread_num()
-{
-  return 0;
-}
-static inline int nuklei_max_threads()
-{
-  return 1;
-}
+  static inline int nuklei_thread_num()
+  {
+    return 0;
+  }
+  static inline int nuklei_max_threads()
+  {
+    return 1;
+  }
 #endif
 
-
-
-namespace nuklei {
   
-  /** @brief GSL random generator */
-  static gsl_rng * randomRng;  
-  
-  static boost::mutex mutex;
-  
-  // generators must be a pointer. If not, its construtor may be called after
-  // init() is called, which will destroy the generators setup in init().
-  static std::vector<boost::mt19937>* generators;
+  // bRandGens must be a pointer. If not, its construtor may be called after
+  // init() is called, which will destroy the bRandGens setup in init().
+  static std::vector<boost::mt19937>* bRandGens;
+  // Same holds for these:
+  static std::vector<gsl_rng*>* gRandGens;
   static std::vector<boost::shared_ptr<boost::mutex> >* mutexes;
   
   bool Random::initialized_ = Random::init();
   
   bool Random::init()
   {
-    const gsl_rng_type * T;
-    gsl_rng_env_setup();
-    T = gsl_rng_default;
-    randomRng = gsl_rng_alloc(T);
     unsigned seed = 0;
     const char * envVal = getenv("NUKLEI_RANDOM_SEED");
     if (envVal != NULL)
@@ -79,11 +70,16 @@ namespace nuklei {
       else
         seed = time(NULL)*getpid();
     }
-    generators = new std::vector<boost::mt19937>();
-    generators->resize(nuklei_max_threads());
+    
+    bRandGens = new std::vector<boost::mt19937>(nuklei_max_threads());
+    gRandGens = new std::vector<gsl_rng*>(nuklei_max_threads(), NULL);
+    for (int i = 0; i < nuklei_max_threads(); i++)
+      gRandGens->at(i) = gsl_rng_alloc(gsl_rng_mt19937);
+    
     mutexes = new std::vector<boost::shared_ptr<boost::mutex> >();
     for (int i = 0; i < nuklei_max_threads(); i++)
       mutexes->push_back(boost::shared_ptr<boost::mutex>(new boost::mutex()));
+    
     Random::seed(seed);
     return true;
   }
@@ -94,18 +90,19 @@ namespace nuklei {
     {
       // Libraries Nuklei depends on may make use of random numbers.
       // Let's make sure we seed those randomly as well.
-      srandom(s);
-#ifdef __APPLE__
+      ::srandom(s);
       //BSD implementation of rand differs from random.
-      srand(s);
-#endif
+      ::srand(s);
     }
-    gsl_rng_set(randomRng, s);
-    if (generators)
-      for (int i = 0; i < generators->size(); ++i)
-      {
-        generators->at(i).seed(s+i);
-      }
+    
+    for (int i = 0; i < bRandGens->size(); ++i)
+    {
+      bRandGens->at(i).seed(s+i);
+    }
+    for (int i = 0; i < gRandGens->size(); ++i)
+    {
+      gsl_rng_set(gRandGens->at(i), s+i);
+    }
   }
   
   //This function returns a double precision floating point number
@@ -114,21 +111,23 @@ namespace nuklei {
   double Random::uniform()
   {
     double r;
-#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
-    boost::uniform_01<> dist;
-    boost::variate_generator<boost::mt19937&, boost::uniform_01<> >
-    die(generators->at(nuklei_thread_num()), dist);
-    r = die();
-#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
 #endif
-    r = gsl_rng_uniform(randomRng);
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    {
+      boost::uniform_01<> dist;
+      boost::variate_generator<boost::mt19937&, boost::uniform_01<> >
+      die(bRandGens->at(nuklei_thread_num()), dist);
+      r = die();
+    }
+#else
+    r = gsl_rng_uniform(gRandGens->at(nuklei_thread_num()));
 #endif
     return r;
   }
@@ -158,23 +157,24 @@ namespace nuklei {
     // OpenMP. This is because it is hard to map pthreads to a
     // number. boost::thread::id could be used to implement nuklei_thread_num()
     // (todo?), but random generators could not be cleaned when a thread exits.
-#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
-#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
-    // no need to mutex here, since we use one generator per thread.
+#  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    //boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
 #endif
-//    r = gsl_rng_uniform_int(randomRng, n);
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    {
+      boost::uniform_int<unsigned long> dist(0, n-1);
+      boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long> >
+      die(bRandGens->at(nuklei_thread_num()), dist);
+      r = die();
+    }
+#else
+    r = gsl_rng_uniform_int(gRandGens->at(nuklei_thread_num()), n);
 #endif
-    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
-    boost::uniform_int<> dist(0, n-1);
-    boost::variate_generator<boost::mt19937&, boost::uniform_int<> >
-    die(generators->at(nuklei_thread_num()), dist);
-    r = die();
     return r;
   }
   
@@ -185,21 +185,23 @@ namespace nuklei {
   double Random::gaussian(double sigma)
   {
     double r;
-#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
-    boost::normal_distribution<> dist(0, sigma);
-    boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
-    die(generators->at(nuklei_thread_num()), dist);
-    r = die();
-#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
 #endif
-    r = gsl_ran_gaussian(randomRng, sigma);
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    {
+      boost::normal_distribution<> dist(0, sigma);
+      boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
+      die(bRandGens->at(nuklei_thread_num()), dist);
+      r = die();
+    }
+#else
+    r = gsl_ran_gaussian(gRandGens->at(nuklei_thread_num()), sigma);
 #endif
     return r;
   }
@@ -210,37 +212,39 @@ namespace nuklei {
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
 #endif
-    r = gsl_ran_beta(randomRng, a, b);
+    r = gsl_ran_beta(gRandGens->at(nuklei_thread_num()), a, b);
     return r;
   }
   
   Vector2 Random::uniformDirection2d()
   {
     Vector2 dir;
-#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
-    const int dim = 2;
-    typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
-    dist_t dist(dim);
-    boost::variate_generator<boost::mt19937&, dist_t >
-    die(generators->at(nuklei_thread_num()), dist);
-    std::vector<double> r = die();
-    dir.X() = r.at(0);
-    dir.Y() = r.at(1);
-#else
 #if defined(NUKLEI_RANDOM_SYNC_OMP)
 #  pragma omp critical(nuklei_randomRng)
 #elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
 #elif defined(NUKLEI_RANDOM_SYNC_NONE)
 #else
 #  error Undefined random sync method
 #endif
-    gsl_ran_dir_2d(randomRng, &dir.X(), &dir.Y());
+#ifdef NUKLEI_USE_BOOST_RANDOM_GEN
+    {
+      const int dim = 2;
+      typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
+      dist_t dist(dim);
+      boost::variate_generator<boost::mt19937&, dist_t >
+      die(bRandGens->at(nuklei_thread_num()), dist);
+      std::vector<double> r = die();
+      dir.X() = r.at(0);
+      dir.Y() = r.at(1);
+    }
+#else
+    gsl_ran_dir_2d(gRandGens->at(nuklei_thread_num()), &dir.X(), &dir.Y());
 #endif
     return dir;
   }
@@ -248,26 +252,26 @@ namespace nuklei {
   Vector3 Random::uniformDirection3d()
   {
     Vector3 dir;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
 #ifdef NUKLEI_USE_BOOST_RANDOM_GEN
     const int dim = 3;
     typedef boost::uniform_on_sphere<double, std::vector<double> > dist_t;
     dist_t dist(dim);
     boost::variate_generator<boost::mt19937&, dist_t >
-    die(generators->at(nuklei_thread_num()), dist);
+    die(bRandGens->at(nuklei_thread_num()), dist);
     std::vector<double> r = die();
     dir.X() = r.at(0);
     dir.Y() = r.at(1);
     dir.Z() = r.at(2);
 #else
-#if defined(NUKLEI_RANDOM_SYNC_OMP)
-#  pragma omp critical(nuklei_randomRng)
-#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
-    boost::unique_lock<boost::mutex> lock(mutex);
-#elif defined(NUKLEI_RANDOM_SYNC_NONE)
-#else
-#  error Undefined random sync method
-#endif
-    gsl_ran_dir_3d(randomRng, &dir.X(), &dir.Y(), &dir.Z());
+    gsl_ran_dir_3d(gRandGens->at(nuklei_thread_num()), &dir.X(), &dir.Y(), &dir.Z());
 #endif
     return dir;
   }
@@ -329,10 +333,10 @@ namespace nuklei {
   void Random::printRandomState()
   {
     NUKLEI_INFO("Random state: " <<
-              NUKLEI_NVP(random()) << 
-              "\n              " << NUKLEI_NVP(rand()) <<
-              "\n              " << NUKLEI_NVP(Random::uniformInt(1000000)) <<
-              "\n              " << NUKLEI_NVP(Random::uniform()));
+                NUKLEI_NVP(random()) <<
+                "\n              " << NUKLEI_NVP(rand()) <<
+                "\n              " << NUKLEI_NVP(Random::uniformInt(1000000)) <<
+                "\n              " << NUKLEI_NVP(Random::uniform()));
   }
   
 }
