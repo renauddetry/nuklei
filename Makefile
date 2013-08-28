@@ -33,6 +33,10 @@ test:
 check:
 	./scons.py check
 
+ifeq "$(shell git rev-parse --abbrev-ref HEAD)" "master"
 publish: doc
-	ssh renauddetry,nuklei@shell.sourceforge.net create
-	rsync -rl --delete --delete-excluded doc_generated/html/ renauddetry@shell.sourceforge.net:/home/project-web/nuklei/htdocs/doxygen
+	rsync -rl --delete --delete-excluded doc_generated/html/ renauddetry@web.sourceforge.net:/home/project-web/nuklei/htdocs/doxygen
+else
+publish:
+	$(error Switch to the master branch before publishing the doc.)
+endif

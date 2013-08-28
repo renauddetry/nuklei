@@ -50,6 +50,9 @@ namespace nuklei {
   // Same holds for these:
   static std::vector<gsl_rng*>* gRandGens;
   static std::vector<boost::shared_ptr<boost::mutex> >* mutexes;
+  // Keep in mind that it's unsafe to store pointers in std::vectors because
+  // they could be discarted without being deallocated. Here it's fine as we
+  // won't be resizing or deleting the vector before the end if the program.
   
   bool Random::initialized_ = Random::init();
   
