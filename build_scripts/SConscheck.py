@@ -198,19 +198,34 @@ if conf.env['UseOpenCV']:
 # PCL
 
 if conf.env['UsePCL']:
-  if not conf.CheckPKG('pcl_io >= 1.0.0'):
-    print 'PCL >= 1.0.0 not found.'
+  pcl_io = ''
+  if conf.CheckPKG('pcl_io >= 1.4.0'):
+    pcl_io = 'pcl_io'
+  elif conf.CheckPKG('pcl_io-1.4 >= 1.4.0'):
+    pcl_io = 'pcl_io-1.4'
+  elif conf.CheckPKG('pcl_io-1.5 >= 1.4.0'):
+    pcl_io = 'pcl_io-1.5'
+  elif conf.CheckPKG('pcl_io-1.6 >= 1.4.0'):
+    pcl_io = 'pcl_io-1.6'
+  elif conf.CheckPKG('pcl_io-1.7 >= 1.4.0'):
+    pcl_io = 'pcl_io-1.7'
+  elif conf.CheckPKG('pcl_io-1.8 >= 1.4.0'):
+    pcl_io = 'pcl_io-1.8'
+  elif conf.CheckPKG('pcl_io-1.9 >= 1.4.0'):
+    pcl_io = 'pcl_io-1.9'
+  else:
+    print 'PCL >= 1.4.0 not found.'
     Exit(1)
-  
-  pcldict = conf.env.ParseFlags("!pkg-config --cflags --libs pcl_io")
+
+  pcldict = conf.env.ParseFlags("!pkg-config --cflags --libs " + pcl_io)
   for i in pcldict['CPPPATH']:
     pcldict['CCFLAGS'].append('-I' + i)
   pcldict['CPPPATH'] = []
   conf.env.MergeFlags(pcldict)
   conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PCL' ])
   conf.env['PkgCCflags'] += ' -DNUKLEI_USE_PCL ' + \
-                            os.popen("pkg-config --cflags pcl_io").read().rstrip("\n")
-  conf.env['PkgCLibs'] += ' ' + os.popen("pkg-config --libs pcl_io").read().rstrip("\n")
+                            os.popen("pkg-config --cflags " + pcl_io).read().rstrip("\n")
+  conf.env['PkgCLibs'] += ' ' + os.popen("pkg-config --libs " + pcl_io).read().rstrip("\n")
 
   if not conf.CheckCXXHeader('pcl/point_cloud.h'):
     print 'Please check your PCL installation.'
