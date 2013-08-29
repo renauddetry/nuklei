@@ -39,12 +39,29 @@ parts = []
 for root, dirs, files in os.walk('.'):
   if SConscriptName in files:
       parts.append(os.path.normpath(root))
+  if '.git' in dirs:
+      dirs.remove('.git')
   if '.svn' in dirs:
       dirs.remove('.svn')
 
 import shlex
 import subprocess
 import os
+import textwrap
+
+red = ''
+green = ''
+blue = ''
+defColor = ''
+
+if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
+  red = '\033[0;31m'
+  green = '\033[0;32m'
+  blue = '\033[0;34m'
+  defColor = '\033[0m'
+
+if os.getuid() == 0:
+  print red + textwrap.fill("You appear to be running scons as root. If you are using sudo to compile or install Nuklei, keep in mind that the command run by sudo does not inherit environment variables from your shell. If any of the libraries required by Nuklei is in a non-standard place (such as /usr/local, or /opt), the Nuklei Install documentation states that these paths should be added to environment variables such as PKG_CONFIG_PATH, or CPPPATH, LDFLAGS, etc. You should use sudo with the '-E' option to forward your shell's environment variables to scons.") + "\n\nFor instance, use\n  sudo -E ./scons.py install\n" + defColor
 
 def system_ret(cmd):
   return subprocess.Popen(shlex.split(cmd), stdout = subprocess.PIPE, stderr = subprocess.PIPE).communicate()[0]
@@ -133,17 +150,6 @@ opts.AddVariables(
 )
 
 opts.Update(env)
-
-red = ''
-green = ''
-blue = ''
-defColor = ''
-
-if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
-  red = '\033[0;31m'
-  green = '\033[0;32m'
-  blue = '\033[0;34m'
-  defColor = '\033[0m'
 
 env['BuildType'] = env['bt']
 
