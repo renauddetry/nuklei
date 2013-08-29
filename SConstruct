@@ -60,8 +60,8 @@ if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
   blue = '\033[0;34m'
   defColor = '\033[0m'
 
-if os.getuid() == 0:
-  print red + textwrap.fill("You appear to be running scons as root. If you are using sudo to compile or install Nuklei, keep in mind that the command run by sudo does not inherit environment variables from your shell. If any of the libraries required by Nuklei is in a non-standard place (such as /usr/local, or /opt), the Nuklei Install documentation states that these paths should be added to environment variables such as PKG_CONFIG_PATH, or CPPPATH, LDFLAGS, etc. You should use sudo with the '-E' option to forward your shell's environment variables to scons.") + "\n\nFor instance, use\n  sudo -E ./scons.py install\n" + defColor
+if os.getuid() != 0:
+  print red + textwrap.fill("* WARNING * You appear to be running scons as root, probably via sudo. Please keep in mind that by default sudo will not forward your environment variables to SCons. This can be a problem, because Nuklei's SCons script does make use of environment variables to find libraries in nonstandard places. For instance, the ROS PCL package installs PCL in /opt. The ROS init script adds something like PKG_CONFIG_PATH=/opt/lib/pkgconfig to your shell's environment, to allow libraries like Nuklei to find PCL in /opt. To prevent sudo from discarding variables like PKG_CONFIG_PATH, you should use sudo with the '-E' option.") + "\n\nFor instance, use\n  sudo -E ./scons.py install\n***" + defColor
 
 def system_ret(cmd):
   return subprocess.Popen(shlex.split(cmd), stdout = subprocess.PIPE, stderr = subprocess.PIPE).communicate()[0]
