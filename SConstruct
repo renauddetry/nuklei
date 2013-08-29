@@ -60,7 +60,7 @@ if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
   blue = '\033[0;34m'
   defColor = '\033[0m'
 
-if os.getuid() != 0:
+if os.getuid() == 0:
   print red + textwrap.fill("* WARNING * You appear to be running scons as root, probably via sudo. Please keep in mind that by default sudo will not forward your environment variables to SCons. This can be a problem, because Nuklei's SCons script does make use of environment variables to find libraries in nonstandard places. For instance, the ROS PCL package installs PCL in /opt. The ROS init script adds something like PKG_CONFIG_PATH=/opt/lib/pkgconfig to your shell's environment, to allow libraries like Nuklei to find PCL in /opt. To prevent sudo from discarding variables like PKG_CONFIG_PATH, you should use sudo with the '-E' option.") + "\n\nFor instance, use\n  sudo -E ./scons.py install\n***" + defColor
 
 def system_ret(cmd):
