@@ -93,12 +93,12 @@ Title = {Continuous Surface-point Distributions for {3D} Object Pose Estimation 
 Year = {2010}}
 @endverbatim
 
-I will be happy to hear from projects that make use of Nuklei, and if desired participate and provide support to these projects. If your project uses Nuklei, <a href="http://www.csc.kth.se/~detryr/">please let me know!</a>.
+I will be happy to hear from projects that make use of Nuklei, and if desired participate and provide support to these projects. If your project uses Nuklei, <a href="http://renaud-detry.net">please let me know!</a>.
 
 
 @section index_author Authors
 
-Nuklei is developped by <a href="http://www.csc.kth.se/~detryr/">Renaud Detry</a>.
+Nuklei is developped by <a href="http://renaud-detry.net">Renaud Detry</a>.
 
 
 */

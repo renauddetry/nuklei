@@ -32,7 +32,7 @@ kernel::base& k = k1;
 k.polyEval(k2) // Again, slow evaluation.
 k.eval(k2) // Compilation error - the base class only has the virtual methods.
 @endcode
-The template kernel::implementation_prototype binds the polymorphic wrapper to static implementations. kernel::implementation_prototype follows the CRTP trick to avoid clutter in derived kernels. Note that the kernel::implementation_prototype trick doesn't currently support class hierarchies taller than 3 (e.g., a class that inherits from kernel::se3 will not work properly). If you need to do such a thing, <a href="http://www.csc.kth.se/~detryr/">talk to me</a>.
+The template kernel::implementation_prototype binds the polymorphic wrapper to static implementations. kernel::implementation_prototype follows the CRTP trick to avoid clutter in derived kernels. Note that the kernel::implementation_prototype trick doesn't currently support class hierarchies taller than 3 (e.g., a class that inherits from kernel::se3 will not work properly). If you need to do such a thing, <a href="http://renaud-detry.net">talk to me</a>.
 
 
 
