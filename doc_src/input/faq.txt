@@ -4,6 +4,7 @@ namespace nuklei {
 
 /**
 
+@ingroup using
 @defgroup faq F.A.Q.
 
 @section faq_thread_safe Is Nuklei thread-safe?
