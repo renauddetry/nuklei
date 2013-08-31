@@ -92,12 +92,12 @@ int pe(int argc, char ** argv)
     // Read-in data: //
     // ------------- //
     
-    PoseEstimator<> pe(locHArg.getValue(),
-                        oriHArg.getValue(),
-                        nChainsArg.getValue(),
-                        nArg.getValue(),
-                        AlwaysReachable(),
-                        partialviewArg.getValue());
+    PoseEstimator pe(locHArg.getValue(),
+                     oriHArg.getValue(),
+                     nChainsArg.getValue(),
+                     nArg.getValue(),
+                     boost::shared_ptr<Reachability>(),
+                     partialviewArg.getValue());
     
     pe.load(objectFileArg.getValue(),
             sceneFileArg.getValue(),
