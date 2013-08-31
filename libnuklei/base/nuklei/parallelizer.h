@@ -116,7 +116,7 @@ namespace nuklei {
       boost::filesystem::path endpoint_name = boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%");
       //std::vector<pid_t> pids(n_, 0);
       std::vector<R> retv;
-      for (unsigned i = 0; i < n_; i++)
+      for (int i = 0; i < n_; i++)
       {
         pid_t pid = fork();
         NUKLEI_ASSERT(pid >= 0);
@@ -148,10 +148,10 @@ namespace nuklei {
       boost::asio::io_service io_service;
       stream_protocol::acceptor acceptor(io_service, ep);
       
-      for (unsigned i = 0; i < n_; i++)
+      for (int i = 0; i < n_; i++)
       {
         R tmp;
-        unsigned fork_i = 0;
+        int fork_i = 0;
         {
           stream_protocol::iostream stream;
           acceptor.accept(*stream.rdbuf());
