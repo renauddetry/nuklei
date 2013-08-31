@@ -199,23 +199,22 @@ if conf.env['UseOpenCV']:
 
 if conf.env['UsePCL']:
   pcl_io = ''
-  if conf.CheckPKG('pcl_io >= 1.4.0'):
-    pcl_io = 'pcl_io'
-  elif conf.CheckPKG('pcl_io-1.4 >= 1.4.0'):
-    pcl_io = 'pcl_io-1.4'
-  elif conf.CheckPKG('pcl_io-1.5 >= 1.4.0'):
-    pcl_io = 'pcl_io-1.5'
-  elif conf.CheckPKG('pcl_io-1.6 >= 1.4.0'):
-    pcl_io = 'pcl_io-1.6'
-  elif conf.CheckPKG('pcl_io-1.7 >= 1.4.0'):
-    pcl_io = 'pcl_io-1.7'
-  elif conf.CheckPKG('pcl_io-1.8 >= 1.4.0'):
-    pcl_io = 'pcl_io-1.8'
-  elif conf.CheckPKG('pcl_io-1.9 >= 1.4.0'):
-    pcl_io = 'pcl_io-1.9'
+  
+  for version in [ '1.9', '1.8', '1.7', '1.6', '1.5', '1.4' ]:
+    if conf.CheckPKG('pcl_io-' + version):
+      if conf.CheckPKG('pcl_io >= ' + version):
+        print "Found two versions of PCL: " + 'pcl_io-' + version + " and " + \
+          "pcl_io. Using pcl_io."
+        pcl_io = 'pcl_io'
+      else:
+        pcl_io = 'pcl_io-' + version
+      break
   else:
-    print 'PCL >= 1.4.0 not found.'
-    Exit(1)
+    if conf.CheckPKG('pcl_io >= 1.4.0'):
+      pcl_io = 'pcl_io'
+    else:
+      print 'PCL >= 1.4.0 not found.'
+      Exit(1)
 
   pcldict = conf.env.ParseFlags("!pkg-config --cflags --libs " + pcl_io)
   for i in pcldict['CPPPATH']:
