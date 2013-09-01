@@ -277,9 +277,9 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
     boost::filesystem::path offfile =
-    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.off");
+    boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.off");
     boost::filesystem::path plyfile =
-    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.ply");
+    boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.ply");
     writeMeshToOffFile(offfile.native());
     boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(offfile.native()));
     mesh->write(plyfile.native());
@@ -311,9 +311,9 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
     boost::filesystem::path offfile =
-    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.off");
+    boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.off");
     boost::filesystem::path plyfile =
-    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.ply");
+    boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.ply");
     boost::filesystem::copy_file(filename, plyfile);
     boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(plyfile.native()));
     mesh->write(offfile.native());
