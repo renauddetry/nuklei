@@ -55,6 +55,8 @@ namespace nuklei {
 
   extern const unsigned IMAGE_PROJECTION_RADIUS;
 
+  extern const std::string PARALLELIZATION;
+
   extern const bool ENABLE_CONSOLE_BACKSPACE;
   
   extern const unsigned LOG_LEVEL;

@@ -84,9 +84,9 @@ double KernelCollection::evaluationAt(const kernel::base &k) const
   return value;
 }
 @endcode
-For computational efficiency, the actual implementation of this function differs in two ways from this piece of code:
+For computational efficiency, the implementation of this function differs in two ways from this piece of code:
 - If the number of kernels is larger than 1000, a @f$kd@f$-tree is used to discard the kernels that are too far from @p k to be relevant (see below).
-- A switch on the type of @p k forces calls to the static equivalent of @p polyEval, to avoid repeated VTABLE lookups.
+- Instead of calling @p polyEval, evaluationAt first figures out the type of the kernels in this KernelCollection, and calls the static equivalent of @p polyEval. This trick avoids repeated VTABLE lookups and allows the compiler to inline the kernel evaluation function.
 
 The Nuklei implementation follows the description given in @ref background and uses a @f$ kd @f$-tree to quickly access kernels that are near the evaluation point. The definition of <em>near</em> is given by the @p cutPoint method that kernels of nuklei::kernel must implement. This method gives the distance to the kernel's origin at which the kernel value can be assume to be zero. For triangular kernels, this distance is @f$ 2\sigma_t @f$.
 

@@ -18,8 +18,7 @@ namespace nuklei {
   std::string("Built on " __DATE__ " at " __TIME__) +
   " with `" + NUKLEI_BUILDTYPE + "' flags.\n"
   "This application is part of Nuklei http://nuklei.sourceforge.net/\n"
-  "For more information, please contact one of the following:\n"
-  "detryr@kth.se\n";
+  "To contact the author, see email at http://renaud-detry.net\n";
     
   template<typename T>
   static T initConst(const char *envVar, T def)
@@ -62,6 +61,12 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
   defConst(std::string, SERIALIZATION_DEFAULT_BOOST_ARCHIVE, "bxmlc");
 
   defConst(unsigned, IMAGE_PROJECTION_RADIUS, 3);
+
+#ifdef __APPLE__
+  defConst(std::string, PARALLELIZATION, "fork");
+#else
+  defConst(std::string, PARALLELIZATION, "openmp");
+#endif
 
   defConst(bool, ENABLE_CONSOLE_BACKSPACE, true);
   

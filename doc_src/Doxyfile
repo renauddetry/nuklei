@@ -671,13 +671,13 @@ INPUT                  = libnuklei/base \
                          doc_src/input/kernel.txt \
                          doc_src/input/generic_kernels.txt \
                          doc_src/input/matrix_transfo.txt \
+                         doc_src/input/faq.txt \
                          doc_src/input/programming_paradigm.txt \
                          doc_src/input/type.txt \
                          doc_src/input/organization.txt \
                          doc_src/input/coding_guidelines.txt \
                          doc_src/input/env_config.txt \
-                         doc_src/input/acknowledgements.txt \
-                         doc_src/input/faq.txt
+                         doc_src/input/acknowledgements.txt
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

@@ -9,6 +9,18 @@ namespace nuklei
 
 <img style="text-align: center;" alt="Logo" src="doc_src/nuklei_logo.jpg">
 
+<div style="padding: 4ex; max-width: 800px; margin-left: auto; margin-right: auto;">
+<span style="color: red;  font-size: 120%;">In May, Sourceforge has migrated the Nuklei git repository to a new URL. The old URL is still accessible, but frozen to its state of May 2013. In order to continue pulling updates to your local copy, <tt>cd</tt> to your nuklei directory and type</span>
+@verbatim
+git remote set-url origin git://git.code.sf.net/p/nuklei/code
+@endverbatim
+You can also delete your copy of Nuklei and clone it again with
+@verbatim
+git clone git://git.code.sf.net/p/nuklei/code nuklei
+@endverbatim
+Apologies for the inconvenience.
+</div>
+
 @section index_overview Overview
 
 Nuklei is a C++ library that implements kernel functions and kernel density estimation for @f$SE(3)@f$ data. Nuklei also provides tools for manipulating @f$SE(3)@f$ transformations, and for manipulating point clouds.
@@ -40,7 +52,7 @@ Potential applications of  @f$ SE(3) @f$ density models:  robot position and ori
 
 The source code is available from the Sourceforge version control server:
 @verbatim
-git clone git://nuklei.git.sourceforge.net/gitroot/nuklei/nuklei
+git clone git://git.code.sf.net/p/nuklei/code nuklei
 @endverbatim
 
 For more info, see @ref install "the install page".
@@ -81,12 +93,12 @@ Title = {Continuous Surface-point Distributions for {3D} Object Pose Estimation 
 Year = {2010}}
 @endverbatim
 
-I will be happy to hear from projects that make use of Nuklei, and if desired participate and provide support to these projects. If your project uses Nuklei, <a href="http://www.csc.kth.se/~detryr/">please let me know!</a>.
+I will be happy to hear from projects that make use of Nuklei, and if desired participate and provide support to these projects. If your project uses Nuklei, <a href="http://renaud-detry.net">please let me know!</a>.
 
 
 @section index_author Authors
 
-Nuklei is developped by <a href="http://www.csc.kth.se/~detryr/">Renaud Detry</a>.
+Nuklei is developped by <a href="http://renaud-detry.net">Renaud Detry</a>.
 
 
 */

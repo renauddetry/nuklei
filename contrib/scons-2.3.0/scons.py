@@ -56,8 +56,8 @@ import sys
 
 
 if sys.version_info >= (3,0,0):
-    msg = "scons: *** SCons version %s does not run under Python version %s.\n\
-Python 3 is not yet supported.\n"
+    msg = "\nscons: *** SCons version %s does not run under Python version %s.\n\
+Python 3 is not yet supported.\nTo proceed, run SCons with Python 2.7. Typing \n\n$ python2.7 ./scons.py install\n\nis likely to do the trick. If it does not work, install Python 2.7, and see how it is called (python2.7, python-2.7, python27, ...).\n"
     sys.stderr.write(msg % (__version__, sys.version.split()[0]))
     sys.exit(1)
 

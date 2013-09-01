@@ -10,27 +10,14 @@
 
 #include <nuklei/KernelLogisticRegressor.h>
 
-#warning The KernelLogisticRegression class is obsolete. \
- Use KernelLogisticRegressor instead.
+#warning The KernelLogisticRegression class is obsolete. Use KernelLogisticRegressor instead.
 
 namespace nuklei
 {
   /**
    * @brief Obsolete. See KernelLogisticRegressor instead.
    */
-  struct KernelLogisticRegression : public KernelLogisticRegressor
-  {
-    KernelLogisticRegression() : KernelLogisticRegressor() {}
-
-    KernelLogisticRegression(const KernelCollection &data,
-                             const std::vector<int>& labels) :
-    KernelLogisticRegressor(data, labels) {};
-
-    KernelLogisticRegression(const KernelCollection &data,
-                             const GMatrix& gramMatrix,
-                             const std::vector<int>& labels) :
-    KernelLogisticRegressor(data, gramMatrix, labels) {};
-  };
+  typedef KernelLogisticRegressor KernelLogisticRegression;
 }
 
 #endif

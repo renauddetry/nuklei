@@ -22,7 +22,7 @@ The behavior of the functions implemented in Nuklei can be altered through envir
 
   Defining NUKLEI_LOG_LEVEL=X will enable all messages that have a level smaller or equal to X.
 
-  Note: NUKLEI_LOG_LEVEL disables messages in the Nuklei <em>library</em>. Messages will still be printed when using the <em>nuklei</em> program.
+  Note: NUKLEI_LOG_LEVEL=0 disables messages in the Nuklei <em>library</em>. Messages will still be printed when using the <em>nuklei</em> program.
 
 - NUKLEI_RANDOM_SEED: if set to a value greater than zero, Nuklei will seed its random generators <b>and the libc random generator</b> with that value. If equal to -1, Nuklei will seed the random generators with a value based on @c time() and the process ID. If NUKLEI_RANDOM_SEED is not set, Nuklei seeds its own random generators with 0, and does not seed the libc generator.
 
