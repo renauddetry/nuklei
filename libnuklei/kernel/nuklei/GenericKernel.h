@@ -515,6 +515,17 @@ namespace nuklei {
       return std::exp( h*arg - log_bessel_I1_h ) * h / (4 * M_PI * M_PI);
     }
     
+    // Normalized VMF S2 evaluation
+    template<class FI>
+    static coord_t eval(const element_t &mean, const coord_t h,
+                        const element_t &p,
+                        groupS::s2, value_scaleS::normalized,
+                        FI, h_scaleS::intrinsic)
+    {
+      coord_t arg = dist_exponent(mean, p, groupS::s2());
+      return (h / (2 * M_PI * (1-std::exp(-2*h)))) * std::exp( h*(arg-1) );
+    }
+
     template<class GP>
     static coord_t eval(const element_t &mean, const coord_t h,
                         const element_t &p,
