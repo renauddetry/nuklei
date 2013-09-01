@@ -181,6 +181,26 @@ namespace nuklei {
     return r;
   }
   
+  double Random::triangle(double b)
+  {
+    double r;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    {
+      boost::triangle_distribution<> dist(-b/2, 0, b/2);
+      boost::variate_generator<boost::mt19937&, boost::triangle_distribution<> >
+      die(bRandGens->at(nuklei_thread_num()), dist);
+      r = die();
+    }
+    return r;
+  }
+  
   //This function returns a Gaussian random variate, with mean zero and
   //standard deviation sigma. Use the transformation z = \mu + x on the
   //numbers returned by gsl_ran_gaussian to obtain a Gaussian distribution
