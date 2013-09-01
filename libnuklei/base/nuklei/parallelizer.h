@@ -113,7 +113,7 @@ namespace nuklei {
     std::vector<R> run_fork(Callable callable,
                             PrintAccessor pa) const
     {
-      boost::filesystem::path endpoint_name = boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%");
+      boost::filesystem::path endpoint_name = boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%");
       //std::vector<pid_t> pids(n_, 0);
       std::vector<R> retv;
       for (int i = 0; i < n_; i++)
