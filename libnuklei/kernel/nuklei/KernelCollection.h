@@ -442,8 +442,10 @@ namespace nuklei {
        * @brief Builds a mesh from kernel positions. See @ref intermediary.
        */
       void buildMesh();
-      void saveMeshToOffFile(const std::string& filename) const;
+      void writeMeshToOffFile(const std::string& filename) const;
       void readMeshFromOffFile(const std::string& filename);
+      void writeMeshToPlyFile(const std::string& filename) const;
+      void readMeshFromPlyFile(const std::string& filename);
       /**
        * @brief Assuming that the points in this collection form the surface of
        * an object, this function computes whether a point @p p is visible from

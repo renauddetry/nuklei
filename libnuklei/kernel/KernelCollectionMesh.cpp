@@ -18,10 +18,6 @@
 #include <CGAL/IO/read_xyz_points.h>
 #include <CGAL/IO/write_xyz_points.h>
 
-#include <utility> // defines std::pair
-#include <list>
-#include <fstream>
-
 #include <CGAL/trace.h>
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
@@ -55,6 +51,10 @@
 
 #include <vector>
 #include <fstream>
+#include <utility> // defines std::pair
+#include <list>
+#include <boost/filesystem.hpp>
+#include <trimesh/TriMesh.h>
 
 #include <nuklei/KernelCollection.h>
 
@@ -259,7 +259,7 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
   
-  void KernelCollection::saveMeshToOffFile(const std::string& filename) const
+  void KernelCollection::writeMeshToOffFile(const std::string& filename) const
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CGAL
@@ -272,7 +272,21 @@ namespace nuklei {
 #endif
     NUKLEI_TRACE_END();
   }
-  
+
+  void KernelCollection::writeMeshToPlyFile(const std::string& filename) const
+  {
+    NUKLEI_TRACE_BEGIN();
+    boost::filesystem::path offfile =
+    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.off");
+    boost::filesystem::path plyfile =
+    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.ply");
+    writeMeshToOffFile(offfile.native());
+    boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(offfile.native()));
+    mesh->write(plyfile.native());
+    boost::filesystem::copy_file(plyfile, filename);
+    NUKLEI_TRACE_END();
+  }
+
   void KernelCollection::readMeshFromOffFile(const std::string& filename)
   {
     NUKLEI_TRACE_BEGIN();
@@ -293,6 +307,19 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-  
+  void KernelCollection::readMeshFromPlyFile(const std::string& filename)
+  {
+    NUKLEI_TRACE_BEGIN();
+    boost::filesystem::path offfile =
+    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.off");
+    boost::filesystem::path plyfile =
+    boost::filesystem::unique_path("nuklei-%%%%-%%%%-%%%%-%%%%.ply");
+    boost::filesystem::copy_file(filename, plyfile);
+    boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(plyfile.native()));
+    mesh->write(offfile.native());
+    readMeshFromOffFile(offfile.native());
+    NUKLEI_TRACE_END();
+  }
+
 }
 

@@ -23,6 +23,7 @@ sources = []
 addfiles(sources, names, '*.cpp')
 
 env.Prepend(CPPPATH = [ '.' ])
+env.Prepend(CPPPATH = [ '$trimesh_include' ])
 
 env.Prepend(CCFLAGS = [ '-frounding-math' ])
 env.Append(CPPDEFINES = [ 'CGAL_USE_F2C' ])

@@ -158,7 +158,7 @@ int create_mesh(int argc, char ** argv)
   
   kc.buildMesh();
   
-  kc.saveMeshToOffFile(outFileArg.getValue());
+  kc.writeMeshToOffFile(outFileArg.getValue());
   
   return 0;
   

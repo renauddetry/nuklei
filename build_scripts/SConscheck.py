@@ -9,6 +9,7 @@ if conf.env['UseCIMG']:
   conf.env['CImg_include'] = '#/contrib/CImg/include'
 conf.env['tclap_include'] = '#/contrib/tclap-1.1.0/include'
 conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
+conf.env['trimesh_include'] = '#/contrib/trimesh2-2.12/include'
 conf.env['libkdtree_include'] = '#/contrib/libkdtree++/include'
 conf.env['libklr_include'] = '#/contrib/libklr-2010_05_07/src'
 
