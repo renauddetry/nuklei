@@ -30,13 +30,19 @@ namespace nuklei {
                       const std::string &message = messageDef,
                       const unsigned minLogLevel = 0);
     virtual ~ProgressIndicator();
-    
+
+    void initialize(const int spanStart,
+                    const int spanEnd,
+                    const std::string &message,
+                    const unsigned minLogLevel);
+
     void setMinLogLevel(const unsigned l);
     unsigned getMinLogLevel() const;
     
     void setValue(const int value);
     void setBackspace(const bool backspace);
     void inc(const int value = 1);
+    void mtInc(const int value = 1);
     const std::string& getMessage() const;
     void setMessage(const std::string& message);
     void rewind();
@@ -48,10 +54,6 @@ namespace nuklei {
     enum { ready, running, finished } state_;
     int spanStart_, spanEnd_, spanLength_, spanPos_, current_, scale_;
     std::string message_, colorStart_, colorEnd_;
-    void initialize(const int spanStart, 
-                    const int spanEnd,
-                    const std::string &message,
-                    const unsigned minLogLevel);
     /*static const int spanStartDef, spanEndDef;
      static const char messageDef[];
      static const char backspaceSequence[];*/

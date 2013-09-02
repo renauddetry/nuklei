@@ -10,6 +10,7 @@
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
 #include <nuklei/Types.h>
+#include <nuklei/ProgressIndicator.h>
 
 #define NUKLEI_POSE_ESTIMATOR_POLYMORPHIC
 
@@ -32,11 +33,13 @@ namespace nuklei {
                   const int nChains = -1,
                   const int n = -1,
                   boost::shared_ptr<Reachability> reachability = boost::shared_ptr<Reachability>(),
-                  const bool& partialview = false) :
-    reachability_(reachability), partialview_(partialview),
+                  const bool partialview = false,
+                  const bool progress = true) :
     evaluationStrategy_(KernelCollection::MAX_EVAL),
     loc_h_(locH), ori_h_(oriH),
-    nChains_(nChains), n_(n)
+    nChains_(nChains), n_(n),
+    reachability_(reachability), partialview_(partialview),
+    progress_(progress)
     {
       if (nChains_ <= 0) nChains_ = 8;
     }
@@ -96,13 +99,15 @@ namespace nuklei {
     double objectSize_;
     KernelCollection sceneModel_;
     Vector3 viewpoint_;
-    boost::shared_ptr<Reachability> reachability_;
-    bool partialview_;
     KernelCollection::EvaluationStrategy evaluationStrategy_;
     double loc_h_;
     double ori_h_;
     int nChains_;
     int n_;
+    boost::shared_ptr<Reachability> reachability_;
+    bool partialview_;
+    boost::shared_ptr<ProgressIndicator> pi_;
+    bool progress_;
   };
   
 }

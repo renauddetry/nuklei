@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include <nuklei/ProgressIndicator.h>
+#include <nuklei/Log.h>
 #include <nuklei/Common.h>
 
 namespace nuklei
@@ -79,9 +80,7 @@ namespace nuklei
     spanPos_ = spanStart_;
     spanLength_ = spanEnd_ - spanStart_;
     if (spanLength_ < 0)
-      std::cerr << "Warning: `spanStart > spanEnd', reset indicator with "
-        "valid values to proceed."
-                << std::endl;
+      NUKLEI_THROW("Error: `spanStart > spanEnd'.");
     
     
     shellTerminalFileNumber = STDIN_FILENO;
@@ -191,6 +190,17 @@ namespace nuklei
     setValue(spanPos_+value);
   }
   
+  /**
+   * Use inside the loop.
+   * @param value the progress value between spanStart
+   *              and spanEnd.
+   */
+  void ProgressIndicator::mtInc(const int value)
+  {
+    boost::unique_lock<boost::mutex> lock(Log::mutex_);
+    setValue(spanPos_+value);
+  }
+
   const std::string& ProgressIndicator::getMessage() const
   {
     return message_;

@@ -10,6 +10,7 @@
 
 namespace nuklei
 {
+  
   kernel::se3 PoseEstimator::modelToSceneTransformation() const
   {
     int n = -1;
@@ -36,10 +37,17 @@ namespace nuklei
                   "Pose estimation will use a single core.");
     }
     
+    if (progress_)
+      pi_->initialize(0, 10*n*nChains_ / 10, "Estimating pose", 0);
+    
     parallelizer p(nChains_, typeFromName<parallelizer>(PARALLELIZATION));
     std::vector<kernel::se3> retv =
     p.run<kernel::se3>(boost::bind(&PoseEstimator::mcmc, this, n),
                        kernel::base::WeightAccessor());
+    
+    if (progress_)
+      pi_->forceEnd();
+    
     for (std::vector<kernel::se3>::const_iterator i = retv.begin();
          i != retv.end(); ++i)
       poses.add(*i);
@@ -200,6 +208,10 @@ namespace nuklei
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
     }
+    
+    // Create dummy ProgressIndicator
+    if (progress_)
+      pi_.reset(new ProgressIndicator(1, "", 11));
   }
   
   
@@ -407,6 +419,7 @@ namespace nuklei
         {
           NUKLEI_THROW("Unexpected value for currentPose.loc_h_.");
         }
+        if (progress_ && i%10 == 0) pi_->mtInc();
       }
       
       metropolisHastings(currentPose, currentWeight,
