@@ -11,6 +11,24 @@
 namespace nuklei
 {
   
+  PoseEstimator::PoseEstimator(const double locH,
+                               const double oriH,
+                               const int nChains,
+                               const int n,
+                               boost::shared_ptr<Reachability> reachability,
+                               const bool partialview,
+                               const bool progress) :
+  evaluationStrategy_(KernelCollection::MAX_EVAL),
+  loc_h_(locH), ori_h_(oriH),
+  nChains_(nChains), n_(n),
+  reachability_(reachability), partialview_(partialview),
+  progress_(progress)
+  {
+    if (nChains_ <= 0) nChains_ = 8;
+    parallel_ = typeFromName<parallelizer>(PARALLELIZATION);
+  }
+
+  
   kernel::se3 PoseEstimator::modelToSceneTransformation() const
   {
     int n = -1;
@@ -40,7 +58,7 @@ namespace nuklei
     if (progress_)
       pi_->initialize(0, 10*n*nChains_ / 10, "Estimating pose", 0);
     
-    parallelizer p(nChains_, typeFromName<parallelizer>(PARALLELIZATION));
+    parallelizer p(nChains_, parallel_);
     std::vector<kernel::se3> retv =
     p.run<kernel::se3>(boost::bind(&PoseEstimator::mcmc, this, n),
                        kernel::base::WeightAccessor());

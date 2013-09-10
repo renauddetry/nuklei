@@ -11,6 +11,7 @@
 #include <nuklei/ObservationIO.h>
 #include <nuklei/Types.h>
 #include <nuklei/ProgressIndicator.h>
+#include <nuklei/parallelizer_decl.h>
 
 #define NUKLEI_POSE_ESTIMATOR_POLYMORPHIC
 
@@ -34,15 +35,7 @@ namespace nuklei {
                   const int n = -1,
                   boost::shared_ptr<Reachability> reachability = boost::shared_ptr<Reachability>(),
                   const bool partialview = false,
-                  const bool progress = true) :
-    evaluationStrategy_(KernelCollection::MAX_EVAL),
-    loc_h_(locH), ori_h_(oriH),
-    nChains_(nChains), n_(n),
-    reachability_(reachability), partialview_(partialview),
-    progress_(progress)
-    {
-      if (nChains_ <= 0) nChains_ = 8;
-    }
+                  const bool progress = true);
     
     void load(const std::string& objectFilename,
               const std::string& sceneFilename,
@@ -63,6 +56,9 @@ namespace nuklei {
       viewpoint_ = viewpoint;
       partialview_ = true;
     }
+    
+    void setParallelization(const parallelizer::Type t) { parallel_ = t; }
+    parallelizer::Type getParallelization() const { return parallel_; }
     
     kernel::se3 modelToSceneTransformation() const;
     
@@ -108,6 +104,7 @@ namespace nuklei {
     bool partialview_;
     boost::shared_ptr<ProgressIndicator> pi_;
     bool progress_;
+    parallelizer::Type parallel_;
   };
   
 }
