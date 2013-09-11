@@ -8,6 +8,9 @@
 
 #ifdef NUKLEI_USE_CGAL
 // CGAL jet fitting
+#if CGAL_VERSION_NR >= 1040100000
+#define CGAL_LAPACK_ENABLED
+#endif
 #include <CGAL/Monge_via_jet_fitting.h>
 #include <CGAL/Cartesian.h>
 #endif
