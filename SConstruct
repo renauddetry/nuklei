@@ -359,16 +359,34 @@ def CheckBoost(context, min_version, max_version):
 
 def CheckCGAL_LAPACK(context):
   context.Message( 'Checking for BLAS/LAPACK-enabled CGAL... ' )
-  ret = conf.TryCompile("""
-#include <CGAL/Monge_via_jet_fitting.h>
+  ret = conf.TryLink("""
+    #define CGAL_LAPACK_ENABLED
+    #include <CGAL/Cartesian.h>
+    #include <CGAL/Monge_via_jet_fitting.h>
+    #include <vector>
+    
+    namespace cgal_jet_fitting_types
+    {
+    typedef double                   DFT;
+    typedef CGAL::Cartesian<DFT>     Data_Kernel;
+    typedef Data_Kernel::Point_3     DPoint;
+    typedef CGAL::Monge_via_jet_fitting<Data_Kernel> Monge_via_jet_fitting;
+    typedef Monge_via_jet_fitting::Monge_form     Monge_form;
+    }
 
-#ifndef CGAL_USE_LAPACK
-#error We need LAPACK-enabled CGAL!
-#endif
-  int main()
-  {
-      return 0;
-  }
+    int main()
+    {
+    using namespace cgal_jet_fitting_types;
+    std::vector<DPoint> in_points;
+    size_t d_fitting = 4;
+    size_t d_monge = 4;
+    
+    Monge_form monge_form;
+    Monge_via_jet_fitting monge_fit;
+    monge_form = monge_fit(in_points.begin(), in_points.end(), d_fitting, d_monge);
+    
+    return monge_fit.condition_number();
+    }
     """, '.cpp')
   context.Result( ret )
   return ret

@@ -102,6 +102,9 @@ if conf.env['UseCGAL']:
     # 'CGALcore++', 'CGALPDB', 'mpfr', 'gmpxx', 'gmp'
     conf.env.Append(CPPDEFINES = ['NUKLEI_USE_CGAL'])
     conf.env.Append(LIBS = [ 'CGAL' ])
+    if not conf.CheckCGAL_LAPACK():
+      print 'Your CGAL install does not seem to support LAPACK.'
+      print 'A LAPACK-enabled CGAL install is necessary.'
 
 # GSL
 
