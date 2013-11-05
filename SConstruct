@@ -177,6 +177,11 @@ env['UseOpenCV'] = env['use_opencv'] == 'yes'
 env['UsePCL'] = env['use_pcl'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
 
+if env['CXX'].find('clang++') >= 0:
+  if env['UseOpenMP']:
+    print 'Clang does not support OpenMP yet. Disabling OpenMP support.'
+    env['UseOpenMP'] = False
+
 # this is obsolete, should not be used.
 env['InstallPrefix'] = env['prefix']
 
@@ -443,7 +448,6 @@ elif env['PLATFORM'] == 'posix':
 extra_cxx_args = [];
 if env['CXX'].find('clang++') >= 0:
   extra_cxx_args = [ '-Wno-mismatched-tags', '-Wno-gnu-designator', '-Wno-parentheses', '-ftemplate-depth=256' ]
-
 if env['BuildType'] == 'deploy':
   env.Append(CCFLAGS = [ '-pipe', '-O3', '-Wall', '-Wno-sign-compare', '-Wno-deprecated' ])
   env.Append(CCFLAGS = extra_cxx_args)
