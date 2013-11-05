@@ -442,7 +442,7 @@ elif env['PLATFORM'] == 'posix':
 
 extra_cxx_args = [];
 if env['CXX'].find('clang++') >= 0:
-  extra_cxx_args = [ '-Wno-mismatched-tags', '-Wno-gnu-designator', '-Wno-parentheses' ]
+  extra_cxx_args = [ '-Wno-mismatched-tags', '-Wno-gnu-designator', '-Wno-parentheses', '-ftemplate-depth=256' ]
 
 if env['BuildType'] == 'deploy':
   env.Append(CCFLAGS = [ '-pipe', '-O3', '-Wall', '-Wno-sign-compare', '-Wno-deprecated' ])
