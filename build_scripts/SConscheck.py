@@ -75,15 +75,15 @@ elif conf.env['PLATFORM'] == 'posix':
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
   conf.env.Append(LIBS = [ 'lapack' ])
-  if not conf.CheckLib('cblas', language = 'C++'):
-    if not conf.CheckLib('blas', language = 'C++'):
+  if not conf.CheckLib('blas', language = 'C++'):
+    if not conf.CheckLib('cblas', language = 'C++'):
       print 'A BLAS library is required.'
       print '** For more information, refer to the INSTALL document **'
       Exit(1)
     else:
-      conf.env.Append(LIBS = [ 'blas' ])
+      conf.env.Append(LIBS = [ 'cblas' ])
   else:
-    conf.env.Append(LIBS = [ 'cblas' ])
+    conf.env.Append(LIBS = [ 'blas' ])
 else:
   print 'Unknown platform.'
   Exit(1)
