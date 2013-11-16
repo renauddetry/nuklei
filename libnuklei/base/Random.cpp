@@ -30,7 +30,14 @@ namespace nuklei {
   }
   static inline int nuklei_max_threads()
   {
-    return omp_get_max_threads();
+    // I had issues with omp_get_max_threads(), returning 1 while spawning
+    // more than one thread.
+    // I had this with static executables.
+    // I guess it could be a race condition.
+    // Let's just return a large number instead (who would have more than 1000
+    // procs anyway?)
+    //return omp_get_max_threads();
+    return 1024;
   }
 #else
   static inline int nuklei_thread_num()
