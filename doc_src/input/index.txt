@@ -32,6 +32,10 @@ Nuklei is a C++ library that implements kernel functions and kernel density esti
 @section index_news News
 
 <dl>
+<dt>2013-11-16</dt>
+<dd><a href="http://renaud-detry.net/tmp/nuklei-bin.tgz">Binaries</a> availble for the command-line tool <em>nuklei</em>. The archive comes with an example of how to use Nuklei for pose estimation.</dd>
+<dt>2013-11-16</dt>
+<dd>Nulkei now features a pose-estimation class.</dd>
 <dt>2011-05-11</dt>
 <dd>Documentation is improving rapidly. Take a look at the <a href="modules.html">Module</a> page and at the <a href="examples.html">examples</a>.</dd>
 <dt>2011-04-10</dt>
