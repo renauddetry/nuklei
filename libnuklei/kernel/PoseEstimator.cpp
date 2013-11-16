@@ -15,13 +15,13 @@ namespace nuklei
                                const double oriH,
                                const int nChains,
                                const int n,
-                               boost::shared_ptr<Reachability> reachability,
+                               boost::shared_ptr<CustomIntegrandFactor> cif,
                                const bool partialview,
                                const bool progress) :
   evaluationStrategy_(KernelCollection::MAX_EVAL),
   loc_h_(locH), ori_h_(oriH),
   nChains_(nChains), n_(n),
-  reachability_(reachability), partialview_(partialview),
+  cif_(cif), partialview_(partialview),
   progress_(progress)
   {
     if (nChains_ <= 0) nChains_ = 8;
@@ -103,7 +103,7 @@ namespace nuklei
         w2 += tmp.evaluationAt(*i, evaluationStrategy_);
       }
       
-      t.setWeight(w1/objectModel_.size());
+      t.setWeight(w1/objectModel_.size() * (cif_?cif_->factor(pose):1.));
       //t.setWeight(std::sqrt(w1/objectModel_.size()*w2/objectModel_.size()));
     }
     else
@@ -121,9 +121,9 @@ namespace nuklei
                                               evaluationStrategy_);
         t.setWeight(t.getWeight() + w);
       }
-      t.setWeight(t.getWeight()/std::pow(std::distance(viewIterator, viewIterator.end()), 1.0));
+      t.setWeight(t.getWeight()/std::pow(std::distance(viewIterator, viewIterator.end()), 1.0) * (cif_?cif_->factor(pose):1.));
       
-      if (reachability_ && !reachability_->test(t))
+      if (cif_ && !cif_->test(t))
         t.setWeight(0);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
@@ -290,7 +290,7 @@ namespace nuklei
         
         nextPose = k1->transformationFrom(*k2);
         
-        if (reachability_ && !reachability_->test(nextPose)) continue;
+        if (cif_ && !cif_->test(nextPose)) continue;
         
         if (partialview_)
         {
@@ -318,7 +318,7 @@ namespace nuklei
       {
         if (count == 100) return;
         nextPose = currentPose.sample();
-        if (reachability_ && !reachability_->test(nextPose)) continue;
+        if (cif_ && !cif_->test(nextPose)) continue;
         break;
       }
     }
@@ -338,6 +338,9 @@ namespace nuklei
 #endif
       
     }
+    
+    double factor = (cif_?cif_->factor(nextPose):1.);
+    
     // Go through the points of the model
     for (unsigned pi = 0; pi < indices.size(); ++pi)
     {
@@ -358,6 +361,9 @@ namespace nuklei
         w = (sceneModel_.evaluationAt(*test, KernelCollection::MAX_EVAL) +
              WHITE_NOISE_POWER );
       }
+
+      w *= factor;
+
       weight += w;
       
       // At least consider sqrt(size(model)) points
@@ -495,4 +501,15 @@ namespace nuklei
                       Observation::SERIAL);
   }
   
+  void PoseEstimator::setCustomIntegrandFactor(boost::shared_ptr<CustomIntegrandFactor> cif)
+  {
+    cif_ = cif;
+  }
+  
+  boost::shared_ptr<CustomIntegrandFactor> PoseEstimator::getCustomIntegrandFactor() const
+  {
+    return cif_;
+  }
+  
+
 }

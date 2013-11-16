@@ -21,10 +21,19 @@ namespace nuklei {
   const double MESHTOL = 4;
   const double WHITE_NOISE_POWER = 1e-4;
   
-  struct Reachability
+  /**
+   * @brief Allows to use an external integrand factor, or test reachability
+   *
+   */
+  struct CustomIntegrandFactor
   {
-    virtual ~Reachability() {}
+    virtual ~CustomIntegrandFactor() {}
+    /**
+     * @brief returns true if pose @p k is reachable by the robot */
     virtual bool test(const kernel::se3& k) const = 0;
+    /**
+     * @brief returns the evaluation at @p k of an additional integrand factor */
+    virtual double factor(const kernel::se3& k) const = 0;
   };
   
   struct PoseEstimator
@@ -33,7 +42,7 @@ namespace nuklei {
                   const double oriH = .2,
                   const int nChains = -1,
                   const int n = -1,
-                  boost::shared_ptr<Reachability> reachability = boost::shared_ptr<Reachability>(),
+                  boost::shared_ptr<CustomIntegrandFactor> cif = boost::shared_ptr<CustomIntegrandFactor>(),
                   const bool partialview = false,
                   const bool progress = true);
     
@@ -60,6 +69,12 @@ namespace nuklei {
     void setParallelization(const parallelizer::Type t) { parallel_ = t; }
     parallelizer::Type getParallelization() const { return parallel_; }
     
+    void setCustomIntegrandFactor(boost::shared_ptr<CustomIntegrandFactor> cif);
+    boost::shared_ptr<CustomIntegrandFactor> getCustomIntegrandFactor() const;
+
+    const KernelCollection& getObjectModel() const { return objectModel_; }
+    const KernelCollection& getSceneModel() const { return sceneModel_; }
+
     kernel::se3 modelToSceneTransformation() const;
     
     double findMatchingScore(const kernel::se3& pose) const;
@@ -100,7 +115,7 @@ namespace nuklei {
     double ori_h_;
     int nChains_;
     int n_;
-    boost::shared_ptr<Reachability> reachability_;
+    boost::shared_ptr<CustomIntegrandFactor> cif_;
     bool partialview_;
     boost::shared_ptr<ProgressIndicator> pi_;
     bool progress_;
