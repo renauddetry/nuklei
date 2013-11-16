@@ -153,6 +153,9 @@ opts.AddVariables(
   EnumVariable('branch_in_build_dir', 'This option is for Nuklei developers only. ' + \
                'It tells SCons to use the name of the current git branch in build ' + \
                'directory', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('static', 'This option is for Nuklei developers only. ' + \
+               'It tells SCons to build a static nuklei executable', 'no',
                allowed_values = ('yes', 'no'))
 )
 
@@ -176,6 +179,7 @@ env['UseOpenMP'] = env['use_openmp'] == 'yes'
 env['UseOpenCV'] = env['use_opencv'] == 'yes'
 env['UsePCL'] = env['use_pcl'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
+env['BuildStaticExecutable'] = env['static'] == 'yes'
 
 if env['CXX'].find('clang++') >= 0:
   if env['UseOpenMP']:
@@ -538,8 +542,12 @@ for part in parts:
                   source = join(part, header))
 
 libtarget = os.path.join(env['LibDir'], env['projectName'])
-library = env.SharedLibrary(source = objects,
-                            target = libtarget)
+if env['BuildStaticExecutable']:
+  library = env.StaticLibrary(source = objects,
+                              target = libtarget)
+else:
+  library = env.SharedLibrary(source = objects,
+                              target = libtarget)
 env.Install(dir = '$LibInstallDir', source = library)
 AlwaysBuild(env.Alias('check'))
 AlwaysBuild(env.Alias('examples'))
