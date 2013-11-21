@@ -47,7 +47,7 @@ void convert(const std::vector<std::string>& files,
 
   std::auto_ptr<ObservationWriter> writer;
   Observation::Type writerType = outType;
-  Observation::Type readerType;
+  Observation::Type readerType = Observation::UNKNOWN;
   std::vector< boost::shared_ptr<Observation> > observations;
 
   for (std::vector<std::string>::const_iterator i = files.begin();
