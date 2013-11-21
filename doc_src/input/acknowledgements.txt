@@ -15,7 +15,8 @@ Nuklei relies on the following libraries:
 -# <a href="http://libkdtree.alioth.debian.org/">libkdtree++</a>
 -# <a href="http://tclap.sourceforge.net/">TCLAP</a>
 -# <a href="http://code.google.com/p/ticpp/">ticpp</a>
+-# <a href="http://code.google.com/p/nanoflann/">nanoflann</a>
 
-Packages for 4&mdash;10 are missing in most Linux distributions. To ease deployment, libraries 4 to 10 are bundled with Nuklei.
+Packages for 4&mdash;11 are missing in most Linux distributions. To ease deployment, libraries 4 to 11 are bundled with Nuklei.
 
 */

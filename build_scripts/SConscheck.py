@@ -10,6 +10,7 @@ if conf.env['UseCIMG']:
 conf.env['tclap_include'] = '#/contrib/tclap-1.1.0/include'
 conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
 conf.env['libkdtree_include'] = '#/contrib/libkdtree++/include'
+conf.env['nanoflann_include'] = '#/contrib/nanoflann/include'
 conf.env['libklr_include'] = '#/contrib/libklr-2010_05_07/src'
 
 
@@ -30,6 +31,10 @@ conf.env.Prepend(CPPPATH = [ '$libkdtree_include' ])
 # contrib: libklr
 
 conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
+
+# contrib: nanoflann
+
+conf.env.Prepend(CPPPATH = [ '$nanoflann_include' ])
 
 # contrib: CImg
 
