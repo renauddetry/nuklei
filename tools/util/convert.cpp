@@ -47,13 +47,9 @@ void convert(const std::vector<std::string>& files,
 
   std::auto_ptr<ObservationWriter> writer;
   Observation::Type writerType = outType;
+  Observation::Type readerType;
   std::vector< boost::shared_ptr<Observation> > observations;
-  if (files.size() > 2 && !uniformizeWeights)
-  {
-    std::cout << "Warning: concatenating several files. "
-    "Keep in mind that weights may not be consistently mixed. "
-    "Use --uniformize_weights if appropriate." << std::endl;
-  }
+
   for (std::vector<std::string>::const_iterator i = files.begin();
        i != --files.end(); ++i)
   {
@@ -64,6 +60,7 @@ void convert(const std::vector<std::string>& files,
       reader = ObservationReader::createReader(*i, inType);
 
     reader->addRegionOfInterest(roi);
+    readerType = reader->type();
 
     if (writer.get() == NULL)
     {
@@ -75,11 +72,11 @@ void convert(const std::vector<std::string>& files,
     }
     else
     {
-      if (writerType != Observation::SERIAL &&
-          (writer->type() != reader->type()))
-        NUKLEI_WARN("Writer of type `" << nameFromType<Observation>(writer->type()) <<
-                  "' may not be able to write observations of type `" <<
-                  nameFromType<Observation>(reader->type()) << "'.");
+//      if (writerType != Observation::SERIAL &&
+//          (writer->type() != reader->type()))
+//        NUKLEI_WARN("Writer of type `" << nameFromType<Observation>(writer->type()) <<
+//                  "' may not be able to write observations of type `" <<
+//                  nameFromType<Observation>(reader->type()) << "'.");
     }
     
     std::auto_ptr<Observation> o;
@@ -109,6 +106,15 @@ void convert(const std::vector<std::string>& files,
         writer->writeObservation(*o);
     }
   }
+  
+  if (files.size() > 2 && !uniformizeWeights &&
+      (readerType == Observation::NUKLEI || readerType == Observation::SERIAL))
+  {
+    std::cout << "Warning: concatenating several files. "
+    "Keep in mind that weights may not be consistently mixed. "
+    "Use --uniformize_weights if appropriate." << std::endl;
+  }
+  
   if (storeInKc)
   {
     if (removePlane > 0)
