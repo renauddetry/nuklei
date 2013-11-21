@@ -47,7 +47,7 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
   const int PRECISION = std::numeric_limits<double>::digits10 + 2;
     
   defConst(bool, KDTREE_DENSITY_EVAL, true);
-  defConst(bool, KDTREE_NANOFLANN, false);
+  defConst(bool, KDTREE_NANOFLANN, true);
   
   defConst(unsigned int, KDE_KTH_NEAREST_NEIGHBOR, 8);
   
