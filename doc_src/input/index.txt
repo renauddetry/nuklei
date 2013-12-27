@@ -9,7 +9,7 @@ namespace nuklei
 
 <img style="text-align: center;" alt="Logo" src="doc_src/nuklei_logo.jpg">
 
-<div style="padding: 4ex; max-width: 800px; margin-left: auto; margin-right: auto;">
+<!--<div style="padding: 4ex; max-width: 800px; margin-left: auto; margin-right: auto;">
 <span style="color: red;  font-size: 120%;">In May, Sourceforge has migrated the Nuklei git repository to a new URL. The old URL is still accessible, but frozen to its state of May 2013. In order to continue pulling updates to your local copy, <tt>cd</tt> to your nuklei directory and type</span>
 @verbatim
 git remote set-url origin git://git.code.sf.net/p/nuklei/code
@@ -19,7 +19,7 @@ You can also delete your copy of Nuklei and clone it again with
 git clone git://git.code.sf.net/p/nuklei/code nuklei
 @endverbatim
 Apologies for the inconvenience.
-</div>
+</div>-->
 
 @section index_overview Overview
 
@@ -32,10 +32,22 @@ Nuklei is a C++ library that implements kernel functions and kernel density esti
 @section index_news News
 
 <dl>
+<dt>2013-11-22</dt>
+<dd>Lots of speed improvements over the past months. We removed libkdtree++ in favor of nanoflann, yielding x2 speedups on pointclouds of 2000-4000 points. Pose estimation is fully parallel thanks to OpenMP. Parallelization is also accessible via Posix Threads or fork().</dd>
 <dt>2013-11-16</dt>
-<dd><a href="http://renaud-detry.net/tmp/nuklei-bin.tgz">Binaries</a> availble for the command-line tool <em>nuklei</em>. The archive comes with an example of how to use Nuklei for pose estimation.</dd>
-<dt>2013-11-16</dt>
-<dd>Nulkei now features a pose-estimation class.</dd>
+<dd>The command-line tool <em>nuklei</em> is now available in <a href="http://renaud-detry.net/tmp/nuklei-bin.tgz">binary format</a> (static Linux executable). The archive comes with an example of how to use Nuklei for pose estimation.</dd>
+<dt>2013-11-15</dt>
+<dd>Added a class for pose estimation (see nuklei::PoseEstimator)</dd>
+<dt>2013-07-01</dt>
+<dd>Sourceforge has migrated the Nuklei git repository to a new URL. The old URL is still accessible, but frozen to its state of May 2013. In order to continue pulling updates to your local copy, <tt>cd</tt> to your nuklei directory and type
+@verbatim
+git remote set-url origin git://git.code.sf.net/p/nuklei/code
+@endverbatim
+You can also delete your copy of Nuklei and clone it again with
+@verbatim
+git clone git://git.code.sf.net/p/nuklei/code nuklei
+@endverbatim
+</dd>
 <dt>2011-05-11</dt>
 <dd>Documentation is improving rapidly. Take a look at the <a href="modules.html">Module</a> page and at the <a href="examples.html">examples</a>.</dd>
 <dt>2011-04-10</dt>
