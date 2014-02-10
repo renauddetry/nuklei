@@ -113,13 +113,14 @@ if conf.env['UseCGAL']:
 
 # GSL
 
+conf.env.Append(LIBS = [ 'gslcblas' ])
 if not conf.CheckCXXHeader('gsl/gsl_version.h') or \
    not conf.CheckLib('gsl', language = 'C++'):
   print 'Please check your GSL installation.'
   print '** For more information, refer to the INSTALL document **'
   Exit(1)
 else:
-  conf.env.Append(LIBS = [ 'gsl', 'gslcblas' ])
+  conf.env.Append(LIBS = [ 'gsl' ])
   # GSL requires a BLAS library for vector and matrix operations.  The
   # default CBLAS library supplied with GSL (gslcblas) can be replaced
   # by the tuned ATLAS library for better performance. This is what
