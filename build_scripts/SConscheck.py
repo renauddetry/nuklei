@@ -119,7 +119,7 @@ if not conf.CheckCXXHeader('gsl/gsl_version.h') or \
   print '** For more information, refer to the INSTALL document **'
   Exit(1)
 else:
-  conf.env.Append(LIBS = [ 'gsl' ])
+  conf.env.Append(LIBS = [ 'gsl', 'gslcblas' ])
   # GSL requires a BLAS library for vector and matrix operations.  The
   # default CBLAS library supplied with GSL (gslcblas) can be replaced
   # by the tuned ATLAS library for better performance. This is what
