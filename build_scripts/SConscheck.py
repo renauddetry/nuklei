@@ -81,14 +81,14 @@ elif conf.env['PLATFORM'] == 'posix':
     Exit(1)
   conf.env.Append(LIBS = [ 'lapack' ])
   hasABlas = False
+  if conf.CheckLib('gslcblas', language = 'C++'):
+    conf.env.Append(LIBS = [ 'gslcblas' ])
+    hasABlas = True
   if conf.CheckLib('cblas', language = 'C++'):
     conf.env.Append(LIBS = [ 'cblas' ])
     hasABlas = True
   if conf.CheckLib('blas', language = 'C++'):
     conf.env.Append(LIBS = [ 'blas' ])
-    hasABlas = True
-  if conf.CheckLib('gslcblas', language = 'C++'):
-    conf.env.Append(LIBS = [ 'gslcblas' ])
     hasABlas = True
   if not hasABlas:
     print 'A BLAS library is required.'
