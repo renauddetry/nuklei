@@ -113,7 +113,7 @@ if conf.env['UseCGAL']:
 
 # GSL
 
-conf.env.Append(LIBS = [ 'gslcblas' ])
+#conf.env.Append(LIBS = [ 'gslcblas' ])
 if not conf.CheckCXXHeader('gsl/gsl_version.h') or \
    not conf.CheckLib('gsl', language = 'C++'):
   print 'Please check your GSL installation.'
