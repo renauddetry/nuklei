@@ -153,6 +153,9 @@ opts.AddVariables(
   EnumVariable('branch_in_build_dir', 'This option is for Nuklei developers only. ' + \
                'It tells SCons to use the name of the current git branch in build ' + \
                'directory', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('static', 'This option is for Nuklei developers only. ' + \
+               'It tells SCons to build a static nuklei executable', 'no',
                allowed_values = ('yes', 'no'))
 )
 
@@ -176,6 +179,12 @@ env['UseOpenMP'] = env['use_openmp'] == 'yes'
 env['UseOpenCV'] = env['use_opencv'] == 'yes'
 env['UsePCL'] = env['use_pcl'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
+env['BuildStaticExecutable'] = env['static'] == 'yes'
+
+if env['CXX'].find('clang++') >= 0:
+  if env['UseOpenMP']:
+    print 'Clang does not support OpenMP yet. Disabling OpenMP support.'
+    env['UseOpenMP'] = False
 
 # this is obsolete, should not be used.
 env['InstallPrefix'] = env['prefix']
@@ -359,16 +368,34 @@ def CheckBoost(context, min_version, max_version):
 
 def CheckCGAL_LAPACK(context):
   context.Message( 'Checking for BLAS/LAPACK-enabled CGAL... ' )
-  ret = conf.TryCompile("""
-#include <CGAL/Monge_via_jet_fitting.h>
+  ret = conf.TryLink("""
+    #define CGAL_LAPACK_ENABLED
+    #include <CGAL/Cartesian.h>
+    #include <CGAL/Monge_via_jet_fitting.h>
+    #include <vector>
+    
+    namespace cgal_jet_fitting_types
+    {
+    typedef double                   DFT;
+    typedef CGAL::Cartesian<DFT>     Data_Kernel;
+    typedef Data_Kernel::Point_3     DPoint;
+    typedef CGAL::Monge_via_jet_fitting<Data_Kernel> Monge_via_jet_fitting;
+    typedef Monge_via_jet_fitting::Monge_form     Monge_form;
+    }
 
-#ifndef CGAL_USE_LAPACK
-#error We need LAPACK-enabled CGAL!
-#endif
-  int main()
-  {
-      return 0;
-  }
+    int main()
+    {
+    using namespace cgal_jet_fitting_types;
+    std::vector<DPoint> in_points;
+    size_t d_fitting = 4;
+    size_t d_monge = 4;
+    
+    Monge_form monge_form;
+    Monge_via_jet_fitting monge_fit;
+    monge_form = monge_fit(in_points.begin(), in_points.end(), d_fitting, d_monge);
+    
+    return monge_fit.condition_number();
+    }
     """, '.cpp')
   context.Result( ret )
   return ret
@@ -424,8 +451,7 @@ elif env['PLATFORM'] == 'posix':
 
 extra_cxx_args = [];
 if env['CXX'].find('clang++') >= 0:
-  extra_cxx_args = [ '-Wno-mismatched-tags', '-Wno-gnu-designator', '-Wno-parentheses' ]
-
+  extra_cxx_args = [ '-Wno-mismatched-tags', '-Wno-gnu-designator', '-Wno-parentheses', '-ftemplate-depth=256' ]
 if env['BuildType'] == 'deploy':
   env.Append(CCFLAGS = [ '-pipe', '-O3', '-Wall', '-Wno-sign-compare', '-Wno-deprecated' ])
   env.Append(CCFLAGS = extra_cxx_args)
@@ -516,8 +542,12 @@ for part in parts:
                   source = join(part, header))
 
 libtarget = os.path.join(env['LibDir'], env['projectName'])
-library = env.SharedLibrary(source = objects,
-                            target = libtarget)
+if env['BuildStaticExecutable']:
+  library = env.StaticLibrary(source = objects,
+                              target = libtarget)
+else:
+  library = env.SharedLibrary(source = objects,
+                              target = libtarget)
 env.Install(dir = '$LibInstallDir', source = library)
 AlwaysBuild(env.Alias('check'))
 AlwaysBuild(env.Alias('examples'))

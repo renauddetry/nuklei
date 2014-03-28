@@ -77,6 +77,7 @@ namespace nuklei
       Plane_3 plane(randomPoints.at(0),
                     randomPoints.at(1),
                     randomPoints.at(2));
+      if (plane.is_degenerate()) continue;
       
       int inliners = 0;
       for (const_iterator i = begin(); i != end(); ++i)

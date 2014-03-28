@@ -55,6 +55,15 @@ namespace nuklei {
     static unsigned long int uniformInt(unsigned long int n);
     
     /**
+     * @brief This function returns a random variate from the triangle
+     * distribution of zero mean and base @p b.
+     *
+     * Use the transformation @f$ z = \mu + x @f$ on the numbers returned by
+     * this method to obtain a triangle distribution with mean @f$ \mu @f$.
+     */
+    static double triangle(double b);
+
+    /**
      * @brief This function returns a Gaussian random variate, with mean zero and
      * standard deviation @p sigma.
      *
@@ -62,7 +71,7 @@ namespace nuklei {
      * this method to obtain a Gaussian distribution with mean @f$ \mu @f$.
      */
     static double gaussian(double sigma);
-    
+
     /**
      * @brief This function returns a random variate from the beta distribution.
      */

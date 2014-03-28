@@ -11,6 +11,7 @@ conf.env['tclap_include'] = '#/contrib/tclap-1.1.0/include'
 conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
 conf.env['trimesh_include'] = '#/contrib/trimesh2-2.12/include'
 conf.env['libkdtree_include'] = '#/contrib/libkdtree++/include'
+conf.env['nanoflann_include'] = '#/contrib/nanoflann/include'
 conf.env['libklr_include'] = '#/contrib/libklr-2010_05_07/src'
 
 
@@ -31,6 +32,10 @@ conf.env.Prepend(CPPPATH = [ '$libkdtree_include' ])
 # contrib: libklr
 
 conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
+
+# contrib: nanoflann
+
+conf.env.Prepend(CPPPATH = [ '$nanoflann_include' ])
 
 # contrib: CImg
 
@@ -76,15 +81,20 @@ elif conf.env['PLATFORM'] == 'posix':
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
   conf.env.Append(LIBS = [ 'lapack' ])
-  if not conf.CheckLib('cblas', language = 'C++'):
-    if not conf.CheckLib('blas', language = 'C++'):
-      print 'A BLAS library is required.'
-      print '** For more information, refer to the INSTALL document **'
-      Exit(1)
-    else:
-      conf.env.Append(LIBS = [ 'blas' ])
-  else:
+  hasABlas = False
+  if conf.CheckLib('gslcblas', language = 'C++'):
+    conf.env.Append(LIBS = [ 'gslcblas' ])
+    hasABlas = True
+  if conf.CheckLib('cblas', language = 'C++'):
     conf.env.Append(LIBS = [ 'cblas' ])
+    hasABlas = True
+  if conf.CheckLib('blas', language = 'C++'):
+    conf.env.Append(LIBS = [ 'blas' ])
+    hasABlas = True
+  if not hasABlas:
+    print 'A BLAS library is required.'
+    print '** For more information, refer to the INSTALL document **'
+    Exit(1)
 else:
   print 'Unknown platform.'
   Exit(1)
@@ -103,6 +113,7 @@ if conf.env['UseCGAL']:
     # Note: CGAL may need the following:
     # 'CGALcore++', 'CGALPDB', 'mpfr', 'gmpxx', 'gmp'
     conf.env.Append(CPPDEFINES = ['NUKLEI_USE_CGAL'])
+
     conf.env.Append(LIBS = [ 'CGAL', 'CGAL_Core' ])
 
     precisionFound = conf.CheckLib('gmpxx', language = 'C++') and \
@@ -135,6 +146,7 @@ if conf.env['UseCGAL']:
 
 # GSL
 
+#conf.env.Append(LIBS = [ 'gslcblas' ])
 if not conf.CheckCXXHeader('gsl/gsl_version.h') or \
    not conf.CheckLib('gsl', language = 'C++'):
   print 'Please check your GSL installation.'

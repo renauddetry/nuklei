@@ -754,6 +754,8 @@ namespace nuklei {
       NUKLEI_FAST_DEBUG_ASSERT(std::fabs(1-q.Length()) < 1e-6);
       Quaternion sample = (mean * Quaternion(0, 0, 0, 1).Conjugate()) * q;
       sample.Normalize();
+      // Technically, in SO3, sample is equivalent to -sample.
+      // We randomize the sign of sample to make this equivalence explicit.
       if (Random::uniformInt(2))
         return sample;
       else
@@ -795,6 +797,8 @@ namespace nuklei {
                      groupS::s2p, h_scaleS::intrinsic)
     {
       Vector3 sample = s(mean, h, groupS::s2(), h_scaleS::intrinsic());
+      // Technically, in s2p, sample is equivalent to -sample.
+      // We randomize the sign of sample to make this equivalence explicit.
       if (Random::uniformInt(2))
         return sample;
       else

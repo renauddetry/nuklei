@@ -10,6 +10,8 @@
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
 #include <nuklei/Types.h>
+#include <nuklei/ProgressIndicator.h>
+#include <nuklei/parallelizer_decl.h>
 
 #define NUKLEI_POSE_ESTIMATOR_POLYMORPHIC
 
@@ -19,10 +21,19 @@ namespace nuklei {
   const double MESHTOL = 4;
   const double WHITE_NOISE_POWER = 1e-4;
   
-  struct Reachability
+  /**
+   * @brief Allows to use an external integrand factor, or test reachability
+   *
+   */
+  struct CustomIntegrandFactor
   {
-    virtual ~Reachability() {}
+    virtual ~CustomIntegrandFactor() {}
+    /**
+     * @brief returns true if pose @p k is reachable by the robot */
     virtual bool test(const kernel::se3& k) const = 0;
+    /**
+     * @brief returns the evaluation at @p k of an additional integrand factor */
+    virtual double factor(const kernel::se3& k) const = 0;
   };
   
   struct PoseEstimator
@@ -31,15 +42,9 @@ namespace nuklei {
                   const double oriH = .2,
                   const int nChains = -1,
                   const int n = -1,
-                  boost::shared_ptr<Reachability> reachability = boost::shared_ptr<Reachability>(),
-                  const bool& partialview = false) :
-    reachability_(reachability), partialview_(partialview),
-    evaluationStrategy_(KernelCollection::MAX_EVAL),
-    loc_h_(locH), ori_h_(oriH),
-    nChains_(nChains), n_(n)
-    {
-      if (nChains_ <= 0) nChains_ = 8;
-    }
+                  boost::shared_ptr<CustomIntegrandFactor> cif = boost::shared_ptr<CustomIntegrandFactor>(),
+                  const bool partialview = false,
+                  const bool progress = true);
     
     void load(const std::string& objectFilename,
               const std::string& sceneFilename,
@@ -61,6 +66,15 @@ namespace nuklei {
       partialview_ = true;
     }
     
+    void setParallelization(const parallelizer::Type t) { parallel_ = t; }
+    parallelizer::Type getParallelization() const { return parallel_; }
+    
+    void setCustomIntegrandFactor(boost::shared_ptr<CustomIntegrandFactor> cif);
+    boost::shared_ptr<CustomIntegrandFactor> getCustomIntegrandFactor() const;
+
+    const KernelCollection& getObjectModel() const { return objectModel_; }
+    const KernelCollection& getSceneModel() const { return sceneModel_; }
+
     kernel::se3 modelToSceneTransformation() const;
     
     double findMatchingScore(const kernel::se3& pose) const;
@@ -96,13 +110,16 @@ namespace nuklei {
     double objectSize_;
     KernelCollection sceneModel_;
     Vector3 viewpoint_;
-    boost::shared_ptr<Reachability> reachability_;
-    bool partialview_;
     KernelCollection::EvaluationStrategy evaluationStrategy_;
     double loc_h_;
     double ori_h_;
     int nChains_;
     int n_;
+    boost::shared_ptr<CustomIntegrandFactor> cif_;
+    bool partialview_;
+    boost::shared_ptr<ProgressIndicator> pi_;
+    bool progress_;
+    parallelizer::Type parallel_;
   };
   
 }

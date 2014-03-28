@@ -96,7 +96,7 @@ int pe(int argc, char ** argv)
                      oriHArg.getValue(),
                      nChainsArg.getValue(),
                      nArg.getValue(),
-                     boost::shared_ptr<Reachability>(),
+                     boost::shared_ptr<CustomIntegrandFactor>(),
                      partialviewArg.getValue());
     
     pe.load(objectFileArg.getValue(),

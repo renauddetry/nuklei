@@ -30,7 +30,12 @@ sources = [ 'nuklei.cpp', env.Glob('util/*.cpp') ]
 
 target_name = 'nuklei'
 target  = os.path.join(env['BinDir'], target_name)
-product = env.Program(source = sources, target = target)
+if env['BuildStaticExecutable']:
+  env.Append(LIBPATH = [ "/usr/lib/atlas-base/atlas" ])
+  env.Append(LINKFLAGS= [ "-static" ])
+  product = env.Program(source = sources, target = target)
+else:
+  product = env.Program(source = sources, target = target)
 env.Install(dir = '$BinInstallDir', source = product)
 env.Alias(target_name, [ target ])
 

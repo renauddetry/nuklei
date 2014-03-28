@@ -40,6 +40,9 @@ namespace nuklei {
       LOG, DEBUG, UNKNOWN } Type;
     static const Type defaultType = LOG;
     static const std::string TypeNames[];
+    
+    //This one should be moved elsewhere sometime.
+    static boost::mutex mutex_;
   private:
     static std::string msgColor;
     static std::string errorColor;
@@ -47,7 +50,6 @@ namespace nuklei {
     
     static std::ostream *out;
     static std::ostream *outInstance;
-    static boost::mutex mutex_;
   };
   
 }

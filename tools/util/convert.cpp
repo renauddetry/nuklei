@@ -34,6 +34,7 @@ void convert(const std::vector<std::string>& files,
              const double minDist = 0,
              const int removePlane = 0,
              bool makeR3xS2P = false,
+             bool removeNormals = false,
              const std::string &filterRGB = "",
              const std::string &setRGB = "",
              const Color::Type colorToLoc = Color::UNKNOWN)
@@ -41,18 +42,14 @@ void convert(const std::vector<std::string>& files,
   bool storeInKc = removePlane > 0 || nObs >= 0 || minDist > 0 || minDist == -1 ||
     normalizePose || !normalizingTransfoFile.empty() ||
     normalizeScale || !normalizingScaleFile.empty() ||
-    makeR3xS2P ||
+    makeR3xS2P || removeNormals ||
     !filterRGB.empty() || !setRGB.empty() || colorToLoc != Color::UNKNOWN;
 
   std::auto_ptr<ObservationWriter> writer;
   Observation::Type writerType = outType;
+  Observation::Type readerType = Observation::UNKNOWN;
   std::vector< boost::shared_ptr<Observation> > observations;
-  if (files.size() > 2 && !uniformizeWeights)
-  {
-    std::cout << "Warning: concatenating several files. "
-    "Keep in mind that weights may not be consistently mixed. "
-    "Use --uniformize_weights if appropriate." << std::endl;
-  }
+
   for (std::vector<std::string>::const_iterator i = files.begin();
        i != --files.end(); ++i)
   {
@@ -63,6 +60,7 @@ void convert(const std::vector<std::string>& files,
       reader = ObservationReader::createReader(*i, inType);
 
     reader->addRegionOfInterest(roi);
+    readerType = reader->type();
 
     if (writer.get() == NULL)
     {
@@ -74,11 +72,11 @@ void convert(const std::vector<std::string>& files,
     }
     else
     {
-      if (writerType != Observation::SERIAL &&
-          (writer->type() != reader->type()))
-        NUKLEI_WARN("Writer of type `" << nameFromType<Observation>(writer->type()) <<
-                  "' may not be able to write observations of type `" <<
-                  nameFromType<Observation>(reader->type()) << "'.");
+//      if (writerType != Observation::SERIAL &&
+//          (writer->type() != reader->type()))
+//        NUKLEI_WARN("Writer of type `" << nameFromType<Observation>(writer->type()) <<
+//                  "' may not be able to write observations of type `" <<
+//                  nameFromType<Observation>(reader->type()) << "'.");
     }
     
     std::auto_ptr<Observation> o;
@@ -108,6 +106,15 @@ void convert(const std::vector<std::string>& files,
         writer->writeObservation(*o);
     }
   }
+  
+  if (files.size() > 2 && !uniformizeWeights &&
+      (readerType == Observation::NUKLEI || readerType == Observation::SERIAL))
+  {
+    std::cout << "Warning: concatenating several files. "
+    "Keep in mind that weights may not be consistently mixed. "
+    "Use --uniformize_weights if appropriate." << std::endl;
+  }
+  
   if (storeInKc)
   {
     if (removePlane > 0)
@@ -160,7 +167,30 @@ void convert(const std::vector<std::string>& files,
         }
       }
     }
-  
+
+    if (removeNormals)
+    {
+      KernelCollection kc1;
+      for (std::vector< boost::shared_ptr<Observation> >::const_iterator
+           i = observations.begin();
+           i != observations.end(); ++i)
+      {
+        kernel::r3 k;
+        k.loc_ = (*i)->getKernel()->getLoc();
+        k.setWeight((*i)->getKernel()->getWeight());
+        if ((*i)->getKernel()->hasDescriptor()) k.setDescriptor((*i)->getKernel()->getDescriptor());
+        kc1.add(k);
+      }
+      
+      observations.clear();
+      
+      for (KernelCollection::const_iterator i = as_const(kc1).begin();
+           i != as_const(kc1).end(); ++i)
+      {
+        observations.push_back(boost::shared_ptr<Observation>(new SerializedKernelObservation(*i)));
+      }
+    }
+    
     if (makeR3xS2P)
     {
       NUKLEI_ASSERT(setRGB.empty());
@@ -181,41 +211,15 @@ void convert(const std::vector<std::string>& files,
            i != observations.end(); ++i)
         kc1.add(*(*i)->getKernel());
       
-      kc1.buildNeighborSearchTree();
+      kc1.computeSurfaceNormals();
       
       observations.clear();
       
-      int skipped = 0;
       for (KernelCollection::const_iterator i = as_const(kc1).begin();
            i != as_const(kc1).end(); ++i)
       {
-        kernel::r3xs2p k;
-        k.loc_ = i->getLoc();
-        boost::tuple<Matrix3, Vector3, coord_t> dp = kc1.localLocationDifferential(k.loc_);
-        if (dp.get<2>() == 0)
-        {
-          skipped++;
-          continue;
-        }
-        k.dir_ = dp.get<0>().GetColumn(2);
-        k.setWeight(i->getWeight());
-        if (i->hasDescriptor()) k.setDescriptor(i->getDescriptor());
-        RGBColor c (1,0,0);
-        if (std::fabs(dp.get<1>()[0]-dp.get<1>()[1]) / std::fabs(dp.get<1>()[1]-dp.get<1>()[2]) < 2)
-        {
-          if (i->hasDescriptor())
-            if (dynamic_cast<VisualDescriptor*>(&k.getDescriptor()) != NULL)
-              dynamic_cast<VisualDescriptor&>(k.getDescriptor()).setColor(c);
-        }
-        else
-        {
-          k.dir_ = dp.get<0>().GetColumn(0);
-        }
-        observations.push_back(boost::shared_ptr<Observation>(new SerializedKernelObservation(k)));
+        observations.push_back(boost::shared_ptr<Observation>(new SerializedKernelObservation(*i)));
       }
-      if (skipped > 0)
-        NUKLEI_WARN("Skipped " << skipped << " observations for which "
-                  "CGAL couldn't compute local diff.");
     }
     
     if (!setRGB.empty())
@@ -574,7 +578,15 @@ int convert(int argc, char ** argv)
 
   TCLAP::SwitchArg makeR3xs2pArg
     ("", "make_r3xs2p",
-     "Make R^3 x S^2_+, using local location differentials.", cmd);
+     "Compute a surface normal at each point, using local location differentials.", cmd);
+
+  TCLAP::SwitchArg computeNormalsArg
+    ("", "compute_normals",
+     "Compute a surface normal at each point, using local location differentials.", cmd);
+
+  TCLAP::SwitchArg removeNormalsArg
+    ("", "remove_normals",
+     "Remove surface normals.", cmd);
 
   TCLAP::ValueArg<std::string> filterRGBArg
     ("", "filter_rgb",
@@ -715,7 +727,8 @@ int convert(int argc, char ** argv)
           roi,
           nObsArg.getValue(), minDistArg.getValue(),
           removePlaneArg.getValue(),
-          makeR3xs2pArg.getValue(),
+          makeR3xs2pArg.getValue() || computeNormalsArg.getValue(),
+          removeNormalsArg.getValue(),
           filterRGBArg.getValue(),
           setRGBColorArg.getValue(),
           typeFromName<Color>(colorToLocArg.getValue()));

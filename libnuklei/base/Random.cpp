@@ -30,7 +30,14 @@ namespace nuklei {
   }
   static inline int nuklei_max_threads()
   {
-    return omp_get_max_threads();
+    // I had issues with omp_get_max_threads(), returning 1 while spawning
+    // more than one thread.
+    // I had this with static executables.
+    // I guess it could be a race condition.
+    // Let's just return a large number instead (who would have more than 1000
+    // procs anyway?)
+    //return omp_get_max_threads();
+    return 1024;
   }
 #else
   static inline int nuklei_thread_num()
@@ -178,6 +185,26 @@ namespace nuklei {
 #else
     r = gsl_rng_uniform_int(gRandGens->at(nuklei_thread_num()), n);
 #endif
+    return r;
+  }
+  
+  double Random::triangle(double b)
+  {
+    double r;
+#if defined(NUKLEI_RANDOM_SYNC_OMP)
+#  pragma omp critical(nuklei_randomRng)
+#elif defined(NUKLEI_RANDOM_SYNC_MUTEX)
+    boost::unique_lock<boost::mutex> lock(*mutexes->at(nuklei_thread_num()));
+#elif defined(NUKLEI_RANDOM_SYNC_NONE)
+#else
+#  error Undefined random sync method
+#endif
+    {
+      boost::triangle_distribution<> dist(-b/2, 0, b/2);
+      boost::variate_generator<boost::mt19937&, boost::triangle_distribution<> >
+      die(bRandGens->at(nuklei_thread_num()), dist);
+      r = die();
+    }
     return r;
   }
   

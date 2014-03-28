@@ -42,6 +42,7 @@ namespace nuklei {
   extern const int PRECISION;
 
   extern const bool KDTREE_DENSITY_EVAL;
+  extern const bool KDTREE_NANOFLANN;
 
   extern const unsigned int KDE_KTH_NEAREST_NEIGHBOR;
 
