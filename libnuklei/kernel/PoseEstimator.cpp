@@ -473,27 +473,25 @@ namespace nuklei
                                    const kernel::se3& t) const
   {
     KernelCollection objectModel = objectModel_;
-    objectModel.transformWith(t);
-    
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
-      KernelCollection coloredOE;
-      for (KernelCollection::const_iterator i = objectModel.begin();
-           i != objectModel.end(); ++i)
+      objectModel = KernelCollection();
+      kernel::se3 tt = t;
+      for (KernelCollection::const_iterator i = objectModel_.begin();
+           i != objectModel_.end(); ++i)
       {
-        coloredOE.add(*i);
-        if (objectModel.isVisibleFrom(i->getLoc(),
-                                      viewpoint_,
-                                      MESHTOL))
+        objectModel.add(*i);
+        if (objectModel_.isVisibleFrom(i->getLoc(),
+                                       viewpointInFrame(tt),
+                                       MESHTOL))
         {
           RGBColor c(0, 0, 1);
           ColorDescriptor d;
           d.setColor(c);
-          coloredOE.back().setDescriptor(d);
+          objectModel.back().setDescriptor(d);
         }
       }
-      objectModel = coloredOE;
 #endif
     }
     writeObservations(filename,
