@@ -494,6 +494,7 @@ namespace nuklei
       }
 #endif
     }
+    objectModel.transformWith(t);
     writeObservations(filename,
                       objectModel,
                       Observation::SERIAL);
