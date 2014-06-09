@@ -22,7 +22,7 @@ namespace nuklei
   loc_h_(locH), ori_h_(oriH),
   nChains_(nChains), n_(n),
   cif_(cif), partialview_(partialview),
-  progress_(progress)
+  progress_(progress), meshTol_(4)
   {
     if (nChains_ <= 0) nChains_ = 8;
     parallel_ = typeFromName<parallelizer>(PARALLELIZATION);
@@ -113,7 +113,7 @@ namespace nuklei
       // matching score from that.
       
       KernelCollection::const_partialview_iterator viewIterator =
-      objectModel_.partialViewBegin(viewpointInFrame(t), MESHTOL);
+      objectModel_.partialViewBegin(viewpointInFrame(t), meshTol_);
       for (KernelCollection::const_partialview_iterator i = viewIterator;
            i != i.end(); ++i)
       {
@@ -163,6 +163,7 @@ namespace nuklei
   {
     objectModel_ = objectModel;
     sceneModel_ = sceneModel;
+    viewpoint_ = viewpoint;
     
     if (objectModel_.size() == 0 || sceneModel_.size() == 0)
       NUKLEI_THROW("Empty input cloud.");
@@ -298,7 +299,7 @@ namespace nuklei
           bool visible =
           objectModel_.isVisibleFrom(objectModel_.at(indices.front()).getLoc(),
                                      viewpointInFrame(nextPose),
-                                     MESHTOL);
+                                     meshTol_);
           if (!visible) continue;
 #else
           NUKLEI_THROW("Requires the partial view version of Nuklei.");
@@ -332,7 +333,7 @@ namespace nuklei
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
       // Fixme: we should take at most n of these:
       indices = objectModel_.partialView(viewpointInFrame(nextPose),
-                                         MESHTOL);
+                                         meshTol_);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -459,7 +460,7 @@ namespace nuklei
     return bestPose;
   }
   
-  Vector3 PoseEstimator::viewpointInFrame(kernel::se3& frame) const
+  Vector3 PoseEstimator::viewpointInFrame(const kernel::se3& frame) const
   {
     kernel::se3 origin;
     kernel::se3 invt = origin.transformationFrom(frame);
@@ -484,7 +485,7 @@ namespace nuklei
         objectModel.add(*i);
         if (objectModel_.isVisibleFrom(i->getLoc(),
                                        viewpointInFrame(tt),
-                                       MESHTOL))
+                                       meshTol_))
         {
           RGBColor c(0, 0, 1);
           ColorDescriptor d;

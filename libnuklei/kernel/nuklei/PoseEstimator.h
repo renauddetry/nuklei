@@ -18,7 +18,6 @@
 namespace nuklei {
   
   const bool WEIGHTED_SUM_EVIDENCE_EVAL = false;
-  const double MESHTOL = 4;
   const double WHITE_NOISE_POWER = 1e-4;
   
   /**
@@ -66,6 +65,8 @@ namespace nuklei {
       partialview_ = true;
     }
     
+    void setMeshToVisibilityTol(const double meshTol) { meshTol_ = meshTol; }
+    
     void setParallelization(const parallelizer::Type t) { parallel_ = t; }
     parallelizer::Type getParallelization() const { return parallel_; }
     
@@ -84,7 +85,7 @@ namespace nuklei {
     
   private:
     
-    Vector3 viewpointInFrame(kernel::se3& frame) const;
+    Vector3 viewpointInFrame(const kernel::se3& frame) const;
     
     // Temperature function (cooling factor)
     static double Ti(const unsigned i, const unsigned F);
@@ -120,6 +121,7 @@ namespace nuklei {
     boost::shared_ptr<ProgressIndicator> pi_;
     bool progress_;
     parallelizer::Type parallel_;
+    double meshTol_;
   };
   
 }
