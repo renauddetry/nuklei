@@ -18,7 +18,6 @@
 namespace nuklei {
   
   const bool WEIGHTED_SUM_EVIDENCE_EVAL = false;
-  const double MESHTOL = 4;
   const double WHITE_NOISE_POWER = 1e-4;
   
   /**
@@ -65,6 +64,8 @@ namespace nuklei {
       viewpoint_ = viewpoint;
       partialview_ = true;
     }
+    
+    void setMeshToVisibilityTol(const double meshTol) { meshTol_ = meshTol; }
     
     void setParallelization(const parallelizer::Type t) { parallel_ = t; }
     parallelizer::Type getParallelization() const { return parallel_; }
