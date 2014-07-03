@@ -33,6 +33,7 @@ void convert(const std::vector<std::string>& files,
              const int nObs = -1,
              const double minDist = 0,
              const int removePlane = 0,
+             const double inlierThreshold = 8,
              bool makeR3xS2P = false,
              bool removeNormals = false,
              const std::string &filterRGB = "",
@@ -119,8 +120,6 @@ void convert(const std::vector<std::string>& files,
   {
     if (removePlane > 0)
     {
-      const coord_t inlinerThreshold = 8;
-      
       KernelCollection kc;
       for (std::vector< boost::shared_ptr<Observation> >::const_iterator
            i = observations.begin();
@@ -130,7 +129,7 @@ void convert(const std::vector<std::string>& files,
         r3k.loc_ = (*i)->getKernel()->getLoc();
         kc.add(r3k);
       }
-      kernel::se3 k = kc.ransacPlaneFit(inlinerThreshold, removePlane);
+      kernel::se3 k = kc.ransacPlaneFit(inlierThreshold, removePlane);
       Plane3 plane(la::matrixCopy(k.ori_).GetColumn(2), k.loc_);
       
       std::vector< boost::shared_ptr<Observation> > tmp = observations;
@@ -140,7 +139,7 @@ void convert(const std::vector<std::string>& files,
            i != tmp.end(); ++i)
       {
         Vector3 loc = (*i)->getKernel()->getLoc();
-        if (std::fabs(plane.DistanceTo(loc)) >= inlinerThreshold)
+        if (std::fabs(plane.DistanceTo(loc)) >= inlierThreshold)
           observations.push_back(*i);
       }
     }
@@ -576,6 +575,13 @@ int convert(int argc, char ** argv)
      "A value of 100 is a good start.",
      false, -1, "int", cmd);
 
+  TCLAP::ValueArg<double> removePlaneInlierTArg
+  ("", "inlier_threshold",
+   "Inlier threshold for removing plane with RANSAC. "
+   "A value of 8mm is a good start",
+   false, 8, "float", cmd);
+  
+  
   TCLAP::SwitchArg makeR3xs2pArg
     ("", "make_r3xs2p",
      "Compute a surface normal at each point, using local location differentials.", cmd);
@@ -726,7 +732,7 @@ int convert(int argc, char ** argv)
           typeFromName<Observation>(outTypeArg.getValue()),
           roi,
           nObsArg.getValue(), minDistArg.getValue(),
-          removePlaneArg.getValue(),
+          removePlaneArg.getValue(), removePlaneInlierTArg.getValue(),
           makeR3xs2pArg.getValue() || computeNormalsArg.getValue(),
           removeNormalsArg.getValue(),
           filterRGBArg.getValue(),
