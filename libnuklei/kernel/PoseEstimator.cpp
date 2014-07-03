@@ -22,7 +22,7 @@ namespace nuklei
   loc_h_(locH), ori_h_(oriH),
   nChains_(nChains), n_(n),
   cif_(cif), partialview_(partialview),
-  progress_(progress)
+  progress_(progress), meshTol_(4)
   {
     if (nChains_ <= 0) nChains_ = 8;
     parallel_ = typeFromName<parallelizer>(PARALLELIZATION);
@@ -113,7 +113,7 @@ namespace nuklei
       // matching score from that.
       
       KernelCollection::const_partialview_iterator viewIterator =
-      objectModel_.partialViewBegin(viewpointInFrame(t), MESHTOL);
+      objectModel_.partialViewBegin(viewpointInFrame(t), meshTol_);
       for (KernelCollection::const_partialview_iterator i = viewIterator;
            i != i.end(); ++i)
       {
@@ -163,6 +163,7 @@ namespace nuklei
   {
     objectModel_ = objectModel;
     sceneModel_ = sceneModel;
+    viewpoint_ = viewpoint;
     
     if (objectModel_.size() == 0 || sceneModel_.size() == 0)
       NUKLEI_THROW("Empty input cloud.");
@@ -298,7 +299,7 @@ namespace nuklei
           bool visible =
           objectModel_.isVisibleFrom(objectModel_.at(indices.front()).getLoc(),
                                      viewpointInFrame(nextPose),
-                                     MESHTOL);
+                                     meshTol_);
           if (!visible) continue;
 #else
           NUKLEI_THROW("Requires the partial view version of Nuklei.");
@@ -330,9 +331,11 @@ namespace nuklei
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
-      // Fixme: we should take at most n of these:
       indices = objectModel_.partialView(viewpointInFrame(nextPose),
-                                         MESHTOL);
+                                         meshTol_);
+      std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
+      if (indices.size() > n)
+        indices.resize(n);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -370,8 +373,8 @@ namespace nuklei
       if (pi < std::sqrt(indices.size())) continue;
       
       
-      weight_t nextWeight = weight/(pi+1);
-      
+      weight_t nextWeight = weight/(pi+1.);
+      if (partialview_) nextWeight = weight/std::sqrt(pi+1.);
       // For the first run, consider all the points of the model
       if (firstRun)
       {
@@ -419,10 +422,9 @@ namespace nuklei
     
     //fixme: See if nSteps should be computed as a function of n.
     int nSteps = 1000;
-    if (partialview_) nSteps = 3000;
-    
+    if (partialview_) nSteps = 1000;
     //fixme:
-    nSteps = 10*n;
+    nSteps = 10*n*(partialview_?10:1);
     
     for (int i = 0; i < nSteps; i++)
     {
@@ -459,7 +461,7 @@ namespace nuklei
     return bestPose;
   }
   
-  Vector3 PoseEstimator::viewpointInFrame(kernel::se3& frame) const
+  Vector3 PoseEstimator::viewpointInFrame(const kernel::se3& frame) const
   {
     kernel::se3 origin;
     kernel::se3 invt = origin.transformationFrom(frame);
@@ -473,29 +475,28 @@ namespace nuklei
                                    const kernel::se3& t) const
   {
     KernelCollection objectModel = objectModel_;
-    objectModel.transformWith(t);
-    
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
-      KernelCollection coloredOE;
-      for (KernelCollection::const_iterator i = objectModel.begin();
-           i != objectModel.end(); ++i)
+      objectModel = KernelCollection();
+      kernel::se3 tt = t;
+      for (KernelCollection::const_iterator i = objectModel_.begin();
+           i != objectModel_.end(); ++i)
       {
-        coloredOE.add(*i);
-        if (objectModel.isVisibleFrom(i->getLoc(),
-                                      viewpoint_,
-                                      MESHTOL))
+        objectModel.add(*i);
+        if (objectModel_.isVisibleFrom(i->getLoc(),
+                                       viewpointInFrame(tt),
+                                       meshTol_))
         {
           RGBColor c(0, 0, 1);
           ColorDescriptor d;
           d.setColor(c);
-          coloredOE.back().setDescriptor(d);
+          objectModel.back().setDescriptor(d);
         }
       }
-      objectModel = coloredOE;
 #endif
     }
+    objectModel.transformWith(t);
     writeObservations(filename,
                       objectModel,
                       Observation::SERIAL);
