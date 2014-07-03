@@ -331,9 +331,11 @@ namespace nuklei
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
-      // Fixme: we should take at most n of these:
       indices = objectModel_.partialView(viewpointInFrame(nextPose),
                                          meshTol_);
+      std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
+      if (indices.size() > n)
+        indices.resize(n);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -371,8 +373,8 @@ namespace nuklei
       if (pi < std::sqrt(indices.size())) continue;
       
       
-      weight_t nextWeight = weight/(pi+1);
-      
+      weight_t nextWeight = weight/(pi+1.);
+      if (partialview_) nextWeight = weight/std::sqrt(pi+1.);
       // For the first run, consider all the points of the model
       if (firstRun)
       {
@@ -420,10 +422,9 @@ namespace nuklei
     
     //fixme: See if nSteps should be computed as a function of n.
     int nSteps = 1000;
-    if (partialview_) nSteps = 3000;
-    
+    if (partialview_) nSteps = 1000;
     //fixme:
-    nSteps = 10*n;
+    nSteps = 10*n*(partialview_?10:1);
     
     for (int i = 0; i < nSteps; i++)
     {
