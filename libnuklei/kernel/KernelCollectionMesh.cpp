@@ -197,7 +197,12 @@ namespace nuklei {
       // The position property map can be omitted here as we use iterators over Point_3 elements.
       Poisson_reconstruction_function function(
                                                pl.begin(), pl.end(),
-                                               CGAL::make_normal_of_point_with_normal_pmap(pl.begin()));
+#if CGAL_VERSION_NR < 1040300000
+                                               CGAL::make_normal_of_point_with_normal_pmap(pl.begin())
+#else
+                                               CGAL::make_normal_of_point_with_normal_pmap(PointList::value_type())
+#endif
+                                               );
       
       // Computes the Poisson indicator function f()
       // at each vertex of the triangulation.
