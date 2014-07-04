@@ -84,7 +84,7 @@ namespace nuklei {
     
   private:
     
-    Vector3 viewpointInFrame(kernel::se3& frame) const;
+    Vector3 viewpointInFrame(const kernel::se3& frame) const;
     
     // Temperature function (cooling factor)
     static double Ti(const unsigned i, const unsigned F);
@@ -120,6 +120,7 @@ namespace nuklei {
     boost::shared_ptr<ProgressIndicator> pi_;
     bool progress_;
     parallelizer::Type parallel_;
+    double meshTol_;
   };
   
 }
