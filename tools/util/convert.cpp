@@ -581,7 +581,6 @@ int convert(int argc, char ** argv)
    "A value of 8mm is a good start",
    false, 8, "float", cmd);
   
-  
   TCLAP::SwitchArg makeR3xs2pArg
     ("", "make_r3xs2p",
      "Compute a surface normal at each point, using local location differentials.", cmd);
