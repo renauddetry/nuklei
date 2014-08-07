@@ -121,7 +121,7 @@ namespace nuklei
                                               evaluationStrategy_);
         t.setWeight(t.getWeight() + w);
       }
-      t.setWeight(t.getWeight()/std::pow(std::distance(viewIterator, viewIterator.end()), 1.0) * (cif_?cif_->factor(pose):1.));
+      t.setWeight(t.getWeight()/std::pow(std::distance(viewIterator, viewIterator.end()), .7) * (cif_?cif_->factor(pose):1.));
       
       if (cif_ && !cif_->test(t))
         t.setWeight(0);
