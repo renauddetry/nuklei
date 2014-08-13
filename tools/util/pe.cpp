@@ -83,6 +83,16 @@ int pe(int argc, char ** argv)
     ("", "partial",
      "Match only the visible side of the model to the object.", cmd);
     
+    ValueArg<std::string> viewpointFileArg
+    ("", "viewpoint",
+     "File containing XYZ of the camera.",
+     false, "", "filename", cmd);
+
+    ValueArg<double> meshVisibilityArg
+    ("", "point_to_mesh_visibility_dist",
+     "Sets the distance to the mesh at which a point is considered to be visible.",
+     false, 4., "float", cmd);
+
     cmd.parse( argc, argv );
     Stopwatch sw("");
     if (!timeArg.getValue())
@@ -98,11 +108,12 @@ int pe(int argc, char ** argv)
                      nArg.getValue(),
                      boost::shared_ptr<CustomIntegrandFactor>(),
                      partialviewArg.getValue());
+    pe.setMeshToVisibilityTol(meshVisibilityArg.getValue());
     
     pe.load(objectFileArg.getValue(),
             sceneFileArg.getValue(),
             "",
-            "",
+            viewpointFileArg.getValue(),
             !useWholeSceneCloudArg.getValue(),
             true);
     

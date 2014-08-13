@@ -25,7 +25,8 @@ namespace nuklei {
   const int KernelCollection::NSTREE_KEY        = 2;
   const int KernelCollection::MESH_KEY          = 3;
   const int KernelCollection::AABBTREE_KEY      = 4;
-
+  const int KernelCollection::VIEWCACHE_KEY     = 5;
+  
   std::istream& operator>>(std::istream &in, KernelCollection &v)
   {
     NUKLEI_TRACE_BEGIN();

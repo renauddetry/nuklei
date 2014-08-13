@@ -56,7 +56,7 @@ namespace nuklei
     }
     
     if (progress_)
-      pi_->initialize(0, 10*n*nChains_ / 10, "Estimating pose", 0);
+      pi_->initialize(0, 10*n*(partialview_?10:1)*nChains_ / 10, "Estimating pose", 0);
     
     parallelizer p(nChains_, parallel_);
     std::vector<kernel::se3> retv =
@@ -223,6 +223,7 @@ namespace nuklei
         objectModel_.readMeshFromOffFile(meshfile);
       else
         objectModel_.buildMesh();
+      objectModel_.buildPartialViewCache(meshTol_);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -331,8 +332,14 @@ namespace nuklei
     if (partialview_)
     {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
-      indices = objectModel_.partialView(viewpointInFrame(nextPose),
-                                         meshTol_);
+      
+      // fixme: could get mean computation out of this loop to save a few ms.
+      Vector3 mean = objectModel_.mean()->getLoc();
+      Vector3 v = viewpointInFrame(nextPose) - mean;
+      v = v/v.Length();
+      indices = objectModel_.partialView(v, -1);
+//      indices = objectModel_.partialView(viewpointInFrame(nextPose),
+//                                         meshTol_);
       std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
       if (indices.size() > n)
         indices.resize(n);

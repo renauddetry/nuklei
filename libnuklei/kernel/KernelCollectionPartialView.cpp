@@ -52,7 +52,9 @@ typedef std::vector<Point_with_normal> PointList;
 #endif
 
 namespace nuklei {
-  
+
+  typedef std::vector< std::pair< Vector3, std::vector<int> > > viewcache_t;
+
 #ifdef NUKLEI_USE_CGAL
 
   inline bool isVisible(const Point& target, const Point& camera,
@@ -135,28 +137,54 @@ namespace nuklei {
                                   const coord_t& tolerance) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
-    if (!deco_.has_key(MESH_KEY))
-      NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
-    if (!deco_.has_key(AABBTREE_KEY))
-      NUKLEI_THROW("Undefined AABB tree. Call buildMesh() first.");
-    
-    const Polyhedron& poly = *deco_.get< boost::shared_ptr<Polyhedron> >(MESH_KEY);
-    const Tree& tree = *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY);
-    Point camera(viewpoint.X(), viewpoint.Y(), viewpoint.Z());
+
     C index_collection;
-    
-    for (const_iterator v = begin(); v != end(); ++v)
+
+    if (tolerance > 0)
     {
-      Vector3 p = v->getLoc();
-      Point target(p.X(), p.Y(), p.Z());
-      if (isVisible(target, camera, poly, tree, tolerance))
-        index_collection.push_back(std::distance(begin(), v));
+#ifdef NUKLEI_USE_CGAL
+      if (!deco_.has_key(MESH_KEY))
+        NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
+      if (!deco_.has_key(AABBTREE_KEY))
+        NUKLEI_THROW("Undefined AABB tree. Call buildMesh() first.");
+      
+      const Polyhedron& poly = *deco_.get< boost::shared_ptr<Polyhedron> >(MESH_KEY);
+      const Tree& tree = *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY);
+      Point camera(viewpoint.X(), viewpoint.Y(), viewpoint.Z());
+      
+      for (const_iterator v = begin(); v != end(); ++v)
+      {
+        Vector3 p = v->getLoc();
+        Point target(p.X(), p.Y(), p.Z());
+        if (isVisible(target, camera, poly, tree, tolerance))
+          index_collection.push_back(std::distance(begin(), v));
+      }
+#else
+      NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
+    }
+    else
+    {
+      if (!deco_.has_key(VIEWCACHE_KEY))
+        NUKLEI_THROW("Undefined view cache. Call buildPartialViewCache() first.");
+
+      const viewcache_t &viewIndex = *deco_.get< boost::shared_ptr<viewcache_t> >(VIEWCACHE_KEY);
+      
+      double minDist = 1e6;
+      viewcache_t::const_iterator closest = as_const(viewIndex).begin();
+      for (viewcache_t::const_iterator oo = as_const(viewIndex).begin(); oo != viewIndex.end(); ++oo)
+      {
+        double tmp = (viewpoint-oo->first).Length();
+        if (tmp < minDist)
+        {
+          minDist = tmp;
+          closest = oo;
+        }
+      }
+      for (std::vector<int>::const_iterator i = closest->second.begin(); i != closest->second.end(); ++i)
+        index_collection.push_back(*i);
     }
     return index_collection;
-#else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
-#endif
     NUKLEI_TRACE_END();
   }
   
@@ -197,5 +225,121 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
   
+  void KernelCollection::buildPartialViewCache(const double meshTol)
+  {
+    NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_CGAL
+    Vector3 mean = as_const(*this).moments()->getLoc();
+    double stdev = as_const(*this).moments()->getLocH();
+    
+    std::vector< Vector3 > keys;
+    for (int o = 0; o < 10000; ++o)
+    {
+      Vector3 key = Random::uniformDirection3d();
+      keys.push_back(key);
+    }
+    
+    {
+      double minDist2 = .15;
+      std::vector< Vector3 > tmp = keys;
+      keys.clear();
+      for (std::vector<Vector3>::const_iterator
+           i = tmp.begin();
+           i != tmp.end(); ++i)
+      {
+        bool cnt = false;
+        Vector3 iLoc = (*i);
+        for (std::vector<Vector3>::const_iterator
+             j = keys.begin();
+             j != keys.end(); ++j)
+        {
+          if ( (iLoc - *j).SquaredLength() < minDist2*minDist2 )
+          {
+            cnt = true;
+            break;
+          }
+        }
+        if (!cnt)
+        {
+          keys.push_back(iLoc);
+        }
+      }
+    }
+    
+    boost::shared_ptr<viewcache_t> viewIndex(new viewcache_t());
+    
+    for (unsigned int o = 0; o < keys.size(); ++o)
+    {
+      Vector3 key = keys.at(o);
+      Vector3 vp = mean + key*stdev*20;
+      std::vector<int> vi = as_const(*this).partialView(vp, meshTol);
+#if 0
+      // debug - delete when code is considered stable
+      KernelCollection v;
+      for (std::vector<int>::iterator i = vi.begin(); i != vi.end(); ++i)
+        v.add(as_const(*this).at(*i));
+      v.computeKernelStatistics();
+      kernel::base::ptr k = v.randomKernel().create();
+      k->setLoc(vp);
+      v.add(*k);
+      v.computeKernelStatistics();
+#endif
+      viewIndex->push_back(std::make_pair(key, vi));
+    }
+    
+    if (deco_.has_key(VIEWCACHE_KEY)) deco_.erase(VIEWCACHE_KEY);
+    deco_.insert(VIEWCACHE_KEY, viewIndex);
+    
+#if 0
+    // debug - delete when code is considered stable
+    
+      for (viewcache_t::iterator o = viewIndex->begin(); o != viewIndex->end(); ++o)
+      {
+        double d = 1e6;
+        KernelCollection near;
+        
+        for (viewcache_t::iterator oo = viewIndex->begin(); oo != viewIndex->end(); ++oo)
+        {
+          if (oo == o) continue;
+          double dd = (o->first-oo->first).Length();
+          if (dd < d) {
+            d = dd;
+            near.clear();
+            for (std::vector<int>::iterator j = oo->second.begin(); j != oo->second.end(); ++j)
+              near.add(as_const(*this).at(*j));
+            near.computeKernelStatistics();
+            kernel::base::ptr k = near.randomKernel().create();
+            k->setLoc(mean + oo->first*stdev*20);
+            near.add(*k);
+            near.computeKernelStatistics();
+          }
+        }
+        for (KernelCollection::iterator i = near.begin(); i != near.end(); ++i)
+        {
+          ColorDescriptor cd;
+          cd.setColor(RGBColor(1, 0, 0));
+          i->setDescriptor(cd);
+        }
+        for (std::vector<int>::iterator j = o->second.begin(); j != o->second.end(); ++j)
+        {
+          near.add(as_const(*this).at(*j));
+          near.back().setLoc(near.back().getLoc()+Vector3(1, 0, 0));
+        }
+        near.computeKernelStatistics();
+        kernel::base::ptr k = near.randomKernel().create();
+        k->setLoc(mean + o->first*stdev*20);
+        near.add(*k);
+        near.computeKernelStatistics();
+        writeObservations("/tmp/v/" + stringify(std::distance(viewIndex->begin(), o)), near, Observation::SERIAL);
+      }
+#endif
+    
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
+    NUKLEI_TRACE_END();
+
+  }
+
 }
 

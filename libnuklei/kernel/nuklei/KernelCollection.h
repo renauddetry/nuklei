@@ -447,6 +447,10 @@ namespace nuklei {
       void writeMeshToPlyFile(const std::string& filename) const;
       void readMeshFromPlyFile(const std::string& filename);
       /**
+       * @brief Builds set of partial views of the object. See @ref intermediary.
+       */
+      void buildPartialViewCache(const double meshTol);
+      /**
        * @brief Assuming that the points in this collection form the surface of
        * an object, this function computes whether a point @p p is visible from
        * @p viewpoint, or if it is occluded by the object.
@@ -555,13 +559,14 @@ namespace nuklei {
       boost::optional<weight_t> totalWeight_;
       boost::optional<coord_t> maxLocCutPoint_;
       boost::optional<kernel::base::Type> kernelType_;
-
+      
       decoration<int> deco_;
       const static int HULL_KEY;
       const static int KDTREE_KEY;
       const static int NSTREE_KEY;
       const static int MESH_KEY;
       const static int AABBTREE_KEY;
+      const static int VIEWCACHE_KEY;
 
       void invalidateHelperStructures();
 

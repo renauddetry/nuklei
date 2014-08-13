@@ -57,6 +57,7 @@
 #include <trimesh/TriMesh.h>
 
 #include <nuklei/KernelCollection.h>
+#include <nuklei/ObservationIO.h>
 
 #ifdef NUKLEI_USE_CGAL
 
