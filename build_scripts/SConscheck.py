@@ -8,7 +8,8 @@ Import('conf')
 if conf.env['UseCIMG']:
   conf.env['CImg_include'] = '#/contrib/CImg/include'
 conf.env['tclap_include'] = '#/contrib/tclap-1.1.0/include'
-conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
+if conf.env['UseTICPP']:
+  conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
 conf.env['trimesh_include'] = '#/contrib/trimesh2-2.12/include'
 conf.env['libkdtree_include'] = '#/contrib/libkdtree++/include'
 conf.env['nanoflann_include'] = '#/contrib/nanoflann/include'
@@ -36,6 +37,11 @@ conf.env.Prepend(CPPPATH = [ '$libklr_include' ])
 # contrib: nanoflann
 
 conf.env.Prepend(CPPPATH = [ '$nanoflann_include' ])
+
+# contrib: ticpp
+
+if conf.env['UseTICPP']:
+  conf.env.Append(CPPDEFINES = ['NUKLEI_USE_TICPP'])
 
 # contrib: CImg
 

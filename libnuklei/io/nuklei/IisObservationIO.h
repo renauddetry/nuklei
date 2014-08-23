@@ -13,12 +13,14 @@
 #include <nuklei/ObservationIO.h>
 #include <nuklei/IisObservation.h>
 
+#ifdef NUKLEI_USE_TICPP
 namespace ticpp {
   class Document;
   class Node;
   class Element;
   template < class T > class Iterator;
 }
+#endif
 
 namespace nuklei {
 
@@ -37,9 +39,11 @@ namespace nuklei {
       std::auto_ptr<Observation> readObservation_();
       std::string observationFileName_;
     private:
+#ifdef NUKLEI_USE_TICPP
       boost::shared_ptr<ticpp::Document> in_;
       typedef ticpp::Iterator< ticpp::Element > ElementIterator;
       boost::shared_ptr<ElementIterator> e_;
+#endif
     };
 
   class IisWriter : public ObservationWriter
@@ -61,8 +65,10 @@ namespace nuklei {
       
     private:
       std::string observationFileName_;
+#ifdef NUKLEI_USE_TICPP
       boost::shared_ptr<ticpp::Document> out_;
       ticpp::Element* kc_;
+#endif
       coord_t totalWeight_;
     };
 
