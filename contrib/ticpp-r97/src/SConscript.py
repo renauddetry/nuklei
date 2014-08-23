@@ -14,23 +14,23 @@ env = env.Clone()
 
 wd = Dir('.').srcnode().path
 absWd = '#' + wd
-print 'Scanning ' + wd
+if env['UseTICPP']:
+  print 'Scanning ' + wd
 
-# gather all files to be included in a product.
-# We can choose here to include those manually,
-# or using a pattern-based selection in the
-# current directory.
-sources = [ 'ticpp.cpp',
-            'tinystr.cpp',
-            'tinyxml.cpp',
-            'tinyxmlerror.cpp',
-            'tinyxmlparser.cpp']
+  # gather all files to be included in a product.
+  # We can choose here to include those manually,
+  # or using a pattern-based selection in the
+  # current directory.
+  sources = [ 'ticpp.cpp',
+              'tinystr.cpp',
+              'tinyxml.cpp',
+              'tinyxmlerror.cpp',
+              'tinyxmlparser.cpp']
 
-env.Prepend(CPPPATH = [ '.' ])
-env.Append(CPPDEFINES = [ 'TIXML_USE_TICPP' ])
+  env.Prepend(CPPPATH = [ '.' ])
+  env.Append(CPPDEFINES = [ 'TIXML_USE_TICPP' ])
 
-deepObjList = []
-for source in sources:
-  deepObjList += env.SharedObject(source)
-objects += Flatten(deepObjList)
-
+  deepObjList = []
+  for source in sources:
+    deepObjList += env.SharedObject(source)
+  objects += Flatten(deepObjList)
