@@ -23,7 +23,9 @@ sources = []
 addfiles(sources, names, '*.cpp')
 
 env.Prepend(CPPPATH = [ '.' ])
-env.Prepend(CPPPATH = [ '$ticpp_include' ])
+
+if env['UseTICPP']:
+  env.Prepend(CPPPATH = [ '$ticpp_include' ])
 
 addfiles(headers, names, 'nuklei/*.h')
 

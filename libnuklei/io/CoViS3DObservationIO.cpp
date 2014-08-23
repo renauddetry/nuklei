@@ -12,8 +12,10 @@
 
 #include <nuklei/CoViS3DObservationIO.h>
 #include <nuklei/CoViS3DObservation.h>
+#ifdef NUKLEI_USE_TICPP
 #define TIXML_USE_TICPP
 #include "ticpp.h"
+#endif
 
 namespace nuklei {
 
@@ -31,9 +33,14 @@ namespace nuklei {
   }
 
   CoViS3DXMLReader::CoViS3DXMLReader(const std::string &observationFileName) :
-    CoViS3DReader(observationFileName), in_(new ticpp::Document(observationFileName))
+    CoViS3DReader(observationFileName)
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
+    in_ = boost::shared_ptr<ticpp::Document>(new ticpp::Document(observationFileName));
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
 
@@ -80,6 +87,7 @@ namespace nuklei {
   void CoViS3DXMLReader::init_()
   {
     NUKLEI_TRACE_BEGIN();    
+#ifdef NUKLEI_USE_TICPP
     try {
       in_->LoadFile();
       ticpp::Element* scene = in_->FirstChildElement( "Scene" );
@@ -89,6 +97,9 @@ namespace nuklei {
     } catch (ticpp::Exception& e) {
       throw ObservationIOError(e.what());
     }
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
 
@@ -145,6 +156,7 @@ namespace nuklei {
   std::auto_ptr<Observation> CoViS3DXMLReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     if (!e_) NUKLEI_THROW("Reader does not seem inited.");
     
     typedef ticpp::Element* ElementPtr;
@@ -275,6 +287,9 @@ namespace nuklei {
     
     // End of file reached.
     return std::auto_ptr<Observation>();
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
 
@@ -420,6 +435,7 @@ namespace nuklei {
   void CoViS3DXMLWriter::init()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     try {
       out_.reset(new ticpp::Document(observationFileName));
       ticpp::Declaration dec("1.0", "UTF-8", "");
@@ -431,7 +447,10 @@ namespace nuklei {
     } catch (ticpp::Exception& e) {
       throw ObservationIOError(e.what());
     }
-    NUKLEI_TRACE_END();
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
+   NUKLEI_TRACE_END();
   }
 
   void CoViS3DXMLWriter::reset()
@@ -444,10 +463,15 @@ namespace nuklei {
   void CoViS3DXMLWriter::writeBuffer()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     out_->SaveFile();
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
 
+#ifdef NUKLEI_USE_TICPP
   static ticpp::Element* append(ticpp::Element* parent, const std::string& value)
   {
     NUKLEI_TRACE_BEGIN();
@@ -455,10 +479,12 @@ namespace nuklei {
     return parent->InsertEndChild(child)->ToElement();
     NUKLEI_TRACE_END();
   }
+#endif
 
   void CoViS3DXMLWriter::writeObservation(const Observation &o)
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     if (!out_) NUKLEI_THROW("Writer does not seem inited.");
     
     typedef ticpp::Element* ElementPtr;
@@ -571,6 +597,9 @@ namespace nuklei {
       }
       
     }
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
 

@@ -19,7 +19,8 @@ print 'Scanning ' + wd
 origEnv.Prepend(CPPPATH = [ '$tclap_include' ])
 
 origEnv.Prepend(CPPPATH = [ '.' ])
-origEnv.Prepend(CPPPATH = [ '$ticpp_include' ])
+if env['UseTICPP']:
+  origEnv.Prepend(CPPPATH = [ '$ticpp_include' ])
 
 origEnv.Prepend(LIBS = [ 'nuklei' ])
 

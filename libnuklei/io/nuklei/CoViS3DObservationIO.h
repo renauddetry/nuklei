@@ -12,12 +12,14 @@
 #include <nuklei/ObservationIO.h>
 #include <nuklei/CoViS3DObservation.h>
 
+#ifdef NUKLEI_USE_TICPP
 namespace ticpp {
   class Document;
   class Node;
   class Element;
   template < class T > class Iterator;
 }
+#endif
 
 namespace nuklei {
 
@@ -51,9 +53,11 @@ namespace nuklei {
       void init_();
       std::auto_ptr<Observation> readObservation_();
     private:
+#ifdef NUKLEI_USE_TICPP
       boost::shared_ptr<ticpp::Document> in_;
       typedef ticpp::Iterator< ticpp::Element > ElementIterator;
       boost::shared_ptr<ElementIterator> e_;
+#endif
     };
 
 
@@ -91,8 +95,10 @@ namespace nuklei {
       
     private:
       std::string observationFileName;
+#ifdef NUKLEI_USE_TICPP
       boost::shared_ptr<ticpp::Document> out_;
       ticpp::Element* scene_;
+#endif
     };
 
 }

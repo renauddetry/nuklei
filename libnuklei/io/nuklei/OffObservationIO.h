@@ -12,13 +12,6 @@
 #include <nuklei/ObservationIO.h>
 #include <nuklei/OffObservation.h>
 
-namespace ticpp {
-  class Document;
-  class Node;
-  class Element;
-  template < class T > class Iterator;
-}
-
 namespace nuklei {
 
 

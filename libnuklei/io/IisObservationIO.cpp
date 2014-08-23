@@ -12,17 +12,24 @@
 
 #include <nuklei/IisObservationIO.h>
 #include <nuklei/IisObservation.h>
+#ifdef NUKLEI_USE_TICPP
 #define TIXML_USE_TICPP
 #include "ticpp.h"
+#endif
 
 namespace nuklei {
   
   
   
   IisReader::IisReader(const std::string &observationFileName) :
-  observationFileName_(observationFileName), in_(new ticpp::Document(observationFileName))
+  observationFileName_(observationFileName)
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
+    in_ = boost::shared_ptr<ticpp::Document>(new ticpp::Document(observationFileName));
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
   
@@ -34,6 +41,7 @@ namespace nuklei {
   void IisReader::init_()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     try {
       in_->LoadFile();
       ticpp::Element* kc = in_->FirstChildElement( "grasps" );
@@ -43,6 +51,9 @@ namespace nuklei {
     } catch (ticpp::Exception& e) {
       throw ObservationIOError(e.what());
     }
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
   
@@ -56,6 +67,7 @@ namespace nuklei {
   std::auto_ptr<Observation> IisReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     if (!e_) NUKLEI_THROW("Reader does not seem inited.");
     
     typedef ticpp::Element* ElementPtr;
@@ -135,6 +147,9 @@ namespace nuklei {
     
     // End of file reached.
     return std::auto_ptr<Observation>();
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
   
@@ -165,6 +180,7 @@ namespace nuklei {
   void IisWriter::init()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     totalWeight_ = -1;
     try {
       out_.reset(new ticpp::Document(observationFileName_));
@@ -177,6 +193,9 @@ namespace nuklei {
     kc.SetValue( "grasps" );
     kc.SetAttribute( "xmlns", "http://iis.uibk.ac.at/ns/grasping" );
     kc_ = out_->InsertEndChild(kc)->ToElement();
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
   
@@ -190,10 +209,15 @@ namespace nuklei {
   void IisWriter::writeBuffer()
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     out_->SaveFile();
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
   
+#ifdef NUKLEI_USE_TICPP
   static ticpp::Element* append(ticpp::Element* parent, const std::string& value)
   {
     NUKLEI_TRACE_BEGIN();
@@ -202,10 +226,12 @@ namespace nuklei {
     return parent->InsertEndChild(child)->ToElement();
     NUKLEI_TRACE_END();
   }
-  
+#endif
+
   void IisWriter::writeObservation(const Observation &o)
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_TICPP
     if (!out_) NUKLEI_THROW("Writer does not seem inited.");
     
     typedef ticpp::Element* ElementPtr;
@@ -239,6 +265,9 @@ namespace nuklei {
       rotmatrix->SetText(oss.str());
     }
     
+#else
+    NUKLEI_THROW("This function requires TICPP.");
+#endif
     NUKLEI_TRACE_END();
   }
   
