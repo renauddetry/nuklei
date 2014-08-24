@@ -76,6 +76,19 @@ if conf.env['UseCIMG']:
     if have_libjpeg: print '  JPG'
     print 'Install ImageMagick command line tools and/or libjpeg/libpng to enable a larger format support.'
 
+# TinyXML-2
+
+if not conf.env['UseTICPP']:
+  if not conf.CheckCXXHeader('tinyxml2.h') or \
+    not conf.CheckLib('tinyxml2', language = 'C++'):
+      print 'If TICPP is disabled, TinyXML-2 is required.'
+      print 'Please check your TinyXML-2 installation.'
+      print '** For more information, refer to the INSTALL document **'
+      Exit(1)
+  else:
+    conf.env.Append(LIBS = [ 'tinyxml2' ])
+
+
 # BLAS, LAPACK
 
 if conf.env['PLATFORM'] == 'darwin':

@@ -120,13 +120,15 @@ namespace nuklei {
     std::string errorsCat = std::string("Error in ObservationReader::createReader.") +
       "\nErrors at each format attempt were:";
 
+#ifdef NUKLEI_USE_TICPP
     try {
       reader = createReader(arg, Observation::COVIS3D);
       return reader;
     } catch (ObservationIOError &e) {
       errorsCat += "\n" + std::string(e.what());
     }
-
+#endif
+    
     try {
       reader = createReader(arg, Observation::NUKLEI);
       return reader;
@@ -134,12 +136,14 @@ namespace nuklei {
       errorsCat += "\n" + std::string(e.what());
     }
     
+#ifdef NUKLEI_USE_TICPP
     try {
       reader = createReader(arg, Observation::IIS);
       return reader;
     } catch (ObservationIOError &e) {
       errorsCat += "\n" + std::string(e.what());
     }
+#endif
     
     try {
       reader = createReader(arg, Observation::OSUTXT);

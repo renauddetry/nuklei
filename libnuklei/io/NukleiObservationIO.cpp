@@ -15,6 +15,9 @@
 #ifdef NUKLEI_USE_TICPP
 #define TIXML_USE_TICPP
 #include "ticpp.h"
+#else
+#include <tinyxml2.h>
+namespace tt = tinyxml2;
 #endif
 
 namespace nuklei {
@@ -28,7 +31,7 @@ namespace nuklei {
 #ifdef NUKLEI_USE_TICPP
     in_ = boost::shared_ptr<ticpp::Document>(new ticpp::Document(observationFileName));
 #else
-    NUKLEI_THROW("This function requires TICPP.");
+    in_ = boost::shared_ptr<tt::XMLDocument>(new tt::XMLDocument());
 #endif
     NUKLEI_TRACE_END();
   }
@@ -52,7 +55,13 @@ namespace nuklei {
       throw ObservationIOError(e.what());
     }
 #else
-    NUKLEI_THROW("This function requires TICPP.");
+    in_->LoadFile(observationFileName_.c_str());
+    if (in_->ErrorID() != 0)
+      throw ObservationIOError("Error parsing with TinyXML-2");
+    tt::XMLElement* kc = in_->FirstChildElement( "kernelCollection" );
+    if (kc == NULL)
+      throw ObservationIOError("Cannot find element kernelCollection");
+    e_ = kc->FirstChildElement( "kernel" );
 #endif
     NUKLEI_TRACE_END();
   }
@@ -238,7 +247,149 @@ namespace nuklei {
     // End of file reached.
     return std::auto_ptr<Observation>();
 #else
-    NUKLEI_THROW("This function requires TICPP.");
+    if (!in_->RootElement()) NUKLEI_THROW("Reader does not seem inited.");
+    
+    using namespace tt;
+    while (e_)
+    {
+      XMLElement* kernel = e_;
+      e_ = kernel->NextSiblingElement( "kernel" );
+      
+      std::auto_ptr<NukleiObservation> observation(new NukleiObservation);
+
+      XMLElement* kernelIter = kernel->FirstChildElement();
+      NUKLEI_ASSERT(kernelIter);
+      
+      weight_t w = 1;
+      
+      if (std::string(kernelIter->Name()) == "weight")
+      {
+        NUKLEI_ASSERT(kernelIter->QueryDoubleText(&w) == 0);
+        kernelIter = kernelIter->NextSiblingElement();
+        NUKLEI_ASSERT(kernelIter);
+      }
+      
+      Vector3 loc;
+      coord_t loc_h = 0;
+      
+      {
+        NUKLEI_ASSERT(std::string(kernelIter->Name()) == "location");
+        XMLElement* li = kernelIter->FirstChildElement();
+        NUKLEI_ASSERT(li);
+        {
+          NUKLEI_ASSERT(std::string(li->Name()) == "vector3");
+          loc = numify<Vector3>(li->GetText());
+        }
+        li = li->NextSiblingElement();
+        if (li)
+        {
+          NUKLEI_ASSERT(std::string(li->Name()) == "width");
+          NUKLEI_ASSERT(li->QueryDoubleText(&loc_h) == 0);
+          NUKLEI_ASSERT(li->NextSiblingElement() == NULL);
+        }
+      }
+      
+      kernel::base::ptr k;
+      
+      kernelIter = kernelIter->NextSiblingElement();
+      
+      if (kernelIter)
+      {
+        NUKLEI_ASSERT(std::string(kernelIter->Value()) == "orientation");
+        std::string domain;
+        {
+          const char* tmp = kernelIter->Attribute("domain");
+          NUKLEI_ASSERT(tmp);
+          domain = tmp;
+        }
+        // domain == "se3" is to support files wirtten with a buggy Nuklei build.
+        if (domain == "se3" || domain == "so3")
+        {
+          kernel::se3 se3k;
+          se3k.loc_ = loc;
+          se3k.loc_h_ = loc_h;
+          
+          XMLElement* oi = kernelIter->FirstChildElement();
+          NUKLEI_ASSERT(oi);
+          {
+            NUKLEI_ASSERT(std::string(oi->Name()) == "quaternion");
+            se3k.ori_ = la::normalized(numify<Quaternion>(oi->GetText()));
+          }
+          oi = oi->NextSiblingElement();
+          if (oi)
+          {
+            NUKLEI_ASSERT(std::string(oi->Name()) == "width");
+            NUKLEI_ASSERT(oi->QueryDoubleText(&se3k.ori_h_) == 0);
+            NUKLEI_ASSERT(oi->NextSiblingElement() == NULL);
+          }
+          
+          k.reset(new kernel::se3(se3k));
+        }
+        else if (domain == "s2p")
+        {
+          kernel::r3xs2p r3xs2pk;
+          r3xs2pk.loc_ = loc;
+          r3xs2pk.loc_h_ = loc_h;
+          
+          XMLElement* oi = kernelIter->FirstChildElement();
+          NUKLEI_ASSERT(oi);
+          {
+            NUKLEI_ASSERT(std::string(oi->Name()) == "vector3");
+            r3xs2pk.dir_ = la::normalized(numify<Vector3>(oi->GetText()));
+          }
+          oi = oi->NextSiblingElement();
+          if (oi)
+          {
+            NUKLEI_ASSERT(std::string(oi->Name()) == "width");
+            NUKLEI_ASSERT(oi->QueryDoubleText(&r3xs2pk.dir_h_) == 0);
+            NUKLEI_ASSERT(oi->NextSiblingElement() == NULL);
+          }
+          
+          k.reset(new kernel::r3xs2p(r3xs2pk));
+        }
+        else if (domain == "s2")
+        {
+          kernel::r3xs2 r3xs2k;
+          r3xs2k.loc_ = loc;
+          r3xs2k.loc_h_ = loc_h;
+          
+          XMLElement* oi = kernelIter->FirstChildElement();
+          NUKLEI_ASSERT(oi);
+          {
+            NUKLEI_ASSERT(std::string(oi->Name()) == "vector3");
+            r3xs2k.dir_ = la::normalized(numify<Vector3>(oi->GetText()));
+          }
+          oi = oi->NextSiblingElement();
+          if (oi)
+          {
+            NUKLEI_ASSERT(std::string(oi->Name()) == "width");
+            NUKLEI_ASSERT(oi->QueryDoubleText(&r3xs2k.dir_h_) == 0);
+            NUKLEI_ASSERT(oi->NextSiblingElement() == NULL);
+          }
+
+          k.reset(new kernel::r3xs2(r3xs2k));
+        }
+      }
+      else
+      {
+        kernel::r3 r3k;
+        r3k.loc_ = loc;
+        r3k.loc_h_ = loc_h;
+        k.reset(new kernel::r3(r3k));
+      }
+      k->setWeight(w);
+      
+      //TwoFingerDescriptor d;
+      //k->setDescriptor(d);
+      
+      observation->setKernel(*k);
+      
+      oc.incLabel("input");
+      
+      return std::auto_ptr<Observation>(observation);
+    }
+    // End of file reached.
+    return std::auto_ptr<Observation>();
 #endif
     NUKLEI_TRACE_END();
   }
@@ -284,7 +435,14 @@ namespace nuklei {
     kc.SetAttribute( "version", "1.0" );
     kc_ = out_->InsertEndChild(kc)->ToElement();
 #else
-    NUKLEI_THROW("This function requires TICPP.");
+    totalWeight_ = -1;
+    out_.reset(new tt::XMLDocument());
+    
+    out_->InsertEndChild(out_->NewDeclaration());
+    
+    kc_ = out_->NewElement("kernelCollection");
+    kc_->SetAttribute( "version", "1.0" );
+    out_->InsertEndChild(kc_);
 #endif
     NUKLEI_TRACE_END();
   }
@@ -302,7 +460,7 @@ namespace nuklei {
 #ifdef NUKLEI_USE_TICPP
     out_->SaveFile();
 #else
-    NUKLEI_THROW("This function requires TICPP.");
+    NUKLEI_ASSERT(out_->SaveFile(observationFileName_.c_str()) == 0);
 #endif
     NUKLEI_TRACE_END();
   }
@@ -314,6 +472,14 @@ namespace nuklei {
     ticpp::Element child(value);
     NUKLEI_ASSERT(parent != NULL);
     return parent->InsertEndChild(child)->ToElement();
+    NUKLEI_TRACE_END();
+  }
+#else
+  static tt::XMLElement* append(tt::XMLElement* parent, const std::string& value)
+  {
+    NUKLEI_TRACE_BEGIN();
+    NUKLEI_ASSERT(parent != NULL);
+    return parent->InsertEndChild(parent->GetDocument()->NewElement(value.c_str()))->ToElement();
     NUKLEI_TRACE_END();
   }
 #endif
@@ -379,7 +545,63 @@ namespace nuklei {
       width->SetText(stringify(r3xs2k.dir_h_, PRECISION));
     }
 #else
-    NUKLEI_THROW("This function requires TICPP.");
+    if (!out_) NUKLEI_THROW("Writer does not seem inited.");
+    
+    using namespace tt;
+
+    const Observation& observation = dynamic_cast<const Observation&>(o);
+    
+    kernel::base::ptr k = observation.getKernel();
+    
+    XMLElement* kernel = append(kc_, "kernel");
+
+    if (totalWeight_ == -1) totalWeight_ = k->getWeight();
+    else totalWeight_ += k->getWeight();
+    
+    {
+      XMLElement* w = append(kernel, "weight");
+      w->SetText(stringify(k->getWeight(), PRECISION).c_str());
+    }
+    {
+      XMLElement* loc = append(kernel, "location");
+      loc->SetAttribute("domain", "r3");
+      XMLElement* v3 = append(loc, "vector3");
+      v3->SetText(stringify(k->getLoc(), PRECISION).c_str());
+      XMLElement* width = append(loc, "width");
+      width->SetText(stringify(k->getLocH(), PRECISION).c_str());
+    }
+    
+    if (k->polyType() == kernel::base::SE3)
+    {
+      const kernel::se3& se3k = dynamic_cast<const kernel::se3&>(*k);
+      XMLElement* ori = append(kernel, "orientation");
+      ori->SetAttribute("domain", "so3");
+      XMLElement* q = append(ori, "quaternion");
+      q->SetAttribute("format", "wxyz");
+      q->SetText(stringify(se3k.ori_, PRECISION).c_str());
+      XMLElement* width = append(ori, "width");
+      width->SetText(stringify(se3k.ori_h_, PRECISION).c_str());
+    }
+    else if (k->polyType() == kernel::base::R3XS2P)
+    {
+      const kernel::r3xs2p& r3xs2pk = dynamic_cast<const kernel::r3xs2p&>(*k);
+      XMLElement* ori = append(kernel, "orientation");
+      ori->SetAttribute("domain", "s2p");
+      XMLElement* q = append(ori, "vector3");
+      q->SetText(stringify(r3xs2pk.dir_, PRECISION).c_str());
+      XMLElement* width = append(ori, "width");
+      width->SetText(stringify(r3xs2pk.dir_h_, PRECISION).c_str());
+    }
+    else if (k->polyType() == kernel::base::R3XS2)
+    {
+      const kernel::r3xs2& r3xs2k = dynamic_cast<const kernel::r3xs2&>(*k);
+      XMLElement* ori = append(kernel, "orientation");
+      ori->SetAttribute("domain", "s2");
+      XMLElement* q = append(ori, "vector3");
+      q->SetText(stringify(r3xs2k.dir_, PRECISION).c_str());
+      XMLElement* width = append(ori, "width");
+      width->SetText(stringify(r3xs2k.dir_h_, PRECISION).c_str());
+    }
 #endif
     NUKLEI_TRACE_END();
   }
