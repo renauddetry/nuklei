@@ -20,6 +20,11 @@ namespace ticpp {
   class Element;
   template < class T > class Iterator;
 }
+#else
+namespace tinyxml2 {
+  class XMLDocument;
+  class XMLElement;
+}
 #endif
 
 namespace nuklei {
@@ -43,6 +48,9 @@ namespace nuklei {
       boost::shared_ptr<ticpp::Document> in_;
       typedef ticpp::Iterator< ticpp::Element > ElementIterator;
       boost::shared_ptr<ElementIterator> e_;
+#else
+      boost::shared_ptr<tinyxml2::XMLDocument> in_;
+      tinyxml2::XMLElement* e_;
 #endif
     };
 
@@ -68,6 +76,9 @@ namespace nuklei {
 #ifdef NUKLEI_USE_TICPP
       boost::shared_ptr<ticpp::Document> out_;
       ticpp::Element* kc_;
+#else
+      boost::shared_ptr<tinyxml2::XMLDocument> out_;
+      tinyxml2::XMLElement* kc_;
 #endif
       coord_t totalWeight_;
     };
