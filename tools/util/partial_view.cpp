@@ -144,11 +144,16 @@ int create_mesh(int argc, char ** argv)
    "Input point cloud.",
    true, "", "filename", cmd);
   
-  TCLAP::UnlabeledValueArg<std::string> outFileArg
-  ("output",
-   "Output point cloud = partial view of input from viewpoint.",
-   true, "", "filename", cmd);
-    
+  TCLAP::ValueArg<std::string> offFileArg
+  ("o", "off",
+   "File to which the mesh is written in OFF format.",
+   false, "", "filename", cmd);
+
+  TCLAP::ValueArg<std::string> plyFileArg
+  ("p", "ply",
+   "File to which the mesh is written in PLY format.",
+   false, "", "filename", cmd);
+
   cmd.parse( argc, argv );
   
   NUKLEI_ASSERT(setpriority(PRIO_PROCESS, 0, niceArg.getValue()) == 0);
@@ -158,7 +163,10 @@ int create_mesh(int argc, char ** argv)
   
   kc.buildMesh();
   
-  kc.writeMeshToOffFile(outFileArg.getValue());
+  if (!offFileArg.getValue().empty())
+    kc.writeMeshToOffFile(offFileArg.getValue());
+  if (!plyFileArg.getValue().empty())
+    kc.writeMeshToPlyFile(plyFileArg.getValue());
   
   return 0;
   
