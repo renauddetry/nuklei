@@ -449,7 +449,7 @@ namespace nuklei {
       /**
        * @brief Builds set of partial views of the object. See @ref intermediary.
        */
-      void buildPartialViewCache(const double meshTol);
+      void buildPartialViewCache(const double meshTol, const bool useRayToSurfacenormalAngle = false);
       /**
        * @brief Assuming that the points in this collection form the surface of
        * an object, this function computes whether a point @p p is visible from
@@ -468,6 +468,13 @@ namespace nuklei {
       bool isVisibleFrom(const Vector3& p, const Vector3& viewpoint,
                          const coord_t& tolerance = FLOATTOL) const;
       /**
+       * @brief Same as isVisibleFrom(), but additionally checks that the 
+       * ray-to-surfacenormal angle is small enough.
+       */
+      bool isVisibleFrom(const kernel::r3xs2p& p, const Vector3& viewpoint,
+                         const coord_t& tolerance = FLOATTOL) const;
+      
+      /**
        * @brief Assuming that the points in this collection form the surface of
        * an object, this function returns the indices of points visible from
        * @p viewpoint.
@@ -475,7 +482,9 @@ namespace nuklei {
        * See isVisibleFrom() for more details.
        */
       std::vector<int> partialView(const Vector3& viewpoint,
-                                   const coord_t& tolerance = FLOATTOL) const;
+                                   const coord_t& tolerance = FLOATTOL,
+                                   const bool useViewcache = false,
+                                   const bool useRayToSurfacenormalAngle = false) const;
       /**
        * @brief Partial View Iterator type.
        *
@@ -494,7 +503,9 @@ namespace nuklei {
        */
       const_partialview_iterator
       partialViewBegin(const Vector3& viewpoint,
-                       const coord_t& tolerance = FLOATTOL) const;
+                       const coord_t& tolerance = FLOATTOL,
+                       const bool useViewcache = false,
+                       const bool useRayToSurfacenormalAngle = false) const;
       
       // Density-related methods
             
@@ -577,7 +588,9 @@ namespace nuklei {
       kernel::base::ptr deviation(const kernel::base &center) const;
       template<typename C>
       C partialView(const Vector3& viewpoint,
-                    const coord_t& tolerance) const;
+                    const coord_t& tolerance,
+                    const bool useViewcache,
+                    const bool useRayToSurfacenormalAngle) const;
       
       friend class boost::serialization::access;
       template<class Archive>

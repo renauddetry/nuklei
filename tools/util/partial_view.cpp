@@ -61,11 +61,15 @@ int partial_view(int argc, char ** argv)
    "Tolerance t in distsance from a point to the mesh. If a point is at "
    "distance t behind the mesh (with respect to the viewpoint), it is "
    "considered visible.",
-   false, FLOATTOL, "float", cmd);
+   false, 4, "float", cmd);
 
   TCLAP::SwitchArg colorizeArg
   ("c", "colorize_only",
    "Instead of ignoring occluded points, colorize them.", cmd);
+
+  TCLAP::SwitchArg normalsArg
+  ("n", "use_normals",
+   "Use surface normals in computing visibility.", cmd);
 
   cmd.parse( argc, argv );
   
@@ -73,7 +77,12 @@ int partial_view(int argc, char ** argv)
   
   KernelCollection kc;
   readObservations(inFileArg.getValue(), kc);
-
+  if (normalsArg.getValue())
+  {
+    kc.buildNeighborSearchTree();
+    kc.computeSurfaceNormals();
+  }
+  
   Vector3 viewpoint = readSingleObservation(viewpointFileArg.getValue())->getLoc();
   
   if (!meshFileArg.getValue().empty())
@@ -88,7 +97,12 @@ int partial_view(int argc, char ** argv)
   for (KernelCollection::const_iterator i = as_const(kc).begin();
        i != as_const(kc).end(); ++i)
   {
-    if (kc.isVisibleFrom(i->getLoc(), viewpoint, tol))
+    bool visible = false;
+    if (normalsArg.getValue())
+      visible = kc.isVisibleFrom(kernel::r3xs2p(*i), viewpoint, tol);
+    else
+      visible = kc.isVisibleFrom(i->getLoc(), viewpoint, tol);
+    if (visible)
     {
       view.add(*i);
       if (colorizeArg.getValue())

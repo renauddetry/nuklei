@@ -56,12 +56,29 @@ namespace nuklei {
   typedef std::vector< std::pair< Vector3, std::vector<int> > > viewcache_t;
 
 #ifdef NUKLEI_USE_CGAL
-
-  inline bool isVisible(const Point& target, const Point& camera,
+  
+  
+  inline bool isVisible(const Vector3& wtarget,
+                        const Vector3& wnormal,
+                        const Vector3& wcamera,
                         const Polyhedron& poly,
                         const Tree& tree,
                         const coord_t& tolerance)
   {
+    if (std::fabs(wnormal.SquaredLength()-1) < FLOATTOL)
+    {
+      Vector3 ctot = la::normalized(wtarget-wcamera);
+      double dot = wnormal.Dot(ctot);
+      if (std::acos(std::fabs(dot)) > (80./180*M_PI))
+      {
+        return false;
+      }
+    }
+    
+    Point camera(wcamera.X(), wcamera.Y(), wcamera.Z());
+    Point target(wtarget.X(), wtarget.Y(), wtarget.Z());
+    
+    //double d = dot();
     Segment segment_query(camera,target);
     bool visible = true;
     
@@ -107,6 +124,20 @@ namespace nuklei {
     
   }
   
+  inline bool isVisible(const Vector3& wtarget,
+                        const Vector3& wcamera,
+                        const Polyhedron& poly,
+                        const Tree& tree,
+                        const coord_t& tolerance)
+  {
+    return isVisible(wtarget,
+                     Vector3::ZERO,
+                     wcamera,
+                     poly,
+                     tree,
+                     tolerance);
+  }
+
 #endif
   
   bool KernelCollection::isVisibleFrom(const Vector3& p, const Vector3& viewpoint,
@@ -114,15 +145,12 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CGAL
-    Point camera(viewpoint.X(), viewpoint.Y(), viewpoint.Z());
-    Point target(p.X(), p.Y(), p.Z());
-    
     if (!deco_.has_key(MESH_KEY))
       NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
     if (!deco_.has_key(AABBTREE_KEY))
       NUKLEI_THROW("Undefined AABB tree. Call buildMesh() first.");
     
-    return isVisible(target, camera,
+    return isVisible(p, viewpoint,
                      *deco_.get< boost::shared_ptr<Polyhedron> >(MESH_KEY),
                      *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY),
                      tolerance);
@@ -132,9 +160,31 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
   
+  bool KernelCollection::isVisibleFrom(const kernel::r3xs2p& p, const Vector3& viewpoint,
+                                       const coord_t& tolerance) const
+  {
+    NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_USE_CGAL
+    if (!deco_.has_key(MESH_KEY))
+      NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
+    if (!deco_.has_key(AABBTREE_KEY))
+      NUKLEI_THROW("Undefined AABB tree. Call buildMesh() first.");
+
+    return isVisible(p.loc_, p.dir_, viewpoint,
+                     *deco_.get< boost::shared_ptr<Polyhedron> >(MESH_KEY),
+                     *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY),
+                     tolerance);
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
+    NUKLEI_TRACE_END();
+  }
+
   template<typename C>
   C KernelCollection::partialView(const Vector3& viewpoint,
-                                  const coord_t& tolerance) const
+                                  const coord_t& tolerance,
+                                  const bool useViewcache,
+                                  const bool useRayToSurfacenormalAngle) const
   {
     NUKLEI_TRACE_BEGIN();
 
@@ -150,13 +200,14 @@ namespace nuklei {
       
       const Polyhedron& poly = *deco_.get< boost::shared_ptr<Polyhedron> >(MESH_KEY);
       const Tree& tree = *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY);
-      Point camera(viewpoint.X(), viewpoint.Y(), viewpoint.Z());
       
       for (const_iterator v = begin(); v != end(); ++v)
       {
         Vector3 p = v->getLoc();
-        Point target(p.X(), p.Y(), p.Z());
-        if (isVisible(target, camera, poly, tree, tolerance))
+        Vector3 normal = Vector3::ZERO;
+        if (useRayToSurfacenormalAngle)
+          normal = kernel::r3xs2p(*v).dir_;
+        if (isVisible(p, normal, viewpoint, poly, tree, tolerance))
           index_collection.push_back(std::distance(begin(), v));
       }
 #else
@@ -190,11 +241,13 @@ namespace nuklei {
   
   
   std::vector<int> KernelCollection::partialView(const Vector3& viewpoint,
-                                                 const coord_t& tolerance) const
+                                                 const coord_t& tolerance,
+                                                 const bool useViewcache,
+                                                 const bool useRayToSurfacenormalAngle) const
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CGAL
-    return partialView< std::vector<int> >(viewpoint, tolerance);
+    return partialView< std::vector<int> >(viewpoint, tolerance, useViewcache, useRayToSurfacenormalAngle);
 #else
     NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
@@ -203,7 +256,9 @@ namespace nuklei {
   
   
   KernelCollection::const_partialview_iterator KernelCollection::partialViewBegin(const Vector3& viewpoint,
-                                                                                  const coord_t& tolerance) const
+                                                                                  const coord_t& tolerance,
+                                                                                  const bool useViewcache,
+                                                                                  const bool useRayToSurfacenormalAngle) const
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CGAL
@@ -216,7 +271,7 @@ namespace nuklei {
     index_t;
     
     index_container_ptr index_collection(new index_container);
-    *index_collection = partialView< index_container >(viewpoint, tolerance);
+    *index_collection = partialView< index_container >(viewpoint, tolerance, useViewcache, useRayToSurfacenormalAngle);
     
     return const_partialview_iterator(begin(), index_collection);
 #else
@@ -225,7 +280,7 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
   
-  void KernelCollection::buildPartialViewCache(const double meshTol)
+  void KernelCollection::buildPartialViewCache(const double meshTol, const bool useRayToSurfacenormalAngle)
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CGAL
@@ -272,7 +327,7 @@ namespace nuklei {
     {
       Vector3 key = keys.at(o);
       Vector3 vp = mean + key*stdev*20;
-      std::vector<int> vi = as_const(*this).partialView(vp, meshTol);
+      std::vector<int> vi = as_const(*this).partialView(vp, meshTol, false, useRayToSurfacenormalAngle);
 #if 0
       // debug - delete when code is considered stable
       KernelCollection v;

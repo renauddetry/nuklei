@@ -113,7 +113,7 @@ namespace nuklei
       // matching score from that.
       
       KernelCollection::const_partialview_iterator viewIterator =
-      objectModel_.partialViewBegin(viewpointInFrame(t), meshTol_);
+      objectModel_.partialViewBegin(viewpointInFrame(t), meshTol_, false, true);
       for (KernelCollection::const_partialview_iterator i = viewIterator;
            i != i.end(); ++i)
       {
@@ -223,7 +223,7 @@ namespace nuklei
         objectModel_.readMeshFromOffFile(meshfile);
       else
         objectModel_.buildMesh();
-      objectModel_.buildPartialViewCache(meshTol_);
+      objectModel_.buildPartialViewCache(meshTol_, objectModel_.front().polyType() == kernel::base::R3XS2P);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -297,10 +297,16 @@ namespace nuklei
         if (partialview_)
         {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
-          bool visible =
-          objectModel_.isVisibleFrom(objectModel_.at(indices.front()).getLoc(),
-                                     viewpointInFrame(nextPose),
-                                     meshTol_);
+          bool visible = false;
+          const kernel::base& tmp = objectModel_.at(indices.front());
+          if (tmp.polyType() == kernel::base::R3XS2P)
+            objectModel_.isVisibleFrom(kernel::r3xs2p(tmp),
+                                       viewpointInFrame(nextPose),
+                                       meshTol_);
+          else
+            objectModel_.isVisibleFrom(tmp.getLoc(),
+                                       viewpointInFrame(nextPose),
+                                       meshTol_);
           if (!visible) continue;
 #else
           NUKLEI_THROW("Requires the partial view version of Nuklei.");
@@ -337,7 +343,7 @@ namespace nuklei
       Vector3 mean = objectModel_.mean()->getLoc();
       Vector3 v = viewpointInFrame(nextPose) - mean;
       v = v/v.Length();
-      indices = objectModel_.partialView(v, -1);
+      indices = objectModel_.partialView(v, meshTol_, true, true);
 //      indices = objectModel_.partialView(viewpointInFrame(nextPose),
 //                                         meshTol_);
       std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
@@ -491,9 +497,17 @@ namespace nuklei
            i != objectModel_.end(); ++i)
       {
         objectModel.add(*i);
-        if (objectModel_.isVisibleFrom(i->getLoc(),
-                                       viewpointInFrame(tt),
-                                       meshTol_))
+        bool visible = false;
+        const kernel::base& tmp = *i;
+        if (tmp.polyType() == kernel::base::R3XS2P)
+          objectModel_.isVisibleFrom(kernel::r3xs2p(tmp),
+                                     viewpointInFrame(tt),
+                                     meshTol_);
+        else
+          objectModel_.isVisibleFrom(tmp.getLoc(),
+                                     viewpointInFrame(tt),
+                                     meshTol_);
+        if (visible)
         {
           RGBColor c(0, 0, 1);
           ColorDescriptor d;
