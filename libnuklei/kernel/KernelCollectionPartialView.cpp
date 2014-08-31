@@ -190,7 +190,7 @@ namespace nuklei {
 
     C index_collection;
 
-    if (tolerance > 0)
+    if (!useViewcache)
     {
 #ifdef NUKLEI_USE_CGAL
       if (!deco_.has_key(MESH_KEY))
@@ -225,8 +225,8 @@ namespace nuklei {
       viewcache_t::const_iterator closest = as_const(viewIndex).begin();
       for (viewcache_t::const_iterator oo = as_const(viewIndex).begin(); oo != viewIndex.end(); ++oo)
       {
-        double tmp = (viewpoint-oo->first).Length();
-        if (tmp < minDist)
+        double tmp = (viewpoint-oo->first).SquaredLength();
+        if (tmp < minDist*minDist)
         {
           minDist = tmp;
           closest = oo;

@@ -31,6 +31,7 @@ namespace nuklei
   
   kernel::se3 PoseEstimator::modelToSceneTransformation() const
   {
+    NUKLEI_TRACE_BEGIN();
     int n = -1;
     
     if (n_ <= 0)
@@ -74,11 +75,13 @@ namespace nuklei
     pose.setWeight(findMatchingScore(pose));
     
     return pose;
+    NUKLEI_TRACE_END();
   }
   
   double
   PoseEstimator::findMatchingScore(const kernel::se3& pose) const
   {
+    NUKLEI_TRACE_BEGIN();
     kernel::se3 t = pose;
     
     if (!partialview_)
@@ -131,6 +134,7 @@ namespace nuklei
     }
     
     return t.getWeight();
+    NUKLEI_TRACE_END();
   }
   
   void PoseEstimator::load(const std::string& objectFilename,
@@ -140,6 +144,7 @@ namespace nuklei
                            const bool light,
                            const bool computeNormals)
   {
+    NUKLEI_TRACE_BEGIN();
     KernelCollection objectModel, sceneModel;
     readObservations(objectFilename, objectModel);
     readObservations(sceneFilename, sceneModel);
@@ -151,6 +156,7 @@ namespace nuklei
     }
     load(objectModel, sceneModel, meshfile, viewpoint,
          light, computeNormals);
+    NUKLEI_TRACE_END();
   }
   
   
@@ -161,6 +167,7 @@ namespace nuklei
                            const bool light,
                            const bool computeNormals)
   {
+    NUKLEI_TRACE_BEGIN();
     objectModel_ = objectModel;
     sceneModel_ = sceneModel;
     viewpoint_ = viewpoint;
@@ -223,7 +230,7 @@ namespace nuklei
         objectModel_.readMeshFromOffFile(meshfile);
       else
         objectModel_.buildMesh();
-      objectModel_.buildPartialViewCache(meshTol_, objectModel_.front().polyType() == kernel::base::R3XS2P);
+      objectModel_.buildPartialViewCache(meshTol_, as_const(objectModel_).front().polyType() == kernel::base::R3XS2P);
 #else
       NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -232,6 +239,7 @@ namespace nuklei
     // Create dummy ProgressIndicator
     if (progress_)
       pi_.reset(new ProgressIndicator(1, "", 11));
+    NUKLEI_TRACE_END();
   }
   
   
@@ -426,8 +434,8 @@ namespace nuklei
   
   kernel::se3
   PoseEstimator::mcmc(const int n) const
-  
   {
+    NUKLEI_TRACE_BEGIN();
     kernel::se3 currentPose, bestPose;
     weight_t currentWeight = 0;
     bestPose.setWeight(currentWeight);
@@ -472,6 +480,7 @@ namespace nuklei
     }
     
     return bestPose;
+    NUKLEI_TRACE_END();
   }
   
   Vector3 PoseEstimator::viewpointInFrame(const kernel::se3& frame) const
@@ -487,6 +496,7 @@ namespace nuklei
   PoseEstimator::writeAlignedModel(const std::string& filename,
                                    const kernel::se3& t) const
   {
+    NUKLEI_TRACE_BEGIN();
     KernelCollection objectModel = objectModel_;
     if (partialview_)
     {
@@ -521,6 +531,7 @@ namespace nuklei
     writeObservations(filename,
                       objectModel,
                       Observation::SERIAL);
+    NUKLEI_TRACE_END();
   }
   
   void PoseEstimator::setCustomIntegrandFactor(boost::shared_ptr<CustomIntegrandFactor> cif)
