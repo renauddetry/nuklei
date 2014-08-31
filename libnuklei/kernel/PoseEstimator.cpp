@@ -57,7 +57,7 @@ namespace nuklei
     }
     
     if (progress_)
-      pi_->initialize(0, 10*n*(partialview_?10:1)*nChains_ / 10, "Estimating pose", 0);
+      pi_->initialize(0, 10*n*(partialview_?4:1)*nChains_ / 10, "Estimating pose", 0);
     
     parallelizer p(nChains_, parallel_);
     std::vector<kernel::se3> retv =
@@ -445,7 +445,7 @@ namespace nuklei
     int nSteps = 1000;
     if (partialview_) nSteps = 1000;
     //fixme:
-    nSteps = 10*n*(partialview_?10:1);
+    nSteps = 10*n*(partialview_?4:1);
     
     for (int i = 0; i < nSteps; i++)
     {
