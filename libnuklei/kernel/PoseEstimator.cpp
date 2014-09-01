@@ -254,6 +254,24 @@ namespace nuklei
     }
   }
   
+  bool PoseEstimator::recomputeIndices(std::vector<int>& indices,
+                                       const kernel::se3& nextPose,
+                                       const int n) const
+  {
+    Vector3 mean = objectModel_.mean()->getLoc();
+    Vector3 v = la::normalized(viewpointInFrame(nextPose) - mean);
+    indices = objectModel_.partialView(v, meshTol_, true, true);
+    
+    if (indices.size() < 20) return false;
+    
+    //      indices = objectModel_.partialView(viewpointInFrame(nextPose),
+    //                                         meshTol_);
+    std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
+    if (indices.size() > n)
+      indices.resize(n);
+    return true;
+  }
+  
   /**
    * This function implements the algorithm of Fig. 2: Simulated annealing
    * algorithm of the ACCV paper.
@@ -307,6 +325,7 @@ namespace nuklei
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
           bool visible = false;
           const kernel::base& tmp = objectModel_.at(indices.front());
+
           if (tmp.polyType() == kernel::base::R3XS2P)
             objectModel_.isVisibleFrom(kernel::r3xs2p(tmp),
                                        viewpointInFrame(nextPose),
@@ -316,6 +335,10 @@ namespace nuklei
                                        viewpointInFrame(nextPose),
                                        meshTol_);
           if (!visible) continue;
+
+          if (! recomputeIndices(indices, nextPose, n))
+            continue;
+
 #else
           NUKLEI_THROW("Requires the partial view version of Nuklei.");
 #endif
@@ -335,36 +358,20 @@ namespace nuklei
         if (count == 100) return;
         nextPose = currentPose.sample();
         if (cif_ && !cif_->test(nextPose)) continue;
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
+        if (! recomputeIndices(indices, nextPose, n))
+          continue;
+#endif
         break;
       }
     }
-    
+
     weight_t weight = 0;
     
     double threshold = Random::uniform();
     
-    if (partialview_)
-    {
-#ifdef NUKLEI_HAS_PARTIAL_VIEW
-      
-      // fixme: could get mean computation out of this loop to save a few ms.
-      Vector3 mean = objectModel_.mean()->getLoc();
-      Vector3 v = viewpointInFrame(nextPose) - mean;
-      v = v/v.Length();
-      indices = objectModel_.partialView(v, meshTol_, true, true);
-//      indices = objectModel_.partialView(viewpointInFrame(nextPose),
-//                                         meshTol_);
-      std::random_shuffle(indices.begin(), indices.end(), Random::uniformInt);
-      if (indices.size() > n)
-        indices.resize(n);
-#else
-      NUKLEI_THROW("Requires the partial view version of Nuklei.");
-#endif
-      
-    }
-    
     double factor = (cif_?cif_->factor(nextPose):1.);
-    
+
     // Go through the points of the model
     for (unsigned pi = 0; pi < indices.size(); ++pi)
     {

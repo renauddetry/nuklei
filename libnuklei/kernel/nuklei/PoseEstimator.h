@@ -106,7 +106,10 @@ namespace nuklei {
     
     kernel::se3
     mcmc(const int n) const;
-    
+    bool recomputeIndices(std::vector<int>& indices,
+                          const kernel::se3& nextPose,
+                          const int n) const;
+
     KernelCollection objectModel_;
     double objectSize_;
     KernelCollection sceneModel_;
