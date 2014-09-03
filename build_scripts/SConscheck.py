@@ -135,11 +135,11 @@ if conf.env['UseCGAL']:
 
     conf.env.Append(LIBS = [ 'CGAL', 'CGAL_Core' ])
 
-    if env['PartialView']:
+    if conf.env['PartialView']:
       if not conf.CheckLib('gmpxx', language = 'C++') or \
          not conf.CheckLib('mpfr', language = 'C++') or \
          not conf.CheckLib('gmp', language = 'C++') or \
-         not conf.CheckPKG('eigen3 >= 3.1.0')
+         not conf.CheckPKG('eigen3 >= 3.1.0'):
         print 'Please check your GMP and Eigen installation.'
         print '** For more information, refer to the INSTALL document **'
         Exit(1)

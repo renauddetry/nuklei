@@ -345,7 +345,7 @@ namespace nuklei
         if (count == 100) return;
         nextPose = currentPose.sample();
         if (cif_ && !cif_->test(nextPose)) continue;
-        if (partialView_ && ! recomputeIndices(indices, nextPose, n))
+        if (partialview_ && ! recomputeIndices(indices, nextPose, n))
           continue;
         break;
       }
