@@ -4,7 +4,7 @@
 
 /** @file */
 
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
 
 #define CGAL_EIGEN3_ENABLED
 
@@ -31,7 +31,7 @@
 
 #include <nuklei/KernelCollection.h>
 
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
 
 typedef CGAL::Simple_cartesian<double> K;
 typedef K::Point_3 Point;
@@ -55,7 +55,7 @@ namespace nuklei {
 
   typedef std::vector< std::pair< Vector3, std::vector<int> > > viewcache_t;
 
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
   
   
   inline bool isVisible(const Vector3& wtarget,
@@ -144,7 +144,7 @@ namespace nuklei {
                                        const coord_t& tolerance) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     if (!deco_.has_key(MESH_KEY))
       NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
     if (!deco_.has_key(AABBTREE_KEY))
@@ -155,7 +155,7 @@ namespace nuklei {
                      *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY),
                      tolerance);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -164,7 +164,7 @@ namespace nuklei {
                                        const coord_t& tolerance) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     if (!deco_.has_key(MESH_KEY))
       NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
     if (!deco_.has_key(AABBTREE_KEY))
@@ -175,7 +175,7 @@ namespace nuklei {
                      *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY),
                      tolerance);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -192,7 +192,7 @@ namespace nuklei {
 
     if (!useViewcache)
     {
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
       if (!deco_.has_key(MESH_KEY))
         NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
       if (!deco_.has_key(AABBTREE_KEY))
@@ -211,7 +211,7 @@ namespace nuklei {
           index_collection.push_back(std::distance(begin(), v));
       }
 #else
-      NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+      NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     }
     else
@@ -246,10 +246,10 @@ namespace nuklei {
                                                  const bool useRayToSurfacenormalAngle) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     return partialView< std::vector<int> >(viewpoint, tolerance, useViewcache, useRayToSurfacenormalAngle);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -261,7 +261,7 @@ namespace nuklei {
                                                                                   const bool useRayToSurfacenormalAngle) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     
     typedef const_partialview_iterator::index_container
     index_container;
@@ -275,7 +275,7 @@ namespace nuklei {
     
     return const_partialview_iterator(begin(), index_collection);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -283,7 +283,7 @@ namespace nuklei {
   void KernelCollection::buildPartialViewCache(const double meshTol, const bool useRayToSurfacenormalAngle)
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     Vector3 mean = as_const(*this).moments()->getLoc();
     double stdev = as_const(*this).moments()->getLocH();
     
@@ -390,7 +390,7 @@ namespace nuklei {
 #endif
     
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
 

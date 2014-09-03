@@ -4,7 +4,7 @@
 
 /** @file */
 
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
 
 
 #define CGAL_EIGEN3_ENABLED
@@ -59,7 +59,7 @@
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
 
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
 
 
 namespace meshing_types {
@@ -110,6 +110,7 @@ namespace view_types {
 
 namespace nuklei {
   
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
   static void buildAABBTree(decoration<int>& deco, const int aabbKey,
                             SimplePolyhedron& poly)
   {
@@ -124,11 +125,12 @@ namespace nuklei {
     if (deco.has_key(aabbKey)) deco.erase(aabbKey);
     deco.insert(aabbKey, tree);
   }
+#endif
   
   void KernelCollection::buildMesh()
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     
     boost::shared_ptr<SimplePolyhedron> poly(new SimplePolyhedron);
     
@@ -260,7 +262,7 @@ namespace nuklei {
     
     buildAABBTree(deco_, AABBTREE_KEY, *poly);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -268,13 +270,13 @@ namespace nuklei {
   void KernelCollection::writeMeshToOffFile(const std::string& filename) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     if (!deco_.has_key(MESH_KEY))
       NUKLEI_THROW("Undefined mesh. Call buildMesh() first.");
     std::ofstream out(filename.c_str());
     out << *deco_.get< boost::shared_ptr<SimplePolyhedron> >(MESH_KEY);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -282,6 +284,7 @@ namespace nuklei {
   void KernelCollection::writeMeshToPlyFile(const std::string& filename) const
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     boost::filesystem::path offfile =
     boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.off");
     boost::filesystem::path plyfile =
@@ -290,13 +293,16 @@ namespace nuklei {
     boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(offfile.native()));
     mesh->write(plyfile.native());
     boost::filesystem::copy_file(plyfile, filename);
+#else
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
     NUKLEI_TRACE_END();
   }
 
   void KernelCollection::readMeshFromOffFile(const std::string& filename)
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     boost::shared_ptr<SimplePolyhedron> poly(new SimplePolyhedron);
     std::ifstream in(filename.c_str());
     CGAL::scan_OFF(in, *poly, true /* verbose */);
@@ -308,7 +314,7 @@ namespace nuklei {
     deco_.insert(MESH_KEY, poly);
     buildAABBTree(deco_, AABBTREE_KEY, *poly);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -316,6 +322,7 @@ namespace nuklei {
   void KernelCollection::readMeshFromPlyFile(const std::string& filename)
   {
     NUKLEI_TRACE_BEGIN();
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
     boost::filesystem::path offfile =
     boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.off");
     boost::filesystem::path plyfile =
@@ -324,6 +331,9 @@ namespace nuklei {
     boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(plyfile.native()));
     mesh->write(offfile.native());
     readMeshFromOffFile(offfile.native());
+#else
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
     NUKLEI_TRACE_END();
   }
 

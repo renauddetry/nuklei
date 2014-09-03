@@ -135,33 +135,23 @@ if conf.env['UseCGAL']:
 
     conf.env.Append(LIBS = [ 'CGAL', 'CGAL_Core' ])
 
-    precisionFound = conf.CheckLib('gmpxx', language = 'C++') and \
-                     conf.CheckLib('mpfr', language = 'C++') and \
-                     conf.CheckLib('gmp', language = 'C++')
-
-    taucsFound = conf.CheckCHeader('taucs.h') and \
-                 conf.CheckLib('taucs', language = 'C')
-
-    eigen3Found = conf.CheckPKG('eigen3 >= 1.0.0')
-
-    if not precisionFound:
-      print 'Mesh and partial view computation disabled because GMP and MPFR not found.'
-    else:
+    if env['PartialView']:
+      if not conf.CheckLib('gmpxx', language = 'C++') or \
+         not conf.CheckLib('mpfr', language = 'C++') or \
+         not conf.CheckLib('gmp', language = 'C++') or \
+         not conf.CheckPKG('eigen3 >= 3.1.0')
+        print 'Please check your GMP and Eigen installation.'
+        print '** For more information, refer to the INSTALL document **'
+        Exit(1)
       conf.env.Append(LIBS = [ 'gmpxx', 'mpfr', 'gmp' ])
-      conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_PRECISION' ])
-
-      if eigen3Found:
-        eigen3dict = conf.env.ParseFlags("!pkg-config --cflags --libs eigen3")
-        for i in eigen3dict['CPPPATH']:
-          eigen3dict['CCFLAGS'].append('-I' + i)
-        eigen3dict['CPPPATH'] = []
-        conf.env.MergeFlags(eigen3dict)
-        conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_EIGEN3' ])
-      elif taucsFound:
-        conf.env.Append(LIBS = [ 'taucs' ])
-        conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_TAUCS' ])
-      else:
-        print 'Mesh and partial view computation disabled because neither Eigen3 or TAUCS were found.'
+      conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PRECISION' ])
+      eigen3dict = conf.env.ParseFlags("!pkg-config --cflags --libs eigen3")
+      for i in eigen3dict['CPPPATH']:
+        eigen3dict['CCFLAGS'].append('-I' + i)
+      eigen3dict['CPPPATH'] = []
+      conf.env.MergeFlags(eigen3dict)
+      conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_EIGEN3' ])
+      conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_PARTIAL_VIEW' ])
 
 # GSL
 

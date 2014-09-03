@@ -111,7 +111,6 @@ namespace nuklei
     }
     else
     {
-#ifdef NUKLEI_HAS_PARTIAL_VIEW
       // Use a mesh to compute the partial view of the model and compute the
       // matching score from that.
       
@@ -128,9 +127,6 @@ namespace nuklei
       
       if (cif_ && !cif_->test(t))
         t.setWeight(0);
-#else
-      NUKLEI_THROW("Requires the partial view version of Nuklei.");
-#endif
     }
     
     return t.getWeight();
@@ -225,15 +221,11 @@ namespace nuklei
     
     if (partialview_)
     {
-#ifdef NUKLEI_HAS_PARTIAL_VIEW
       if (!meshfile.empty())
         objectModel_.readMeshFromOffFile(meshfile);
       else
         objectModel_.buildMesh();
       objectModel_.buildPartialViewCache(meshTol_, as_const(objectModel_).front().polyType() == kernel::base::R3XS2P);
-#else
-      NUKLEI_THROW("Requires the partial view version of Nuklei.");
-#endif
     }
     
     // Create dummy ProgressIndicator
@@ -322,7 +314,6 @@ namespace nuklei
         
         if (partialview_)
         {
-#ifdef NUKLEI_HAS_PARTIAL_VIEW
           bool visible = false;
           const kernel::base& tmp = objectModel_.at(indices.front());
 
@@ -338,10 +329,6 @@ namespace nuklei
 
           if (! recomputeIndices(indices, nextPose, n))
             continue;
-
-#else
-          NUKLEI_THROW("Requires the partial view version of Nuklei.");
-#endif
         }
         
         break;
@@ -358,10 +345,8 @@ namespace nuklei
         if (count == 100) return;
         nextPose = currentPose.sample();
         if (cif_ && !cif_->test(nextPose)) continue;
-#ifdef NUKLEI_HAS_PARTIAL_VIEW
-        if (! recomputeIndices(indices, nextPose, n))
+        if (partialView_ && ! recomputeIndices(indices, nextPose, n))
           continue;
-#endif
         break;
       }
     }
@@ -507,7 +492,6 @@ namespace nuklei
     KernelCollection objectModel = objectModel_;
     if (partialview_)
     {
-#ifdef NUKLEI_HAS_PARTIAL_VIEW
       objectModel = KernelCollection();
       kernel::se3 tt = t;
       for (KernelCollection::const_iterator i = objectModel_.begin();
@@ -532,7 +516,6 @@ namespace nuklei
           objectModel.back().setDescriptor(d);
         }
       }
-#endif
     }
     objectModel.transformWith(t);
     writeObservations(filename,

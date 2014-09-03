@@ -8,8 +8,6 @@
 #ifndef NUKLEI_KERNELCOLLECTION_H
 #define NUKLEI_KERNELCOLLECTION_H
 
-#define NUKLEI_HAS_PARTIAL_VIEW
-
 #include <vector>
 #include <string>
 #include <iostream>

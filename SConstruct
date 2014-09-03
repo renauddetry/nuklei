@@ -152,6 +152,8 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('use_ticpp', 'Enables functions that depend on TICPP', 'yes',
                allowed_values = ('yes', 'no')),
+  EnumVariable('partial_view', 'Enables code for partial-view--aware pose estimation.', 'no',
+               allowed_values = ('yes', 'no')),
   EnumVariable('branch_in_build_dir', 'This option is for Nuklei developers only. ' + \
                'It tells SCons to use the name of the current git branch in build ' + \
                'directory', 'no',
@@ -182,6 +184,7 @@ env['UseOpenCV'] = env['use_opencv'] == 'yes'
 env['UsePCL'] = env['use_pcl'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
 env['UseTICPP'] = env['use_ticpp'] == 'yes'
+env['PartialView'] = env['partial_view'] == 'yes'
 env['BuildStaticExecutable'] = env['static'] == 'yes'
 
 if env['CXX'].find('clang++') >= 0:
