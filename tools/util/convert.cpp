@@ -16,6 +16,7 @@
 #include <nuklei/Serial.h>
 #include <nuklei/nullable.h>
 #include <nuklei/ProgressIndicator.h>
+#include <nuklei/ObservationIO.h>
 
 using namespace nuklei;
 
@@ -32,15 +33,18 @@ void convert(const std::vector<std::string>& files,
              boost::shared_ptr<RegionOfInterest> roi = boost::shared_ptr<RegionOfInterest>(),
              const int nObs = -1,
              const double minDist = 0,
-             const int removePlane = 0,
+             const bool removePlane = false,
+             const int ransacIter = 100,
              const double inlierThreshold = 8,
+             const std::string& fittedPlaneFile = "",
              bool makeR3xS2P = false,
              bool removeNormals = false,
              const std::string &filterRGB = "",
              const std::string &setRGB = "",
              const Color::Type colorToLoc = Color::UNKNOWN)
 {
-  bool storeInKc = removePlane > 0 || nObs >= 0 || minDist > 0 || minDist == -1 ||
+  bool storeInKc = removePlane || !fittedPlaneFile.empty() ||
+    nObs >= 0 || minDist > 0 || minDist == -1 ||
     normalizePose || !normalizingTransfoFile.empty() ||
     normalizeScale || !normalizingScaleFile.empty() ||
     makeR3xS2P || removeNormals ||
@@ -118,7 +122,7 @@ void convert(const std::vector<std::string>& files,
   
   if (storeInKc)
   {
-    if (removePlane > 0)
+    if (removePlane || !fittedPlaneFile.empty())
     {
       KernelCollection kc;
       for (std::vector< boost::shared_ptr<Observation> >::const_iterator
@@ -129,8 +133,9 @@ void convert(const std::vector<std::string>& files,
         r3k.loc_ = (*i)->getKernel()->getLoc();
         kc.add(r3k);
       }
-      kernel::se3 k = kc.ransacPlaneFit(inlierThreshold, removePlane);
+      kernel::se3 k = kc.ransacPlaneFit(inlierThreshold, ransacIter);
       Plane3 plane(la::matrixCopy(k.ori_).GetColumn(2), k.loc_);
+      kernel::
       
       std::vector< boost::shared_ptr<Observation> > tmp = observations;
       observations.clear();
@@ -139,8 +144,14 @@ void convert(const std::vector<std::string>& files,
            i != tmp.end(); ++i)
       {
         Vector3 loc = (*i)->getKernel()->getLoc();
-        if (std::fabs(plane.DistanceTo(loc)) >= inlierThreshold)
-          observations.push_back(*i);
+        if (removePlane && std::fabs(plane.DistanceTo(loc)) < inlierThreshold)
+          continue;
+        observations.push_back(*i);
+      }
+      
+      if (!fittedPlaneFile.empty())
+      {
+        writeSingleObservation(fittedPlaneFile, k, Observation::SERIAL);
       }
     }
 
@@ -569,11 +580,22 @@ int convert(int argc, char ** argv)
    "argument.",
    false, 0, "float", cmd);
 
-  TCLAP::ValueArg<int> removePlaneArg
-    ("", "remove_plane",
-     "Remove the largest plane, use the given int as number of RANSAC iterations. "
-     "A value of 100 is a good start.",
-     false, -1, "int", cmd);
+  TCLAP::SwitchArg removeDominantPlaneArg
+  ("", "remove_dominant_plane",
+   "Remove dominant plane.", cmd);
+
+  TCLAP::ValueArg<int> ransacIterArg
+  ("", "ransac_iter",
+   "Number of RANSAC iterations in plane fitting. "
+   "A value of 100 is a good start.",
+   false, 100, "int", cmd);
+
+  TCLAP::ValueArg<std::string> fittedPlaneArg
+    ("", "fitted_plane",
+     "Fit plane to data. Write the plane params to the provided file. "
+     "The plane is written as an SE(3) point. The Z axis of the ori is normal "
+     "to the plane. The other two axes indicate its principal components.",
+     false, "", "string", cmd);
 
   TCLAP::ValueArg<double> removePlaneInlierTArg
   ("", "inlier_threshold",
@@ -722,7 +744,7 @@ int convert(int argc, char ** argv)
     else
       roi = boxROI;
   }
-
+  
   convert(fileListArg.getValue(), transfo.get(), scaleArg.getValue(),
           normalizePoseArg.getValue(), normalizingTransfoFileArg.getValue(),
           normalizeScaleArg.getValue(), normalizingScaleFileArg.getValue(),
@@ -731,7 +753,9 @@ int convert(int argc, char ** argv)
           typeFromName<Observation>(outTypeArg.getValue()),
           roi,
           nObsArg.getValue(), minDistArg.getValue(),
-          removePlaneArg.getValue(), removePlaneInlierTArg.getValue(),
+          removeDominantPlaneArg.getValue(), ransacIterArg.getValue(),
+          removePlaneInlierTArg.getValue(),
+          fittedPlaneArg.getValue(),
           makeR3xs2pArg.getValue() || computeNormalsArg.getValue(),
           removeNormalsArg.getValue(),
           filterRGBArg.getValue(),
