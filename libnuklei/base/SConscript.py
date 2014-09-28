@@ -25,6 +25,9 @@ addfiles(sources, names, '*.cpp')
 
 env.Prepend(CPPPATH = [ '.' ])
 
+env.Prepend(CCFLAGS = [ '-frounding-math' ])
+env.Append(CPPDEFINES = [ 'CGAL_USE_F2C' ])
+
 sources.remove('Definitions.cpp')
 defEnv = env.Clone()
 #defEnv.Append(CPPDEFINES = [ ( 'UPDATE', "\\\"" +
