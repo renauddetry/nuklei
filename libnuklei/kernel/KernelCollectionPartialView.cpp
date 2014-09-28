@@ -363,6 +363,7 @@ namespace nuklei {
             for (std::vector<int>::iterator j = oo->second.begin(); j != oo->second.end(); ++j)
               near.add(as_const(*this).at(*j));
             near.computeKernelStatistics();
+            if (near.size() == 0) continue;
             kernel::base::ptr k = near.randomKernel().create();
             k->setLoc(mean + oo->first*stdev*20);
             near.add(*k);
@@ -378,9 +379,10 @@ namespace nuklei {
         for (std::vector<int>::iterator j = o->second.begin(); j != o->second.end(); ++j)
         {
           near.add(as_const(*this).at(*j));
-          near.back().setLoc(near.back().getLoc()+Vector3(1, 0, 0));
+          near.back().setLoc(near.back().getLoc()+Vector3(0.001, 0, 0));
         }
         near.computeKernelStatistics();
+        if (near.size() == 0) continue;
         kernel::base::ptr k = near.randomKernel().create();
         k->setLoc(mean + o->first*stdev*20);
         near.add(*k);

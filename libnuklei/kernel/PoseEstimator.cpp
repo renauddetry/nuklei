@@ -305,7 +305,8 @@ namespace nuklei
       for (int count = 0; ; ++count)
       {
         if (count == 100) return;
-        kernel::se3::ptr k2 = objectModel_.at(indices.front()).polySe3Proj();
+        const kernel::base& randomModelPoint = objectModel_.at(indices.at(Random::uniformInt(indices.size())));
+        kernel::se3::ptr k2 = randomModelPoint.polySe3Proj();
         kernel::se3::ptr k1 = sceneModel_.at(Random::uniformInt(sceneModel_.size())).polySe3Proj();
         
         nextPose = k1->transformationFrom(*k2);
@@ -315,16 +316,15 @@ namespace nuklei
         if (partialview_)
         {
           bool visible = false;
-          const kernel::base& tmp = objectModel_.at(indices.front());
 
-          if (tmp.polyType() == kernel::base::R3XS2P)
-            objectModel_.isVisibleFrom(kernel::r3xs2p(tmp),
-                                       viewpointInFrame(nextPose),
-                                       meshTol_);
+          if (randomModelPoint.polyType() == kernel::base::R3XS2P)
+            visible = objectModel_.isVisibleFrom(kernel::r3xs2p(randomModelPoint),
+                                                 viewpointInFrame(nextPose),
+                                                 meshTol_);
           else
-            objectModel_.isVisibleFrom(tmp.getLoc(),
-                                       viewpointInFrame(nextPose),
-                                       meshTol_);
+            visible = objectModel_.isVisibleFrom(randomModelPoint.getLoc(),
+                                                 viewpointInFrame(nextPose),
+                                                 meshTol_);
           if (!visible) continue;
 
           if (! recomputeIndices(indices, nextPose, n))
@@ -501,13 +501,13 @@ namespace nuklei
         bool visible = false;
         const kernel::base& tmp = *i;
         if (tmp.polyType() == kernel::base::R3XS2P)
-          objectModel_.isVisibleFrom(kernel::r3xs2p(tmp),
-                                     viewpointInFrame(tt),
-                                     meshTol_);
+          visible = objectModel_.isVisibleFrom(kernel::r3xs2p(tmp),
+                                               viewpointInFrame(tt),
+                                               meshTol_);
         else
-          objectModel_.isVisibleFrom(tmp.getLoc(),
-                                     viewpointInFrame(tt),
-                                     meshTol_);
+          visible = objectModel_.isVisibleFrom(tmp.getLoc(),
+                                               viewpointInFrame(tt),
+                                               meshTol_);
         if (visible)
         {
           RGBColor c(0, 0, 1);
