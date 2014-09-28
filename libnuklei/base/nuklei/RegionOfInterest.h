@@ -11,6 +11,7 @@
 #include <nuklei/Definitions.h>
 #include <nuklei/LinearAlgebra.h>
 #include <nuklei/GenericKernel.h>
+#include <boost/any.hpp>
 
 namespace nuklei {
   
@@ -38,8 +39,32 @@ namespace nuklei {
     {
       positive_ = positive;
     }
+    
+    void buildAABBTree()
+    {
+      buildAABBTree_();
+    }
+
+    void pushTriangles(std::list<boost::any>& triangles) const
+    {
+      if (next_)
+        next_->pushTriangles(triangles);
+      pushTriangles_(triangles);
+    }
+    
+    virtual bool intersectsPlane(const Vector3& p,
+                                 const Vector3& q,
+                                 const Vector3& r) const
+    { NUKLEI_THROW("Not implemented"); }
+    virtual bool intersectsPlane(const Vector3& p, const Vector3& v) const
+    { NUKLEI_THROW("Not implemented"); }
+  
   protected:
     virtual bool contains_(const Vector3 &v) const = 0;
+    virtual void buildAABBTree_()
+    { NUKLEI_THROW("Not implemented"); }
+    virtual void pushTriangles_(std::list<boost::any>& triangles) const
+    { NUKLEI_THROW("Not implemented"); }
     bool positive_;
   private:
     boost::shared_ptr<RegionOfInterest> next_;
@@ -74,13 +99,21 @@ namespace nuklei {
     void setCenterOriSize(const std::string &centerSize);
     void setCenterAxesSize(const std::string &centerSize);
     
+    virtual bool intersectsPlane(const Vector3& p,
+                                 const Vector3& q,
+                                 const Vector3& r) const;
+    virtual bool intersectsPlane(const Vector3& p, const Vector3& v) const;
+
     ~BoxROI() {}
   protected:
     bool contains_(const Vector3 &v) const;
+    void buildAABBTree_();
+    void pushTriangles_(std::list<boost::any>& triangles) const;
   private:
     Vector3 centerLoc_;
     Quaternion centerOri_;
     Vector3 edgeLengths_;
+    boost::any tree_;
   };
   
 }
