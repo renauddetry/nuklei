@@ -135,7 +135,6 @@ void convert(const std::vector<std::string>& files,
       }
       kernel::se3 k = kc.ransacPlaneFit(inlierThreshold, ransacIter);
       Plane3 plane(la::matrixCopy(k.ori_).GetColumn(2), k.loc_);
-      kernel::
       
       std::vector< boost::shared_ptr<Observation> > tmp = observations;
       observations.clear();
