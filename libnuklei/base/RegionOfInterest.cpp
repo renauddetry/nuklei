@@ -47,8 +47,11 @@ namespace nuklei
   typedef CGAL::AABB_triangle_primitive<K, Iterator> Primitive;
   typedef CGAL::AABB_traits<K, Primitive> AABB_triangle_traits;
   typedef CGAL::AABB_tree<AABB_triangle_traits> Tree;
-  typedef boost::optional< Tree::Intersection_and_primitive_id<Segment>::Type > Segment_intersection;
+#if CGAL_VERSION_NR >= 1040300000
   typedef boost::optional< Tree::Intersection_and_primitive_id<Plane>::Type > Plane_intersection;
+#else
+  typedef boost::optional< Tree::Object_and_primitive_id > Plane_intersection;
+#endif
   
   SphereROI::SphereROI(const std::string &centerAndRadius)
   {
