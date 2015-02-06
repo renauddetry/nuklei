@@ -23,7 +23,7 @@ Apologies for the inconvenience.
 
 @section index_overview Overview
 
-Nuklei is a C++ library that implements kernel functions and kernel density estimation for @f$SE(3)@f$ data. Nuklei also provides tools for manipulating @f$SE(3)@f$ transformations, and for manipulating point clouds.
+Nuklei is a C++ library that implements kernel methods for @f$SE(3)@f$ data. Nuklei provides kernel functions for @f$SE(3)@f$ data, algorithms for kernel density estimation, and two-class nonlinear classification of @f$SE(3)@f$ data via kernel logistic regression. Nuklei also provides tools for 3D object pose estimation, for manipulating @f$SE(3)@f$ transformations, and for manipulating point clouds.
 
 <b>Homepage:</b> <a href="http://nuklei.sourceforge.net/">http://nuklei.sourceforge.net/</a>
 
@@ -58,8 +58,9 @@ git clone git://git.code.sf.net/p/nuklei/code nuklei
 
 Nuklei includes implementations of efficient algorithms for:
 - Evaluating and simulating Gaussian distributions and von Mises-Fisher distributions.
-- Evaluating and simulating arbitrary @f$ SE(3) @f$ distributions with kernel density estimation.
-- Kernel logistic regression.
+- Evaluating and simulating arbitrary @f$ SE(3) @f$ distributions with kernel density estimation (see @ref kde_evaluate.cpp and @ref kde_sample.cpp).
+- Kernel logistic regression (see @ref klr_classify.cpp).
+- 3D object pose estimation (see @ref pose-estimation.sh).
 - Reading, writing, transforming clouds of @f$ SE(3) @f$ points.
 
 Potential applications of  @f$ SE(3) @f$ density models:  robot position and orientation (navigation), object pose (pose estimation), gripper pose (grasping).
@@ -124,6 +125,7 @@ Nuklei is developped by <a href="http://renaud-detry.net">Renaud Detry</a>.
 @example kde_evaluate.cpp
 @example kde_sample.cpp
 @example klr_classify.cpp
+@example pose-estimation.sh
 
 */
 
