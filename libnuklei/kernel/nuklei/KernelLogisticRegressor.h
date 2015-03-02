@@ -1,6 +1,6 @@
-// (C) Copyright Renaud Detry   2007-2011.
-// Distributed under the GNU General Public License. (See accompanying file
-// LICENSE.txt or copy at http://www.gnu.org/copyleft/gpl.html)
+// (C) Copyright Renaud Detry   2007-2015.
+// Distributed under the GNU General Public License and under the
+// BSD 3-Clause License (See accompanying file LICENSE.txt).
 
 /** @file */
 
