@@ -92,6 +92,12 @@ int pe(int argc, char ** argv)
     ("", "point_to_mesh_visibility_dist",
      "Sets the distance to the mesh at which a point is considered to be visible.",
      false, 4., "float", cmd);
+    
+    ValueArg<std::string> groundTruthFileArg
+    ("", "ground_truth_transfo",
+     "File the ground truth transformation. The file must provide kernel bandwidth, "
+     "which define the success tolerance. Will output the number of successful chains.",
+     false, "", "filename", cmd);
 
     cmd.parse( argc, argv );
     Stopwatch sw("");
@@ -117,14 +123,19 @@ int pe(int argc, char ** argv)
             !useWholeSceneCloudArg.getValue(),
             true);
     
+    boost::optional<kernel::se3> gtTransfo;
+    if (!groundTruthFileArg.getValue().empty())
+    {
+      gtTransfo = kernel::se3(*readSingleObservation(groundTruthFileArg.getValue()));
+    }
+    
     sw.lap("data read");
     
     // ------------------------------- //
     // Prepare density for evaluation: //
     // ------------------------------- //
     
-    
-    kernel::se3 t = pe.modelToSceneTransformation();
+    kernel::se3 t = pe.modelToSceneTransformation(gtTransfo);
     
     sw.lap("alignment");
     
