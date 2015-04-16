@@ -220,6 +220,7 @@ void convert(const std::vector<std::string>& files,
            i != observations.end(); ++i)
         kc1.add(*(*i)->getKernel());
       
+      kc1.buildNeighborSearchTree();
       kc1.computeSurfaceNormals();
       
       observations.clear();
