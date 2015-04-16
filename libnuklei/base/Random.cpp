@@ -111,7 +111,7 @@ namespace nuklei {
     }
     for (int i = 0; i < gRandGens->size(); ++i)
     {
-      gsl_rng_set(gRandGens->at(i), s+i);
+      gsl_rng_set(gRandGens->at(i), s+i+1); // +1 because GSL complains when seed == 0
     }
   }
   
