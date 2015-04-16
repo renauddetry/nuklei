@@ -44,13 +44,13 @@ namespace nuklei {
 
   inline bool valid(const pcl::PointXYZRGB& p)
   {
-    float t = p.x + p.y + p.z + p.rgb;
+    float t = p.x + p.y + p.z; // colors may be nan
     return !(boost::math::isnan)(t);
   }
 
   inline bool valid(const pcl::PointXYZRGBNormal& p)
   {
-    float t = p.x + p.y + p.z + p.normal_x + p.normal_y + p.normal_z + p.rgb;
+    float t = p.x + p.y + p.z + p.normal_x + p.normal_y + p.normal_z; // colors may be nan
     return !(boost::math::isnan)(t);
   }
 

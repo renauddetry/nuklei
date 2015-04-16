@@ -29,10 +29,16 @@ namespace nuklei {
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
     RGBColor c(double(r)/255, double(g)/255, double(b)/255);
-#else
-    RGBColor c(double(p.r)/255, double(p.g)/255, double(p.b)/255);
-#endif
     d.setColor(c);
+#else
+    if (!(boost::math::isnan)(p.rgb)) {
+	RGBColor c(double(p.r)/255, double(p.g)/255, double(p.b)/255);
+	d.setColor(c);
+    } else {
+	RGBColor c(255, 255, 255);
+	d.setColor(c);
+    }
+#endif
     k.setDescriptor(d);
     return k;
   }
@@ -67,10 +73,16 @@ namespace nuklei {
     uint8_t g = (rgb >> 8)  & 0x0000ff;
     uint8_t b = (rgb)       & 0x0000ff;
     RGBColor c(double(r)/255, double(g)/255, double(b)/255);
-#else
-    RGBColor c(double(p.r)/255, double(p.g)/255, double(p.b)/255);
-#endif
     d.setColor(c);
+#else
+    if (!(boost::math::isnan)(p.rgb)) {
+	RGBColor c(double(p.r)/255, double(p.g)/255, double(p.b)/255);
+	d.setColor(c);
+    } else {
+	RGBColor c(255, 255, 255);
+	d.setColor(c);
+    }
+#endif
     k.setDescriptor(d);
     return k;
   }
