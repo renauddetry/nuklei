@@ -29,7 +29,8 @@ namespace nuklei
   }
 
   
-  kernel::se3 PoseEstimator::modelToSceneTransformation() const
+  kernel::se3
+  PoseEstimator::modelToSceneTransformation(const boost::optional<kernel::se3>& gtTransfo) const
   {
     NUKLEI_TRACE_BEGIN();
     int n = -1;
@@ -70,6 +71,26 @@ namespace nuklei
     for (std::vector<kernel::se3>::const_iterator i = retv.begin();
          i != retv.end(); ++i)
       poses.add(*i);
+    
+    int success = 0;
+    if (gtTransfo)
+    {
+      for (KernelCollection::const_sort_iterator i = poses.sortBegin(poses.size()); i != i.end(); ++i)
+      {
+        coord_pair d = i->polyDistanceTo(*gtTransfo);
+        coord_pair t = coord_pair(gtTransfo->getLocH(), gtTransfo->getOriH());
+        bool s = (d.first < t.first && d.second < t.second);
+        if (s)
+          success++;
+        std::cout << "Matching score: " << i->getWeight() << ", ";
+        std::cout << "distance to GT: " << d.first << " " << d.second << ", ";
+        if (s) std::cout << "success";
+        else std::cout << "failure";
+        std::cout << std::endl;
+      }
+      std::cout << "Number of successful chains: " << success << " out of ";
+      std::cout << poses.size() << "." << std::endl;
+    }
     
     kernel::se3 pose(*poses.sortBegin(1));
     pose.setWeight(findMatchingScore(pose));

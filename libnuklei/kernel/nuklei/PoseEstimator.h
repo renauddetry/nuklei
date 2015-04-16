@@ -76,7 +76,7 @@ namespace nuklei {
     const KernelCollection& getObjectModel() const { return objectModel_; }
     const KernelCollection& getSceneModel() const { return sceneModel_; }
 
-    kernel::se3 modelToSceneTransformation() const;
+    kernel::se3 modelToSceneTransformation(const boost::optional<kernel::se3>& gtTransfo = boost::none) const;
     
     double findMatchingScore(const kernel::se3& pose) const;
     
