@@ -20,7 +20,7 @@
 namespace nuklei {
 
 //#define NUKLEI_USE_BOOST_RANDOM_GEN
-#define NUKLEI_RANDOM_SYNC_MUTEX
+#define NUKLEI_RANDOM_SYNC_NONE
 
 #ifdef _OPENMP
 #include <omp.h>
