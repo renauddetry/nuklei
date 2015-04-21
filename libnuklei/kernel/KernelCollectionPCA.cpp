@@ -63,6 +63,10 @@ namespace nuklei
 #ifdef NUKLEI_USE_CGAL
     using namespace cgal_pca_types;
     
+    if (size() < 3)
+      NUKLEI_THROW("Only " << size() << " points in KernelCollection. " <<
+                   "Need at least 3 for plane fitting.");
+    
     Plane_3 bestPlane(Point_3(1,0,0), Point_3(0,1,0), Point_3(0,0,0));
     
     int bestPlaneInliners = 0;

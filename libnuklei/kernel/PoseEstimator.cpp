@@ -273,9 +273,10 @@ namespace nuklei
   {
     Vector3 mean = objectModel_.mean()->getLoc();
     Vector3 v = la::normalized(viewpointInFrame(nextPose) - mean);
-    indices = objectModel_.partialView(v, meshTol_, true, true);
+    std::vector<int> pindices = objectModel_.partialView(v, meshTol_, true, true);
     
-    if (indices.size() < 20) return false;
+    if (pindices.size() < 20) return false;
+    indices = pindices;
     
     //      indices = objectModel_.partialView(viewpointInFrame(nextPose),
     //                                         meshTol_);
