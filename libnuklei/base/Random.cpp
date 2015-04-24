@@ -78,7 +78,7 @@ namespace nuklei {
       if (seed_d >= 0)
         seed = numify<unsigned>(envVal);
       else
-        seed = time(NULL)*getpid();
+        seed = time(NULL)*getpid(); // Unsigned don't overflow, they wrap around
     }
     
     bRandGens = new std::vector<boost::mt19937>(nuklei_max_threads());
