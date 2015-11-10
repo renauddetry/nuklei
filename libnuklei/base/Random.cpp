@@ -96,6 +96,12 @@ namespace nuklei {
         std::terminate();
 #endif
       }
+      else
+      {
+        std::cout << "Unknown value '" << para << "' for NUKLEI_PARALLELIZATION"
+        " env variable." << std::endl;
+        std::terminate();
+      }
     }
     
     const char * envVal = getenv("NUKLEI_RANDOM_SEED");
