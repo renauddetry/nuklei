@@ -68,6 +68,7 @@ namespace nuklei {
     kernel::r3xs2p k;
     k.loc_ = Vector3(p.x, p.y, p.z);
     k.dir_ = la::normalized(Vector3(p.normal_x, p.normal_y, p.normal_z));
+    ColorDescriptor d;
     if ((boost::math::isnan)(p.rgb))
     {
       RGBColor c(0, 0, 0);
