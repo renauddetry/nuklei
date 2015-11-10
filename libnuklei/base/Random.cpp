@@ -19,7 +19,17 @@
 
 namespace nuklei {
 
+// Either use GSL random gen, or Boost random gen
 //#define NUKLEI_USE_BOOST_RANDOM_GEN
+
+// Sync before accessing random gen?
+// -> NUKLEI_RANDOM_SYNC_OMP: use OMP exclusive access
+//    This one is obsolete, because when OMP is enabled, omp_get_thread_num
+//    allows Random methods to access thread-specific random gens.
+// -> NUKLEI_RANDOM_SYNC_MUTEX: use posix mutex
+//    This makes Nuklei much slower
+// -> NUKLEI_RANDOM_SYNC_NONE: default, use this on single-thread, or with OMP.
+  
 #define NUKLEI_RANDOM_SYNC_NONE
 
 #ifdef _OPENMP
@@ -66,6 +76,28 @@ namespace nuklei {
   bool Random::init()
   {
     unsigned seed = 0;
+
+    const char * envValPara = getenv("NUKLEI_PARALLELIZATION");
+    if (envValPara != NULL)
+    {
+      std::string para(envValPara);
+      if (para == "single" || para == "openmp")
+      {
+        // all ok
+      }
+      else if (para == "pthread")
+      {
+#if defined(NUKLEI_RANDOM_SYNC_OMP) || defined(NUKLEI_RANDOM_SYNC_NONE) || !defined(NUKLEI_RANDOM_SYNC_MUTEX)
+        std::cout << "NUKLEI_PARALLELIZATION is set to pthread. "
+        "You should manually undefine all NUKLEI_RANDOM_SYNC_* in Random.cpp, "
+        "and define NUKLEI_RANDOM_SYNC_MUTEX instead. Note that multithreading "
+        "will be slower than with OpenMP. "
+        "See http://nuklei.sourceforge.net/doxygen/group__faq.html" << std::endl;
+        std::terminate();
+#endif
+      }
+    }
+    
     const char * envVal = getenv("NUKLEI_RANDOM_SEED");
     if (envVal != NULL)
     {
