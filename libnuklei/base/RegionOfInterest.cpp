@@ -13,6 +13,8 @@
 #include <sstream>
 #include <boost/assign/std/vector.hpp>
 
+#ifdef NUKLEI_USE_CGAL
+
 #define CGAL_EIGEN3_ENABLED
 
 #include <CGAL/Simple_cartesian.h>
@@ -29,11 +31,11 @@
 #include <CGAL/squared_distance_3.h>
 #include <CGAL/Point_with_normal_3.h>
 
-
+#endif
 
 namespace nuklei
 {
-
+#ifdef NUKLEI_USE_CGAL
   typedef CGAL::Simple_cartesian<double> K;
   typedef K::FT FT;
   typedef K::Ray_3 Ray;
@@ -51,6 +53,7 @@ namespace nuklei
   typedef boost::optional< Tree::Intersection_and_primitive_id<Plane>::Type > Plane_intersection;
 #else
   typedef boost::optional< Tree::Object_and_primitive_id > Plane_intersection;
+#endif
 #endif
   
   SphereROI::SphereROI(const std::string &centerAndRadius)
@@ -147,6 +150,7 @@ namespace nuklei
   
   void BoxROI::pushTriangles_(std::list<boost::any>& triangles) const
   {
+#ifdef NUKLEI_USE_CGAL
     KernelCollection corners;
     {
       kernel::r3 k;
@@ -219,11 +223,15 @@ namespace nuklei
       triangles.push_back(Triangle(a,b,c));
       triangles.push_back(Triangle(a,d,c));
     }
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
   }
 
   
   void BoxROI::buildAABBTree_()
   {
+#ifdef NUKLEI_USE_CGAL
     std::list<Triangle> triangles;
     std::list<boost::any> t;
     pushTriangles(t);
@@ -235,8 +243,12 @@ namespace nuklei
     // constructs AABB tree
     boost::shared_ptr<Tree> tree(new Tree(triangles.begin(),triangles.end()));
     tree_ = tree;
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
   }
   
+#ifdef NUKLEI_USE_CGAL
   bool intersects(Plane p, const boost::any& t)
   {
     NUKLEI_ASSERT(!p.is_degenerate());
@@ -245,22 +257,31 @@ namespace nuklei
     Plane_intersection plane_intersection = tree->any_intersection(p);
     return plane_intersection;
   }
+#endif
   
   bool BoxROI::intersectsPlane(const Vector3& p, const Vector3& q, const Vector3& r) const
   {
+#ifdef NUKLEI_USE_CGAL
     Point pp(p.X(), p.Y(), p.Z());
     Point qq(q.X(), q.Y(), q.Z());
     Point rr(r.X(), r.Y(), r.Z());
     Plane plane_query(pp, qq, rr);
     return intersects(plane_query, tree_);
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
   }
   
   bool BoxROI::intersectsPlane(const Vector3& p, const Vector3& v) const
   {
+#ifdef NUKLEI_USE_CGAL
     Vector vec(v.X(), v.Y(), v.Z());
     Point a(p.X(), p.Y(), p.Z());
     Plane plane_query(a,vec);
     return intersects(plane_query, tree_);
+#else
+    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+#endif
   }
 
 }
