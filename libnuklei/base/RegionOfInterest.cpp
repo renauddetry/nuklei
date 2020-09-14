@@ -15,7 +15,9 @@
 
 #ifdef NUKLEI_USE_CGAL
 
-#define CGAL_EIGEN3_ENABLED
+#ifndef CGAL_EIGEN3_ENABLED
+#  define CGAL_EIGEN3_ENABLED 1
+#endif
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/AABB_tree.h>

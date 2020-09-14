@@ -4,7 +4,7 @@
 
 /** @file */
 
-#ifdef NUKLEI_USE_OPENCV
+#ifdef NUKLEI_USE_OPENCV_LEGACY
 #include "cvaux.h"
 #endif
 
@@ -75,7 +75,7 @@ namespace nuklei
   {
     NUKLEI_TRACE_BEGIN();
     
-#ifdef NUKLEI_USE_OPENCV
+#ifdef NUKLEI_USE_OPENCV_LEGACY
     CvCalibFilter calibFilter;
     NUKLEI_ASSERT(calibFilter.LoadCameraParams(opencvStereoCalibFile.c_str()));
     const CvCamera* camera = calibFilter.GetCameraParams(camNum);
@@ -85,7 +85,7 @@ namespace nuklei
     for (int i = 0; i < 9; ++i) intrinsicMatrixData_.at(i) = camera->matrix[i];
     for (int i = 0; i < 4; ++i) distortionCoeffsData_.at(i) = camera->distortion[i];      
 #else
-    NUKLEI_THROW("This function requires OpenCV.");
+    NUKLEI_THROW("This function requires lecagy OpenCV code. It will require some work to bring it back to life.");
 #endif
     
     NUKLEI_TRACE_END();
@@ -109,7 +109,7 @@ namespace nuklei
       for (unsigned i = 0; i < 3; ++i)
         objectPointsData.at(3*pc+i) = worldPoints.at(pc)[i];
 
-#ifdef NUKLEI_USE_OPENCV
+#ifdef NUKLEI_USE_OPENCV_LEGACY
     CvMat object_points = cvMat(large_p, 3, CV_64FC1, &objectPointsData.front());
     CvMat rotation_vector = cvMat(3, 3, CV_64FC1, const_cast<double*>(&rotationMatrixData_.front()));
     CvMat translation_vector = cvMat(1, 3, CV_64FC1, const_cast<double*>(&translationVectorData_.front()));
@@ -124,7 +124,7 @@ namespace nuklei
                      &distortion_coeffs,
                      &image_points);
 #else
-    NUKLEI_THROW("This function requires OpenCV.");
+    NUKLEI_THROW("This function requires lecagy OpenCV code. It will require some work to bring it back to life.");
 #endif
     
     std::vector<Vector2> imagePoints(p);

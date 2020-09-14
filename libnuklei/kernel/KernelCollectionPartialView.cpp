@@ -6,13 +6,19 @@
 
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
 
-#define CGAL_EIGEN3_ENABLED
+#ifndef CGAL_EIGEN3_ENABLED
+#  define CGAL_EIGEN3_ENABLED 1
+#endif
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits.h>
 #include <CGAL/Polyhedron_3.h>
+#if CGAL_VERSION_NR >= 1040300000
+#include <CGAL/AABB_face_graph_triangle_primitive.h>
+#else
 #include <CGAL/AABB_polyhedron_triangle_primitive.h>
+#endif
 #include <CGAL/property_map.h>
 #include <CGAL/IO/read_off_points.h>
 #include <CGAL/IO/read_xyz_points.h>
@@ -40,7 +46,11 @@ typedef K::Vector_3 Vector;
 typedef K::Segment_3 Segment;
 typedef K::Line_3 Line;
 typedef CGAL::Polyhedron_3<K> Polyhedron;
+#if CGAL_VERSION_NR >= 1040300000
+typedef CGAL::AABB_face_graph_triangle_primitive<Polyhedron> Primitive;
+#else
 typedef CGAL::AABB_polyhedron_triangle_primitive<K,Polyhedron> Primitive;
+#endif
 typedef CGAL::AABB_traits<K, Primitive> Traits;
 typedef CGAL::AABB_tree<Traits> Tree;
 typedef Tree::Object_and_primitive_id Object_and_primitive_id;

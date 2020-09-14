@@ -7,7 +7,9 @@
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
 
 
-#define CGAL_EIGEN3_ENABLED
+#ifndef CGAL_EIGEN3_ENABLED
+#  define CGAL_EIGEN3_ENABLED 1
+#endif
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/pca_estimate_normals.h>
@@ -223,8 +225,10 @@ namespace nuklei {
                                                pl.begin(), pl.end(),
 #if CGAL_VERSION_NR < 1040300000
                                                CGAL::make_normal_of_point_with_normal_pmap(pl.begin())
-#else
+#elif CGAL_VERSION_NR < 1041200000
                                                CGAL::make_normal_of_point_with_normal_pmap(PointList::value_type())
+#else
+                                               CGAL::make_normal_of_point_with_normal_map(PointList::value_type())
 #endif
                                                );
       
