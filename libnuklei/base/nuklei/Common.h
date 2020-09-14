@@ -14,10 +14,53 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/filesystem.hpp>
+#include <boost/config.hpp>
+
 #include <nuklei/Definitions.h>
 #include <nuklei/Log.h>
 #include <nuklei/LoggingMacros.h>
 #include <nuklei/LinearAlgebraTypes.h>
+
+// NUKLEI_UNIQUE_PTR_IMPL==0:
+//   use std::auto_ptr if BOOST_NO_CXX11_SMART_PTR is defined
+//   use std::unique_ptr if BOOST_NO_CXX11_SMART_PTR is not defined
+// NUKLEI_UNIQUE_PTR_IMPL==1:
+//   use std::auto_ptr
+// NUKLEI_UNIQUE_PTR_IMPL==2:
+//   use std::unique_ptr
+
+#define NUKLEI_UNIQUE_PTR_IMPL 2
+
+#if NUKLEI_UNIQUE_PTR_IMPL == 0
+// Define unique pointer type, move and release according based on
+// compile flags and capabilities (eg, std::unique_ptr when -std=c++11)
+// If a client library is not compiled with the same flags, bad things
+// can happen (eg the client will give an auto_ptr to a nuklei function
+// that has been compiled to receive an unique_ptr).
+#  ifdef BOOST_NO_CXX11_SMART_PTR
+#    define NUKLEI_UNIQUE_PTR std::auto_ptr
+#    define NUKLEI_MOVE(PTR) (PTR)
+#    define NUKLEI_RELEASE(PTR) (PTR)
+#  else
+#    define NUKLEI_UNIQUE_PTR std::unique_ptr
+#    define NUKLEI_MOVE(PTR) std::move(PTR)
+#    define NUKLEI_RELEASE(PTR) (PTR).release()
+#  endif
+#elif NUKLEI_UNIQUE_PTR_IMPL == 1
+#  define NUKLEI_UNIQUE_PTR std::auto_ptr
+#  define NUKLEI_MOVE(PTR) (PTR)
+#  define NUKLEI_RELEASE(PTR) (PTR)
+#elif NUKLEI_UNIQUE_PTR_IMPL == 2
+#  ifdef BOOST_NO_CXX11_SMART_PTR
+#    error When NUKLEI_UNIQUE_PTR_IMPL==2, Boost support for C++11 is required
+#  endif
+#  define NUKLEI_UNIQUE_PTR std::unique_ptr
+#  define NUKLEI_MOVE(PTR) std::move(PTR)
+#  define NUKLEI_RELEASE(PTR) (PTR).release()
+#else
+#  error NUKLEI_UNIQUE_PTR_IMPL must be 0, 1 or 2
+#endif
 
 /** @brief Public namespace. */
 namespace nuklei {
@@ -32,6 +75,12 @@ namespace nuklei {
    */
 # define NUKLEI_NVP(x) #x << "=" << x
   
+  /** @brief String file:line. */
+# define NUKLEI_HERE() \
+((boost::filesystem::path(__FILE__).parent_path().filename().string() + "/" + \
+boost::filesystem::path(__FILE__).filename().string() + ":" + \
+nuklei::stringify(__LINE__)))
+
   /**
    * @brief Throws an Error.
    *
@@ -48,7 +97,7 @@ std::ostringstream oss; \
 oss << x; \
 throw nuklei::Error(oss.str()); \
 }
-  
+
   /**
    * @brief Throws an Error if expression is not true.
    *
@@ -65,8 +114,7 @@ throw nuklei::Error(oss.str()); \
 { \
 if (!(expression)) \
 throw nuklei::Error \
-(std::string(__FILE__) + \
-":" + nuklei::stringify(__LINE__) + \
+(NUKLEI_HERE() + \
 ": failed to assert `" + #expression + "'"); \
 }
   
@@ -98,9 +146,6 @@ NUKLEI_THROW(nuklei::stringify(e1, 20, 0) << " != " << nuklei::stringify(e2, 20,
 if (!(nuklei::afe(e1, e2, tol))) \
 NUKLEI_THROW(nuklei::stringify(e1, 20, 0) << " != " << nuklei::stringify(e2, 20, 0) << " (TOL=" << tol << ")"); \
 }
-  
-  /** @brief String (C string) file:line. */
-# define NUKLEI_HERE() ((std::string(__FILE__) + ":" + nuklei::stringify(__LINE__)))
   
 # ifdef NDEBUG
 #   define NUKLEI_TRACE_BEGIN() {}
@@ -317,6 +362,13 @@ throw nuklei::Error(e, __PRETTY_FUNCTION__, NUKLEI_HERE()); \
     if(!line.empty() && *line.rbegin() == '\r')
       line.erase( line.length()-1, 1);
     return line;
+  }
+  
+  inline void copy_file(const std::string& input, const std::string& output)
+  {
+    std::ifstream  src(input.c_str(),    std::ios::binary);
+    std::ofstream  dst(output.c_str(),   std::ios::binary);
+    dst << src.rdbuf();
   }
   
 }

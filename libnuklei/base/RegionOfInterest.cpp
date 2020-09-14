@@ -21,7 +21,6 @@
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits.h>
 #include <CGAL/AABB_triangle_primitive.h>
-#include <CGAL/AABB_polyhedron_triangle_primitive.h>
 #include <CGAL/property_map.h>
 #include <CGAL/IO/read_off_points.h>
 #include <CGAL/IO/read_xyz_points.h>
@@ -255,7 +254,7 @@ namespace nuklei
     NUKLEI_ASSERT(!t.empty());
     boost::shared_ptr<Tree> tree = boost::any_cast< boost::shared_ptr<Tree> >(t);
     Plane_intersection plane_intersection = tree->any_intersection(p);
-    return plane_intersection;
+    return static_cast<bool>(plane_intersection);
   }
 #endif
   

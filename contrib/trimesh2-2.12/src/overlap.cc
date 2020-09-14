@@ -13,6 +13,7 @@ using namespace std;
 
 namespace trimesh {
 
+/*
 // Quick 'n dirty portable random number generator 
 static inline float tinyrnd()
 {
@@ -20,7 +21,7 @@ static inline float tinyrnd()
 	trand = 1664525u * trand + 1013904223u;
 	return (float) trand / 4294967296.0f;
 }
-
+*/
 
 // Find the overlap area and RMS distance from mesh1 to mesh2.  Used by
 // find_overlap in both directions, below

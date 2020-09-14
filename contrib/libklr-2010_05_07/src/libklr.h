@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
-#include <math.h>
-#include <time.h>
+#include <cmath>
+#include <ctime>
 
 #ifdef __APPLE__
 #include <Accelerate/Accelerate.h>

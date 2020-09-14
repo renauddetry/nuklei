@@ -1,5 +1,19 @@
 import os.path
 import fnmatch
+import shlex
+import subprocess
+import os
+
+def system_ret(cmd):
+  a = shlex.split(cmd)
+  po = subprocess.Popen(a, stdout = subprocess.PIPE, stderr = subprocess.PIPE, env=os.environ)
+  rv = po.communicate()
+  rc = po.returncode
+  if rc == 0:
+    return rv[0]
+  else:
+    print rv[0] + "\n" + rv[1]
+    raise subprocess.CalledProcessError(rc, a, rv[0] + "\n" + rv[1])
 
 Import('conf')
 
@@ -7,12 +21,12 @@ Import('conf')
 
 if conf.env['UseCIMG']:
   conf.env['CImg_include'] = '#/contrib/CImg/include'
-conf.env['tclap_include'] = '#/contrib/tclap-1.1.0/include'
+conf.env['tclap_include'] = '#/contrib/tclap-1e1cc4fb/include'
 if conf.env['UseTICPP']:
   conf.env['ticpp_include'] = '#/contrib/ticpp-r97/src'
 conf.env['trimesh_include'] = '#/contrib/trimesh2-2.12/include'
 conf.env['libkdtree_include'] = '#/contrib/libkdtree++/include'
-conf.env['nanoflann_include'] = '#/contrib/nanoflann/include'
+conf.env['nanoflann_include'] = '#/contrib/nanoflann/25b54675aa555146afae2724ba2bcb0e3f5f1224/include'
 conf.env['libklr_include'] = '#/contrib/libklr-2010_05_07/src'
 
 
@@ -25,6 +39,11 @@ if not conf.CheckPKGConfig('0.15.0'):
 conf.env.Prepend(CPPPATH = [ '#libnuklei/contrib/WildMagic5p4',
                              '#libnuklei/contrib/trsl-0.2.2', '#libnuklei/base',
                              '#libnuklei/kernel', '#libnuklei/io' ])
+if conf.env['UseCereal']:
+  conf.env.Prepend(CPPPATH = [ '#libnuklei/contrib/cereal/v1.2.2' ])
+  conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_CEREAL' ])
+  conf.env['PkgCCflags'] += ' -DNUKLEI_USE_CEREAL'
+  conf.env['PkgCompilerOptions'].append('-DNUKLEI_USE_CEREAL')
 
 # contrib: libkdtree++
 
@@ -101,12 +120,6 @@ elif conf.env['PLATFORM'] == 'posix':
     Exit(1)
   conf.env.Append(LIBS = [ 'lapack' ])
   hasABlas = False
-  if conf.CheckLib('gslcblas', language = 'C++'):
-    conf.env.Append(LIBS = [ 'gslcblas' ])
-    hasABlas = True
-  if conf.CheckLib('cblas', language = 'C++'):
-    conf.env.Append(LIBS = [ 'cblas' ])
-    hasABlas = True
   if conf.CheckLib('blas', language = 'C++'):
     conf.env.Append(LIBS = [ 'blas' ])
     hasABlas = True
@@ -135,22 +148,26 @@ if conf.env['UseCGAL']:
 
     conf.env.Append(LIBS = [ 'CGAL', 'CGAL_Core' ])
 
+    if not conf.CheckLib('gmpxx', language = 'C++') or \
+       not conf.CheckLib('mpfr', language = 'C++') or \
+       not conf.CheckLib('gmp', language = 'C++'):
+      print 'Please check your GMP installation.'
+      print '** For more information, refer to the INSTALL document **'
+      Exit(1)
+    conf.env.Append(LIBS = [ 'gmpxx', 'mpfr', 'gmp' ])
+    conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PRECISION' ])
+
+    if not conf.CheckPKG('eigen3 >= 3.1.0'):
+      print 'Please check your Eigen installation.'
+      print '** For more information, refer to the INSTALL document **'
+      Exit(1)
+    eigen3dict = conf.env.ParseFlags("!pkg-config --cflags --libs eigen3")
+    for i in eigen3dict['CPPPATH']:
+      eigen3dict['CCFLAGS'].append('-I' + i)
+    eigen3dict['CPPPATH'] = []
+    conf.env.MergeFlags(eigen3dict)
+    conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_EIGEN3' ])
     if conf.env['PartialView']:
-      if not conf.CheckLib('gmpxx', language = 'C++') or \
-         not conf.CheckLib('mpfr', language = 'C++') or \
-         not conf.CheckLib('gmp', language = 'C++') or \
-         not conf.CheckPKG('eigen3 >= 3.1.0'):
-        print 'Please check your GMP and Eigen installation.'
-        print '** For more information, refer to the INSTALL document **'
-        Exit(1)
-      conf.env.Append(LIBS = [ 'gmpxx', 'mpfr', 'gmp' ])
-      conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PRECISION' ])
-      eigen3dict = conf.env.ParseFlags("!pkg-config --cflags --libs eigen3")
-      for i in eigen3dict['CPPPATH']:
-        eigen3dict['CCFLAGS'].append('-I' + i)
-      eigen3dict['CPPPATH'] = []
-      conf.env.MergeFlags(eigen3dict)
-      conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_EIGEN3' ])
       conf.env.Append(CPPDEFINES = [ 'NUKLEI_HAS_PARTIAL_VIEW' ])
 
 # GSL
@@ -201,6 +218,7 @@ else:
   else:
     conf.env.Append(LIBS = [ bln(conf.env, 'boost_system') ])
     conf.env['PkgCLibs'] += ' -l' + bln(conf.env, 'boost_system')
+    conf.env['PkgLibraries'].append(bln(conf.env, 'boost_system'))
 
 
 
@@ -217,32 +235,75 @@ if not conf.CheckLib(bln(conf.env, 'boost_serialization'), language = 'C++') or 
 
 conf.env.Append(LIBS = [ bln(conf.env, 'boost_serialization') ])
 conf.env['PkgCLibs'] += ' -l' + bln(conf.env, 'boost_serialization')
+conf.env['PkgLibraries'].append(bln(conf.env, 'boost_serialization'))
 conf.env.Append(LIBS = [ bln(conf.env, 'boost_iostreams') ])
 conf.env['PkgCLibs'] += ' -l' + bln(conf.env, 'boost_iostreams')
+conf.env['PkgLibraries'].append(bln(conf.env, 'boost_iostreams'))
 conf.env.Append(LIBS = [ bln(conf.env, 'boost_thread') ])
 conf.env['PkgCLibs'] += ' -l' + bln(conf.env, 'boost_thread')
+conf.env['PkgLibraries'].append(bln(conf.env, 'boost_thread'))
 conf.env.Append(LIBS = [ bln(conf.env, 'boost_filesystem') ])
 conf.env['PkgCLibs'] += ' -l' + bln(conf.env, 'boost_filesystem')
+conf.env['PkgLibraries'].append(bln(conf.env, 'boost_filesystem'))
 
 conf.env.Append(CPPDEFINES = ['NUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR'])
 conf.env['PkgCCflags'] += ' -DNUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR'
+conf.env['PkgCompilerOptions'].append('-DNUKLEI_TRSL_USE_BSD_BETTER_RANDOM_GENERATOR')
 
 # OpenCV
 
 if conf.env['UseOpenCV']:
+  opencvname = 'opencv'
   if not conf.CheckPKG('opencv >= 1.0.0'):
-    print 'OpenCV >= 1.0.0 not found.'
-    Exit(1)
+    try:
+      allPkgs = system_ret("pkg-config --list-all")
+      opencvs = []
+      for pkgi in allPkgs.splitlines():
+        pkgName = pkgi.split(' ', 1)
+        if pkgName:
+          pkgName = pkgName[0]
+          if 'opencv' in pkgName.lower():
+            opencvs.append(pkgName)
+      if not opencvs:
+        print 'OpenCV >= 1.0.0 not found.'
+        Exit(1)
+      opencvs.sort()
+      if not conf.CheckPKG(opencvs[-1]):
+        print 'OpenCV >= 1.0.0 not found.'
+        Exit(1)
+      opencvname = opencvs[-1]
+    except:
+      print 'OpenCV >= 1.0.0 not found.'
+      Exit(1)
 
-  opencvdict = conf.env.ParseFlags("!pkg-config --cflags --libs opencv")
+  opencvdict = conf.env.ParseFlags("!pkg-config --cflags --libs " + opencvname)
   for i in opencvdict['CPPPATH']:
     opencvdict['CCFLAGS'].append('-I' + i)
   opencvdict['CPPPATH'] = []
   conf.env.MergeFlags(opencvdict)
   conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_OPENCV' ])
 
-  if not conf.CheckCXXHeader('cv.h'):
+  if not conf.CheckCXXHeader('opencv2/core/core.hpp'):
     print 'Please check your OpenCV installation.'
+    print '** For more information, refer to the INSTALL document **'
+    Exit(1)
+
+# yaml-cpp
+
+if conf.env['UseYamlCPP']:
+  if not conf.CheckPKG('yaml-cpp >= 0.5'):
+    print 'yaml-cpp >= 0.5 not found.'
+    Exit(1)
+  
+  yamlcppdict = conf.env.ParseFlags("!pkg-config --cflags --libs yaml-cpp")
+  for i in yamlcppdict['CPPPATH']:
+    yamlcppdict['CCFLAGS'].append('-I' + i)
+  yamlcppdict['CPPPATH'] = []
+  conf.env.MergeFlags(yamlcppdict)
+  conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_YAMLCPP' ])
+
+  if not conf.CheckCXXHeader('yaml-cpp/yaml.h'):
+    print 'Please check your yaml-cpp installation.'
     print '** For more information, refer to the INSTALL document **'
     Exit(1)
 
@@ -257,25 +318,39 @@ if conf.env['UsePCL']:
         print "Found two versions of PCL: " + 'pcl_io-' + version + " and " + \
           "pcl_io. Using pcl_io."
         pcl_io = 'pcl_io'
+        conf.env['PCLVersion'] = ''
       else:
         pcl_io = 'pcl_io-' + version
+        conf.env['PCLVersion'] = version
       break
   else:
     if conf.CheckPKG('pcl_io >= 1.4.0'):
       pcl_io = 'pcl_io'
+      conf.env['PCLVersion'] = ''
     else:
       print 'PCL >= 1.4.0 not found.'
       Exit(1)
+  pcl_features = 'pcl_features'
+  if len(conf.env['PCLVersion']) > 0:
+    pcl_features += '-' + conf.env['PCLVersion']
+  conf.CheckPKG(pcl_features)
 
-  pcldict = conf.env.ParseFlags("!pkg-config --cflags --libs " + pcl_io)
+  pcl_kdtree = 'pcl_kdtree'
+  if len(conf.env['PCLVersion']) > 0:
+    pcl_kdtree += '-' + conf.env['PCLVersion']
+  conf.CheckPKG(pcl_kdtree)
+
+  pcl_packages = pcl_io + ' ' + pcl_features + ' ' + pcl_kdtree
+
+  pcldict = conf.env.ParseFlags("!pkg-config --cflags --libs " + pcl_packages)
   for i in pcldict['CPPPATH']:
     pcldict['CCFLAGS'].append('-I' + i)
   pcldict['CPPPATH'] = []
   conf.env.MergeFlags(pcldict)
   conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_PCL' ])
   conf.env['PkgCCflags'] += ' -DNUKLEI_USE_PCL ' + \
-                            os.popen("pkg-config --cflags " + pcl_io).read().rstrip("\n")
-  conf.env['PkgCLibs'] += ' ' + os.popen("pkg-config --libs " + pcl_io).read().rstrip("\n")
+                            os.popen("pkg-config --cflags " + pcl_packages).read().rstrip("\n")
+  conf.env['PkgCLibs'] += ' ' + os.popen("pkg-config --libs " + pcl_packages).read().rstrip("\n")
 
   if not conf.CheckCXXHeader('pcl/point_cloud.h'):
     print 'Please check your PCL installation.'
@@ -288,7 +363,10 @@ if conf.env['UseOpenMP']:
   conf.env.Append(CPPDEFINES = [ 'NUKLEI_USE_OPENMP' ])
   conf.env.Append(CCFLAGS = [ '-fopenmp' ])
   conf.env.Append(LINKFLAGS = [ '-fopenmp' ])
+  
   conf.env['PkgCCflags'] += ' -DNUKLEI_USE_OPENMP'
+  conf.env['PkgCompilerOptions'].append('-DNUKLEI_USE_OPENMP')
+
   conf.env['PkgCCflags'] += ' -fopenmp'
   conf.env['PkgCLibs'] += ' -fopenmp'
 

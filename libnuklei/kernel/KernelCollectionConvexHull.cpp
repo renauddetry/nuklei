@@ -13,7 +13,7 @@ namespace nuklei {
   void KernelCollection::buildConvexHull(unsigned n)
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_USE_CGAL_DEPRECATED
     using namespace cgal_convex_hull_types;
     
     if (n > size()) n = size();
@@ -42,7 +42,7 @@ namespace nuklei {
   bool KernelCollection::isWithinConvexHull(const kernel::base& k) const
   {
     NUKLEI_TRACE_BEGIN();
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_USE_CGAL_DEPRECATED
     using namespace cgal_convex_hull_types;
     Vector3 loc = k.getLoc();
     if (!deco_.has_key(HULL_KEY))

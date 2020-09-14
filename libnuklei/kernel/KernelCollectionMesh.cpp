@@ -37,7 +37,11 @@
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits.h>
 #include <CGAL/Polyhedron_3.h>
+#if CGAL_VERSION_NR >= 1040300000
+#include <CGAL/AABB_face_graph_triangle_primitive.h>
+#else
 #include <CGAL/AABB_polyhedron_triangle_primitive.h>
+#endif
 #include <CGAL/property_map.h>
 #include <CGAL/IO/read_off_points.h>
 #include <CGAL/IO/read_xyz_points.h>
@@ -54,7 +58,9 @@
 #include <utility> // defines std::pair
 #include <list>
 #include <boost/filesystem.hpp>
+#ifdef NUKLEI_HAS_PARTIAL_VIEW
 #include <trimesh/TriMesh.h>
+#endif
 
 #include <nuklei/KernelCollection.h>
 #include <nuklei/ObservationIO.h>
@@ -95,7 +101,11 @@ namespace view_types {
   typedef K::Segment_3 Segment;
   typedef K::Line_3 Line;
   typedef SimplePolyhedron Polyhedron;
+#if CGAL_VERSION_NR >= 1040300000
+  typedef CGAL::AABB_face_graph_triangle_primitive<Polyhedron> Primitive;
+#else
   typedef CGAL::AABB_polyhedron_triangle_primitive<K,Polyhedron> Primitive;
+#endif
   typedef CGAL::AABB_traits<K, Primitive> Traits;
   typedef CGAL::AABB_tree<Traits> Tree;
   typedef Tree::Object_and_primitive_id Object_and_primitive_id;
@@ -119,7 +129,11 @@ namespace nuklei {
     boost::shared_ptr<Tree> tree(new Tree);
     
     // constructs AABB tree
+#if CGAL_VERSION_NR >= 1040300000
+    tree.reset(new Tree(faces(poly).first, faces(poly).second, poly));
+#else
     tree.reset(new Tree(poly.facets_begin(),poly.facets_end()));
+#endif
     tree->accelerate_distance_queries();
     
     if (deco.has_key(aabbKey)) deco.erase(aabbKey);
@@ -149,11 +163,18 @@ namespace nuklei {
       }
       
       const int nb_neighbors = 16;
+#if CGAL_VERSION_NR >= 1040800000
+      CGAL::jet_estimate_normals<CGAL::Sequential_tag>
+      (points.begin(), points.end(),
+       CGAL::First_of_pair_property_map<PointVectorPair>(),
+       CGAL::Second_of_pair_property_map<PointVectorPair>(),
+       nb_neighbors);
+#else
       CGAL::jet_estimate_normals(points.begin(), points.end(),
                                  CGAL::First_of_pair_property_map<PointVectorPair>(),
                                  CGAL::Second_of_pair_property_map<PointVectorPair>(),
                                  nb_neighbors);
-      
+#endif
       std::list<PointVectorPair>::iterator unoriented_points_begin =
       CGAL::mst_orient_normals(points.begin(), points.end(),
                                CGAL::First_of_pair_property_map<PointVectorPair>(),
@@ -213,8 +234,14 @@ namespace nuklei {
         NUKLEI_THROW("Mesh construction error.");
       
       // Computes average spacing
+#if CGAL_VERSION_NR >= 1040800000
+      FT average_spacing = CGAL::compute_average_spacing<CGAL::Sequential_tag>
+      (pl.begin(), pl.end(),
+       6 /* knn = 1 ring */);
+#else
       FT average_spacing = CGAL::compute_average_spacing(pl.begin(), pl.end(),
                                                          6 /* knn = 1 ring */);
+#endif
       
       // Gets one point inside the implicit surface
       // and computes implicit function bounding sphere radius.
@@ -292,7 +319,9 @@ namespace nuklei {
     writeMeshToOffFile(offfile.native());
     boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(offfile.native()));
     mesh->write(plyfile.native());
-    boost::filesystem::copy_file(plyfile, filename);
+    // copy_file complicates portability between C++03 and C++11
+    //boost::filesystem::copy_file(plyfile, filename);
+    nuklei::copy_file(plyfile.string(), filename);
 #else
     NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
 #endif
@@ -327,7 +356,9 @@ namespace nuklei {
     boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.off");
     boost::filesystem::path plyfile =
     boost::filesystem::unique_path("/tmp/nuklei-%%%%-%%%%-%%%%-%%%%.ply");
-    boost::filesystem::copy_file(filename, plyfile);
+    // copy_file complicates portability between C++03 and C++11
+    //boost::filesystem::copy_file(filename, plyfile);
+    nuklei::copy_file(filename, plyfile.string());
     boost::shared_ptr<trimesh::TriMesh> mesh(trimesh::TriMesh::read(plyfile.native()));
     mesh->write(offfile.native());
     readMeshFromOffFile(offfile.native());

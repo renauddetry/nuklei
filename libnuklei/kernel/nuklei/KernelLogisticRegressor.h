@@ -82,7 +82,7 @@ namespace nuklei
      */
     bool isTrained()
     {
-      return vklr_;
+      return static_cast<bool>(vklr_);
     };
     
     /**

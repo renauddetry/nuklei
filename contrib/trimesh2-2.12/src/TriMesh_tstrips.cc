@@ -15,7 +15,7 @@ namespace trimesh {
 // Forward declarations
 static void tstrip_build(TriMesh &mesh, int f, vector<signed char> &face_avail,
 			 vector<int> &todo);
-static void collect_tris_in_strips(vector<int> &tstrips);
+//static void collect_tris_in_strips(vector<int> &tstrips);
 
 
 // Convert faces to tstrips
@@ -220,7 +220,7 @@ void TriMesh::convert_strips(TstripRep rep)
 	}
 }
 
-
+/*
 // Collect all single triangles to be at the end of the list of tstrips
 static void collect_tris_in_strips(vector<int> &tstrips)
 {
@@ -254,5 +254,5 @@ static void collect_tris_in_strips(vector<int> &tstrips)
 	tstrips.insert(tstrips.end(), tris.begin(), tris.end());
 
 }
-
+*/
 }; // namespace trimesh

@@ -86,7 +86,7 @@ void Clibklr::train(double *Ktrain, int *label){
   for(i = 0; i < n; i++){
     val = 0.0;
     for(j = 0; j < n; j++){
-      val += abs(MAT(Ktrain,n,i,j));
+      val += std::abs(MAT(Ktrain,n,i,j));
     }
     if(val > mval){
       mval = val;
@@ -138,7 +138,7 @@ void Clibklr::train(double *Ktrain, int *label){
   for(i = 0; i < n; i++){
     mKtrain[i] = 0.0;
     for(j = 0; j < n; j++){
-      mKtrain[i] += abs(MAT(Ktrain,n,i,j));
+      mKtrain[i] += std::abs(MAT(Ktrain,n,i,j));
     }
   }
   

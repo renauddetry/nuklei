@@ -16,13 +16,18 @@
 #include <CGAL/Orthogonal_k_neighbor_search.h>
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Cartesian_d.h>
+#endif
 
+#ifdef NUKLEI_USE_CGAL_DEPRECATED
 // CGAL hull
 #include <CGAL/Homogeneous.h>
 #include <CGAL/Convex_hull_d.h>
 #include <CGAL/Convex_hull_d_traits_3.h>
 // NOTE: the choice of double here for a number type may cause problems
 //       for degenerate point sets
+#endif
+
+#ifdef NUKLEI_USE_CGAL
 #  include <CGAL/double.h>
 //#include <CGAL/Gmpz.h>
 
@@ -58,7 +63,7 @@ namespace nuklei
     typedef KDTree::KDTree< 3, FlexiblePoint, FlexiblePoint::Accessor > Tree;
   }
 
-#ifdef NUKLEI_USE_CGAL
+#ifdef NUKLEI_USE_CGAL_DEPRECATED
   namespace cgal_convex_hull_types
   {
     //typedef CGAL::Gmpz RT;
@@ -70,6 +75,9 @@ namespace nuklei
     typedef CGAL::Convex_hull_d_traits_3<K>        Hull_traits_3;
     typedef CGAL::Convex_hull_d< Hull_traits_3 >   Convex_hull_3;
   }
+#endif
+
+#ifdef NUKLEI_USE_CGAL
 
   namespace cgal_neighbor_search_types
   {

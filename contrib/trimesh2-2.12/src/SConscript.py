@@ -45,8 +45,9 @@ sources = [ "ICP.cc",
 
 env.Prepend(CPPPATH = [ '#contrib/trimesh2-2.12/include/trimesh' ])
 
-deepObjList = []
-for source in sources:
-  deepObjList += env.SharedObject(source)
-objects += Flatten(deepObjList)
+if env['PartialView']:
+  deepObjList = []
+  for source in sources:
+    deepObjList += env.SharedObject(source)
+  objects += Flatten(deepObjList)
 

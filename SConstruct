@@ -43,6 +43,18 @@ for root, dirs, files in os.walk('.'):
       dirs.remove('.git')
   if '.svn' in dirs:
       dirs.remove('.svn')
+parts = list(sorted(parts))
+try:
+  # speeds up -jN builds by requesting build jobs for complex files first
+  reorder_attempt = [ 'libnuklei/kernel', 'libnuklei/base', 'libnuklei/io' ]
+  reorder_confirm = [ p for p in reorder_attempt if p in parts]
+  parts_hardcoded_order = parts
+  for p in reorder_confirm:
+    parts_hardcoded_order.remove(p)
+  parts_hardcoded_order = reorder_confirm + parts_hardcoded_order
+  parts = parts_hardcoded_order
+except:
+  print 'Could not re-order parts.'
 
 import shlex
 import subprocess
@@ -78,8 +90,8 @@ except OSError:
   print "Running Git didn't work. Is git installed?"
   branch = ''
 
-if branch.find("# On branch") == 0:
-  branch = branch.replace("# On branch ", "")
+if branch.find("On branch") == 0:
+  branch = branch.replace("On branch ", "")
   branch = branch[:branch.find('\n')]
 else:
   branch = ""
@@ -120,6 +132,74 @@ def buildPkgConfigFile(target = None, source = None, env = None):
 def verbosePkgConfigFile(target, source, env):
     return "Building pkg-config file '%s'" % (target[0])
 
+# buildPkgConfigFile: see scons Actions for signature definition
+def buildCMakeConfigFile(target = None, source = None, env = None):
+
+  cmake_header = """
+# Config file for the nuklei package
+# It defines the following variables
+#  NUKLEI_INCLUDE_DIRS  - include directories (Nuklei & header dependencies)
+#  NUKLEI_LIBRARIES     - libraries to link against (libnuklei & header dependencies)
+#  NUKLEI_DEFINITIONS   - compiler flags
+#  NUKLEI_LIBRARY_DIRS  - library directories (Nuklei & header dependencies)
+# It also find_library for PCL, if Nuklei uses PCL, and find_package for OpenMP
+# if Nuklei uses OpenMP.
+
+# Use as:
+#FIND_PACKAGE(nuklei)
+#ADD_DEFINITIONS(${NUKLEI_DEFINITIONS})
+#INCLUDE_DIRECTORIES(${NUKLEI_INCLUDE_DIRS})
+#LINK_DIRECTORIES(${NUKLEI_LIBRARY_DIRS})
+#TARGET_LINK_LIBRARIES(target ${NUKLEI_LIBRARIES})
+
+"""
+
+  cmake_find_openmp_commands = """
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+"""
+
+  cmake_find_pcl_commads = """
+find_package(PCL %s REQUIRED COMPONENTS io)
+SET(NUKLEI_DEFINITIONS ${PCL_DEFINITIONS} ${NUKLEI_DEFINITIONS})
+SET(NUKLEI_INCLUDE_DIRS ${PCL_INCLUDE_DIRS} ${NUKLEI_INCLUDE_DIRS})
+SET(NUKLEI_LIBRARY_DIRS ${PCL_LIBRARY_DIRS} ${NUKLEI_LIBRARY_DIRS})
+SET(NUKLEI_LIBRARIES ${PCL_LIBRARIES} ${NUKLEI_LIBRARIES})
+""" % (env['PCLVersion'])
+
+  pkgcName = target[0].abspath
+  pkgc = file(pkgcName, 'w')
+  pkgc.write(cmake_header)
+  if env['UseOpenMP']:
+    pkgc.write(cmake_find_openmp_commands)
+  if env['UsePCL']:
+    pkgc.write(cmake_find_pcl_commads)
+
+  compiler_options_string = ' '.join(env['PkgCompilerOptions'])
+  include_dir_string = ' '.join(env['PkgIncludeDirectories']) + ' ' + env['HdrInstallDir']
+  link_dir_string = ' '.join(env['PkgLinkDirectories']) + ' ' + env['LibInstallDir']
+  libs_string = ' '.join(env['PkgLibraries'])
+
+  cmake_nuklei_commands = """
+SET(NUKLEI_DEFINITIONS %s ${NUKLEI_DEFINITIONS})
+SET(NUKLEI_INCLUDE_DIRS %s ${NUKLEI_INCLUDE_DIRS})
+SET(NUKLEI_LIBRARY_DIRS %s ${NUKLEI_LIBRARY_DIRS})
+SET(NUKLEI_LIBRARIES %s ${NUKLEI_LIBRARIES})
+""" % (compiler_options_string, include_dir_string, link_dir_string, libs_string)
+
+  pkgc.write(cmake_nuklei_commands)
+
+  pkgc.write('\n')
+  pkgc.close()
+  return 0
+
+# verbosePkgConfigFile: see scons Actions for signature definition
+def verboseCMakeConfigFile(target, source, env):
+    return "Building cmake-config file '%s'" % (target[0])
+
 ########################
 # command line options #
 ########################
@@ -144,6 +224,10 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('use_opencv', 'Enables functions that depend on OpenCV', 'no',
                allowed_values = ('yes', 'no')),
+  EnumVariable('use_yamlcpp', 'Enables functions that depend on yaml-cpp', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('use_cereal', 'Enables the use of bundled Cereal instead of Boost Serialization', 'yes',
+               allowed_values = ('yes', 'no')),
   EnumVariable('use_cgal', 'Enables functions that depend on CGAL', 'no',
                allowed_values = ('yes', 'no')),
   EnumVariable('use_pcl', 'Enables functions that depend on PCL', 'no',
@@ -160,12 +244,17 @@ opts.AddVariables(
                allowed_values = ('yes', 'no')),
   EnumVariable('static', 'This option is for Nuklei developers only. ' + \
                'It tells SCons to build a static nuklei executable', 'no',
+               allowed_values = ('yes', 'no')),
+  EnumVariable('volatile_parameters',
+               'Refrain from writing configuration parameters to disk.', 'no',
                allowed_values = ('yes', 'no'))
+
 )
 
 opts.Update(env)
 
 env['BuildType'] = env['bt']
+env['VolatileParameters'] = env['volatile_parameters'] == 'yes'
 
 if env['qpl'] == 'yes':
   print red + "Warning: qpl=yes is an obsolete build option. The qpl option used " + \
@@ -181,11 +270,14 @@ if env['qpl'] == 'yes':
 env['UseCGAL'] = env['use_cgal'] == 'yes'
 env['UseOpenMP'] = env['use_openmp'] == 'yes'
 env['UseOpenCV'] = env['use_opencv'] == 'yes'
+env['UseYamlCPP'] = env['use_yamlcpp'] == 'yes'
+env['UseCereal'] = env['use_cereal'] == 'yes'
 env['UsePCL'] = env['use_pcl'] == 'yes'
 env['UseCIMG'] = env['use_cimg'] == 'yes'
 env['UseTICPP'] = env['use_ticpp'] == 'yes'
 env['PartialView'] = env['partial_view'] == 'yes'
 env['BuildStaticExecutable'] = env['static'] == 'yes'
+env['PCLVersion'] = ''
 
 if env['CXX'].find('clang++') >= 0:
   if env['UseOpenMP']:
@@ -194,7 +286,7 @@ if env['CXX'].find('clang++') >= 0:
 
 # this is obsolete, should not be used.
 env['InstallPrefix'] = env['prefix']
-
+env['BranchInBuildDir'] = env['branch_in_build_dir'] == 'yes'
 if env['branch_in_build_dir'] == 'yes':
   env['BuildDirectory'] = join(env['build_dir'], branch)
 else:
@@ -212,7 +304,8 @@ print 'Install prefix currently set to `' + blue + \
 print 'C++ compiler currently set to `' + blue + \
       env['CXX'] + defColor + '\'.'
 
-opts.Save(conf_file, env)
+if not env['VolatileParameters']:
+  opts.Save(conf_file, env)
 
 Help(opts.GenerateHelpText(env))
 
@@ -259,8 +352,13 @@ env['LibInstallDir'] = join(env['prefix'], 'lib')
 env.Alias('install', [ '$BinInstallDir', '$HdrInstallDir', '$LibInstallDir' ])
 env.Clean('install', join('$HdrInstallDir', '$projectName'))
 
-env['PkgCCflags'] = ''
+env['PkgCCflags'] = ' '
 env['PkgCLibs'] = ' -lnuklei'
+env['PkgCompilerOptions'] = [ ]
+env['PkgIncludeDirectories'] = []
+env['PkgLibraries'] = [ 'nuklei' ]
+env['PkgLinkDirectories'] = []
+
 
 ##############################################
 ## configuration: checks & pkg-config setup ##
@@ -379,7 +477,7 @@ def CheckCGAL_LAPACK(context):
     #include <CGAL/Cartesian.h>
     #include <CGAL/Monge_via_jet_fitting.h>
     #include <vector>
-    
+
     namespace cgal_jet_fitting_types
     {
     typedef double                   DFT;
@@ -395,11 +493,11 @@ def CheckCGAL_LAPACK(context):
     std::vector<DPoint> in_points;
     size_t d_fitting = 4;
     size_t d_monge = 4;
-    
+
     Monge_form monge_form;
     Monge_via_jet_fitting monge_fit;
     monge_form = monge_fit(in_points.begin(), in_points.end(), d_fitting, d_monge);
-    
+
     return monge_fit.condition_number();
     }
     """, '.cpp')
@@ -430,6 +528,8 @@ def CheckPKG(context, name):
      context.Result( ret )
      return ret
 
+env.Append(CCFLAGS = [ '-std=c++11' ])
+
 conf = env.Configure(conf_dir = configure_dir, log_file = configure_log_file,
                      custom_tests = { 'CheckBoost' : CheckBoost,
                                       'CheckPKGConfig' : CheckPKGConfig,
@@ -452,14 +552,18 @@ elif env['PLATFORM'] == 'posix':
   # Required by Wm5:
   conf.env.Append(CPPDEFINES = "__LINUX__")
   conf.env['PkgCCflags'] += ' -D__LINUX__'
+  conf.env['PkgCompilerOptions'].append('-D__LINUX__')
 
 # build type
 
-extra_cxx_args = [];
+extra_cxx_args =  [ '-Wall', '-Wno-sign-compare', '-Wno-unused-local-typedefs' ]
 if env['CXX'].find('clang++') >= 0:
-  extra_cxx_args = [ '-Wno-mismatched-tags', '-Wno-gnu-designator', '-Wno-parentheses', '-ftemplate-depth=256', '-Wno-unused-local-typedef' ]
+  extra_cxx_args += [ '-ftemplate-depth=256', '-Wno-gnu-designator', '-Wno-undefined-var-template', '-Wno-unused-private-field', '-Wno-deprecated-declarations', '-Wno-redeclared-class-member' ] # '-Wno-sign-compare', '-Wno-deprecated', '-Wno-mismatched-tags', '-Wno-parentheses', '-Wno-unused-local-typedef'
+else:
+  extra_cxx_args += [ '-Wno-unused-result', '-Wno-maybe-uninitialized' ] # trimesh
+
 if env['BuildType'] == 'deploy':
-  env.Append(CCFLAGS = [ '-pipe', '-O3', '-Wall', '-Wno-sign-compare', '-Wno-deprecated' ])
+  env.Append(CCFLAGS = [ '-pipe', '-O3' ])
   env.Append(CCFLAGS = extra_cxx_args)
 # May bring a 1% speedup:
 #  env.Append(CPPDEFINES = [ 'NDEBUG' ])
@@ -468,7 +572,7 @@ elif env['BuildType'] == 'profile':
   env.Append(CCFLAGS = [ '-pg' ])
   env.Append(LINKFLAGS = [ '-pg' ])
 elif env['BuildType'] == 'develop':
-  env.Append(CCFLAGS = [ '-pipe', '-g', '-Wall', '-Wno-sign-compare', '-Wno-deprecated' ])
+  env.Append(CCFLAGS = [ '-pipe', '-g' ])
   env.Append(CCFLAGS = extra_cxx_args)
 else:
   print 'Unknown build type "' + env['BuildType'] + '".'
@@ -521,9 +625,17 @@ if env['TarDir'].lstrip('#') in COMMAND_LINE_TARGETS:
 
 # generation of a .pc file
 pkgConfigAction = env.Action(buildPkgConfigFile, verbosePkgConfigFile,
-                             varlist = [ 'projectName', 'PkgCCflags', 'PkgCLibs' ])
-pcfile = env.Command(join(env['BuildDirectory'], env['projectName'] + '.pc'), None, pkgConfigAction)
-env.Install(dir = join(env['LibInstallDir'], 'pkgconfig'), source = pcfile)
+                             varlist = [ 'projectName', 'PkgCCflags', 'PkgCLibs', 'LibInstallDir', 'HdrInstallDir', 'prefix' ])
+pcfile = env.Command(join(env['BuildDirectory'], env['projectName'] + '-' + env['PLATFORM'] + '_' + env['BuildType'] + '.pc'), None, pkgConfigAction)
+installer = env.InstallAs(target = join(env['LibInstallDir'], 'pkgconfig', env['projectName'] + '.pc'), source = pcfile)
+if env['BranchInBuildDir']: AlwaysBuild(installer)
+
+# generation of a .cmake file
+cmakeConfigAction = env.Action(buildCMakeConfigFile, verboseCMakeConfigFile,
+                             varlist = [ 'projectName', 'PkgCompilerOptions', 'PkgIncludeDirectories', 'PkgLinkDirectories', 'PkgLibraries', 'PCLVersion', 'UseOpenMP', 'UsePCL', 'LibInstallDir', 'HdrInstallDir', 'prefix' ])
+cmakefile = env.Command(join(env['BuildDirectory'], env['projectName'] + '-' + env['PLATFORM'] + '_' + env['BuildType'] + '.cmake'), None, cmakeConfigAction)
+installer = env.InstallAs(target = join(env['LibInstallDir'], 'cmake', env['projectName'], env['projectName'] + '-config.cmake'), source = cmakefile)
+if env['BranchInBuildDir']: AlwaysBuild(installer)
 
 env.Prepend(LIBPATH = [ '$LibDir' ])
 
@@ -544,8 +656,9 @@ for part in parts:
   SConscript(join(env['ObjDir'], part, SConscriptName),
              exports = 'env names addfiles objects headers')
   for header in headers:
-    env.InstallAs(target = join('$HdrInstallDir', header),
-                  source = join(part, header))
+    installer = env.InstallAs(target = join('$HdrInstallDir', header),
+                              source = join(part, header))
+    if env['BranchInBuildDir']: AlwaysBuild(installer)
 
 libtarget = os.path.join(env['LibDir'], env['projectName'])
 if env['BuildStaticExecutable']:
@@ -554,7 +667,8 @@ if env['BuildStaticExecutable']:
 else:
   library = env.SharedLibrary(source = objects,
                               target = libtarget)
-env.Install(dir = '$LibInstallDir', source = library)
+installer = env.Install(dir = '$LibInstallDir', source = library)
+if env['BranchInBuildDir']: AlwaysBuild(installer)
 AlwaysBuild(env.Alias('check'))
 AlwaysBuild(env.Alias('examples'))
 
