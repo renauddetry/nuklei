@@ -74,7 +74,7 @@ if 'TERM' in os.environ and os.environ['TERM'] != 'dumb':
 
 print 'Welcome to Nuklei.\n' + red + \
   "If this install script doesn't work, please carefully read again the page\n" + \
-  '  http://nuklei.sourceforge.net/doxygen/group__install.html' + \
+  '  http://renaud-detry.net/nuklei/group__install.html' + \
   defColor + '\n' \
   "If installation still doesn't work, feel free to contact me. See http://renaud-detry.net for my email address."
 

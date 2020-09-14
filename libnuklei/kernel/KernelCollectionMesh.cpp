@@ -293,7 +293,7 @@ namespace nuklei {
     
     buildAABBTree(deco_, AABBTREE_KEY, *poly);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -307,7 +307,7 @@ namespace nuklei {
     std::ofstream out(filename.c_str());
     out << *deco_.get< boost::shared_ptr<SimplePolyhedron> >(MESH_KEY);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -327,7 +327,7 @@ namespace nuklei {
     //boost::filesystem::copy_file(plyfile, filename);
     nuklei::copy_file(plyfile.string(), filename);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -347,7 +347,7 @@ namespace nuklei {
     deco_.insert(MESH_KEY, poly);
     buildAABBTree(deco_, AABBTREE_KEY, *poly);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -367,7 +367,7 @@ namespace nuklei {
     mesh->write(offfile.native());
     readMeshFromOffFile(offfile.native());
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }

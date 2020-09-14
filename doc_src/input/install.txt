@@ -12,7 +12,7 @@ Before installing, carefully read the @ref index_license "licensing terms".
 
 There is no periodical release. The source code is only available from the Sourceforge version control server:
 @verbatim
-git clone git://git.code.sf.net/p/nuklei/code nuklei
+git clone https://github.com/renauddetry/nuklei.git
 @endverbatim
 
 @subsection install_download_quick Quick Install

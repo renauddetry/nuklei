@@ -92,7 +92,7 @@ namespace nuklei {
         "You should manually undefine all NUKLEI_RANDOM_SYNC_* in Random.cpp, "
         "and define NUKLEI_RANDOM_SYNC_MUTEX instead. Note that multithreading "
         "will be slower than with OpenMP. "
-        "See http://nuklei.sourceforge.net/doxygen/group__faq.html" << std::endl;
+        "See http://renaud-detry.net/nuklei/group__faq.html" << std::endl;
         std::terminate();
 #endif
       }

@@ -18,7 +18,7 @@ namespace nuklei {
   const std::string INFOSTRING = 
   std::string("Built on " __DATE__ " at " __TIME__) +
   " with `" + NUKLEI_BUILDTYPE + "' flags.\n"
-  "This application is part of Nuklei http://nuklei.sourceforge.net/\n"
+  "This application is part of Nuklei http://renaud-detry.net/nuklei\n"
   "To contact the author, see email at http://renaud-detry.net\n";
     
   template<typename T>

@@ -91,7 +91,7 @@ namespace nuklei
     return boost::make_tuple(eigenVectors, eigenValues, conditionNumber);
     
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     
     NUKLEI_TRACE_END();

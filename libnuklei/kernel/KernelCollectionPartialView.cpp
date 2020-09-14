@@ -165,7 +165,7 @@ namespace nuklei {
                      *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY),
                      tolerance);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -185,7 +185,7 @@ namespace nuklei {
                      *deco_.get< boost::shared_ptr<Tree> >(AABBTREE_KEY),
                      tolerance);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -221,7 +221,7 @@ namespace nuklei {
           index_collection.push_back(std::distance(begin(), v));
       }
 #else
-      NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+      NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     }
     else
@@ -259,7 +259,7 @@ namespace nuklei {
 #ifdef NUKLEI_HAS_PARTIAL_VIEW
     return partialView< std::vector<int> >(viewpoint, tolerance, useViewcache, useRayToSurfacenormalAngle);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -285,7 +285,7 @@ namespace nuklei {
     
     return const_partialview_iterator(begin(), index_collection);
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -402,7 +402,7 @@ namespace nuklei {
 #endif
     
 #else
-    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires the partial view build of Nuklei. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
 

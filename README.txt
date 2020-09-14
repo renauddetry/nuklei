@@ -1,9 +1,9 @@
-Nuklei http://nuklei.sf.net
----------------------------
+Nuklei http://renaud-detry.net/nuklei
+-------------------------------------
 
 For detailed install docs, see
 
-http://nuklei.sourceforge.net/doxygen/group__install.html
+http://renaud-detry.net/nuklei/group__install.html
 
 Summarized install instructions are provided below.
 
@@ -18,10 +18,6 @@ Quick install:
 Nuklei's build system is SCons. Install with
 
 ./scons.py install
-
-This directory also contains a Makefile and a CMakeLists.txt, which both trigger SCons.
-Read the Makefile to see what shortcuts it defines. The CMakeLists.txt is useless at this
-point.
 
 Usage:
 ------

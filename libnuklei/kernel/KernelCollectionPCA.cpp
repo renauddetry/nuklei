@@ -51,7 +51,7 @@ namespace nuklei
     
     return k;
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -114,7 +114,7 @@ namespace nuklei
     
     return kc.linearLeastSquarePlaneFit();
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -133,7 +133,7 @@ namespace nuklei
 //      Point_3 proj = cplane.projection(Point_3(point[0], point[1], point[2]));
 //      return Vector3(proj[0], proj[1], proj[2]);
 //#else
-//      NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+//      NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 //#endif
 //      NUKLEI_TRACE_END();
 //    }  

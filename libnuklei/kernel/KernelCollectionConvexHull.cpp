@@ -33,7 +33,7 @@ namespace nuklei {
     if (deco_.has_key(HULL_KEY)) deco_.erase(HULL_KEY);
     deco_.insert(HULL_KEY, CH_p);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
@@ -50,7 +50,7 @@ namespace nuklei {
     return deco_.get< boost::shared_ptr<Convex_hull_3> >(HULL_KEY)->bounded_side
       (Point_3(loc.X(), loc.Y(), loc.Z())) != CGAL::ON_UNBOUNDED_SIDE;
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }

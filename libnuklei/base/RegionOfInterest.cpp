@@ -225,7 +225,7 @@ namespace nuklei
       triangles.push_back(Triangle(a,d,c));
     }
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
   }
 
@@ -245,7 +245,7 @@ namespace nuklei
     boost::shared_ptr<Tree> tree(new Tree(triangles.begin(),triangles.end()));
     tree_ = tree;
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
   }
   
@@ -269,7 +269,7 @@ namespace nuklei
     Plane plane_query(pp, qq, rr);
     return intersects(plane_query, tree_);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
   }
   
@@ -281,7 +281,7 @@ namespace nuklei
     Plane plane_query(a,vec);
     return intersects(plane_query, tree_);
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
   }
 

@@ -81,7 +81,7 @@ namespace nuklei {
     deco_.insert(NSTREE_KEY, tree);
     
 #else
-    NUKLEI_THROW("This function requires CGAL. See http://nuklei.sourceforge.net/doxygen/group__install.html");
+    NUKLEI_THROW("This function requires CGAL. See http://renaud-detry.net/nuklei/group__install.html");
 #endif
     NUKLEI_TRACE_END();
   }
