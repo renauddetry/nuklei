@@ -428,8 +428,6 @@ namespace nuklei {
 
   CoViS3DXMLWriter::~CoViS3DXMLWriter()
   {
-    NUKLEI_TRACE_BEGIN();
-    NUKLEI_TRACE_END();
   }
 
   void CoViS3DXMLWriter::init()

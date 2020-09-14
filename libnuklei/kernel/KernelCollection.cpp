@@ -69,7 +69,7 @@ namespace nuklei {
       kernelType_ = f.polyType();
     else
       NUKLEI_ASSERT(*kernelType_ == f.polyType());
-    kernels_.push_back(f.clone());
+    kernels_.push_back(NUKLEI_RELEASE(f.clone()));
     NUKLEI_TRACE_END();
   }
 
@@ -86,7 +86,7 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     NUKLEI_ASSERT(0 <= idx && idx < size());
     NUKLEI_ASSERT(*kernelType_ == k.polyType());
-    kernels_.replace(idx, k.clone());
+    kernels_.replace(idx, NUKLEI_RELEASE(k.clone()));
     invalidateHelperStructures();
     NUKLEI_TRACE_END();
   }
