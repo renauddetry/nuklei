@@ -8,6 +8,7 @@
 #include <string>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include <unistd.h>
 #include <nuklei/Common.h>
 #include <nuklei/Math.h>
@@ -57,9 +58,10 @@ const TYPE VAR = initConst<TYPE>("NUKLEI_" #VAR, VAL)
   // Rangoe is [0,1].
   defConst(appear_t, HSV_METRIC_VALUE_WEIGHT, .6);
 
-  const int NICEINC = 17;
-  
-  defConst(std::string, SERIALIZATION_DEFAULT_BOOST_ARCHIVE, "bxmlc");
+  const int NICEINC = std::numeric_limits<int>::max();
+
+  defConst(std::string, SERIALIZATION_DEFAULT_OUTPUT_TYPE, "serial");
+  defConst(std::string, SERIALIZATION_DEFAULT_BOOST_ARCHIVE, "bbinc");
 
   defConst(unsigned, IMAGE_PROJECTION_RADIUS, 3);
 

@@ -41,7 +41,7 @@ namespace nuklei {
   
     protected:
       void init_();
-       NUKLEI_UNIQUE_PTR<Observation> readObservation_();
+      NUKLEI_UNIQUE_PTR<Observation> readObservation_();
       std::string observationFileName_;
     private:
 #ifdef NUKLEI_USE_TICPP
@@ -65,8 +65,8 @@ namespace nuklei {
       void init();
       void reset();
       
-       NUKLEI_UNIQUE_PTR<Observation> templateObservation() const
-      { return  NUKLEI_UNIQUE_PTR<Observation>(new NukleiObservation); }
+      NUKLEI_UNIQUE_PTR<Observation> templateObservation() const
+      { return NUKLEI_UNIQUE_PTR<Observation>(NUKLEI_MOVE(new NukleiObservation)); }
 
       void writeObservation(const Observation &o);
       void writeBuffer();

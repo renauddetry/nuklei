@@ -10,9 +10,9 @@
 
 namespace nuklei
 {
-    const  NUKLEI_UNIQUE_PTR<Color> PlaneProjection::getColor() const
+    const NUKLEI_UNIQUE_PTR<Color> PlaneProjection::getColor() const
     {
-      return  NUKLEI_UNIQUE_PTR<Color>(new RGBColor(color_[0]/255.,
+      return NUKLEI_UNIQUE_PTR<Color>(new RGBColor(color_[0]/255.,
                                                color_[1]/255.,
                                                color_[2]/255.));
     }
@@ -41,9 +41,9 @@ namespace nuklei
       return la::quaternionCopy(m);
     }
 
-    const  NUKLEI_UNIQUE_PTR<Color> StereoPlaneProjection::getColor() const
+    const NUKLEI_UNIQUE_PTR<Color> StereoPlaneProjection::getColor() const
     {
-      return  NUKLEI_UNIQUE_PTR<Color>(new RGBColor(color_[0]/255.,
+      return NUKLEI_UNIQUE_PTR<Color>(new RGBColor(color_[0]/255.,
                                                color_[1]/255.,
                                                color_[2]/255.));
     }

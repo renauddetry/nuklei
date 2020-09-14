@@ -71,11 +71,11 @@ namespace nuklei {
   private:
     container_t container_;
 
-    friend class boost::serialization::access;
+    friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
     template<class Archive>
       void serialize(Archive &ar, const unsigned int version)
       {
-        ar & BOOST_SERIALIZATION_NVP(container_);
+        ar & NUKLEI_SERIALIZATION_NVP(container_);
       }
   };
 

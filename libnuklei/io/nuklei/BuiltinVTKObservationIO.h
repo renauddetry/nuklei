@@ -28,7 +28,7 @@ namespace nuklei {
   
     protected:
       void init_();
-       NUKLEI_UNIQUE_PTR<Observation> readObservation_();
+      NUKLEI_UNIQUE_PTR<Observation> readObservation_();
     private:
       std::ifstream in_;
       int idx_;

@@ -543,24 +543,23 @@ namespace nuklei {
   
 }
 
-namespace boost {
-  namespace serialization {
+NUKLEI_SERIALIZATION_NAMESPACE_BEGIN
 
     template<class Archive>
       void serialize(Archive & ar, nuklei_wmf::Vector3<nuklei::coord_t> &v, const unsigned int version)
       {
-        ar & boost::serialization::make_nvp("x", v.X());
-        ar & boost::serialization::make_nvp("y", v.Y());
-        ar & boost::serialization::make_nvp("z", v.Z());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("x", v.X());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("y", v.Y());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("z", v.Z());
       }
 
     template<class Archive>
       void serialize(Archive & ar, nuklei_wmf::Quaternion<nuklei::coord_t> &q, const unsigned int version)
       {
-        ar & boost::serialization::make_nvp("w", q.W());
-        ar & boost::serialization::make_nvp("x", q.X());
-        ar & boost::serialization::make_nvp("y", q.Y());
-        ar & boost::serialization::make_nvp("z", q.Z());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("w", q.W());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("x", q.X());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("y", q.Y());
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP("z", q.Z());
       }
 
     template<class Archive>
@@ -572,8 +571,7 @@ namespace boost {
       }
 
 
-  } // namespace serialization
-} // namespace boost
+NUKLEI_SERIALIZATION_NAMESPACE_END
 
 
 

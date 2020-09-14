@@ -146,14 +146,14 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-   NUKLEI_UNIQUE_PTR<Observation> CoViS3DReader::readObservation_()
+  NUKLEI_UNIQUE_PTR<Observation> CoViS3DReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
     return reader_->readObservation_();
     NUKLEI_TRACE_END();
   }
   
-   NUKLEI_UNIQUE_PTR<Observation> CoViS3DXMLReader::readObservation_()
+  NUKLEI_UNIQUE_PTR<Observation> CoViS3DXMLReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_TICPP
@@ -166,7 +166,7 @@ namespace nuklei {
       ElementIterator primitive = *e_;
       ++*e_;
       
-       NUKLEI_UNIQUE_PTR<CoViS3DObservation> observation(new CoViS3DObservation);
+      NUKLEI_UNIQUE_PTR<CoViS3DObservation> observation(new CoViS3DObservation);
       
       ElementIterator primitiveElement;
       primitiveElement = primitiveElement.begin(&*primitive);
@@ -282,18 +282,18 @@ namespace nuklei {
             
       oc.incLabel("input");
       
-      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
+      return NUKLEI_UNIQUE_PTR<Observation>(NUKLEI_MOVE(observation));
    }
     
     // End of file reached.
-    return  NUKLEI_UNIQUE_PTR<Observation>();
+    return NUKLEI_UNIQUE_PTR<Observation>();
 #else
     NUKLEI_THROW("This function requires TICPP.");
 #endif
     NUKLEI_TRACE_END();
   }
 
-   NUKLEI_UNIQUE_PTR<Observation> CoViS3DWandererReader::readObservation_()
+  NUKLEI_UNIQUE_PTR<Observation> CoViS3DWandererReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
     if (!in_.is_open()) NUKLEI_THROW("Reader does not seem inited.");
@@ -305,7 +305,7 @@ namespace nuklei {
     {
       NUKLEI_ASSERT(in_.good());
       
-       NUKLEI_UNIQUE_PTR<CoViS3DObservation> observation(new CoViS3DObservation);
+      NUKLEI_UNIQUE_PTR<CoViS3DObservation> observation(new CoViS3DObservation);
       
       // Careful:  LS.normal_vector_plane_C is a Vector!
       
@@ -413,11 +413,11 @@ namespace nuklei {
       
       oc.incLabel("input");
       
-      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
+      return NUKLEI_UNIQUE_PTR<Observation>(NUKLEI_MOVE(observation));
     }
     
     // End of file reached.
-    return  NUKLEI_UNIQUE_PTR<Observation>();
+    return NUKLEI_UNIQUE_PTR<Observation>();
     NUKLEI_TRACE_END();
   }
 

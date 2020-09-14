@@ -50,7 +50,7 @@ void convert(const std::vector<std::string>& files,
     makeR3xS2P || removeNormals ||
     !filterRGB.empty() || !setRGB.empty() || colorToLoc != Color::UNKNOWN;
 
-   NUKLEI_UNIQUE_PTR<ObservationWriter> writer;
+  NUKLEI_UNIQUE_PTR<ObservationWriter> writer;
   Observation::Type writerType = outType;
   Observation::Type readerType = Observation::UNKNOWN;
   std::vector< boost::shared_ptr<Observation> > observations;
@@ -58,7 +58,7 @@ void convert(const std::vector<std::string>& files,
   for (std::vector<std::string>::const_iterator i = files.begin();
        i != --files.end(); ++i)
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader;
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader;
     if (inType == Observation::UNKNOWN)
       reader = ObservationReader::createReader(*i);
     else
@@ -84,7 +84,7 @@ void convert(const std::vector<std::string>& files,
 //                  nameFromType<Observation>(reader->type()) << "'.");
     }
     
-     NUKLEI_UNIQUE_PTR<Observation> o;
+    NUKLEI_UNIQUE_PTR<Observation> o;
     while ( (o = reader->readObservation()).get() != NULL )
     {
       if (transfo != NULL || scale > 0)
@@ -106,7 +106,7 @@ void convert(const std::vector<std::string>& files,
       }
       
       if (storeInKc)
-        observations.push_back(boost::shared_ptr<Observation>(o));
+        observations.push_back(boost::shared_ptr<Observation>(NUKLEI_MOVE(o)));
       else
         writer->writeObservation(*o);
     }
@@ -353,17 +353,17 @@ void convert(const std::vector<std::string>& files,
         NUKLEI_ASSERT(k->hasDescriptor());
 
         Color &icolor = dynamic_cast<ColorDescriptor&>(k->getDescriptor()).getColor();
-         NUKLEI_UNIQUE_PTR<Color> ocolor;
+        NUKLEI_UNIQUE_PTR<Color> ocolor;
         switch (colorToLoc)
         {
           case Color::RGB:
-            ocolor =  NUKLEI_UNIQUE_PTR<Color>(new RGBColor(icolor));
+            ocolor = NUKLEI_UNIQUE_PTR<Color>(new RGBColor(icolor));
             break;
           case Color::HSV:
-            ocolor =  NUKLEI_UNIQUE_PTR<Color>(new HSVColor(icolor));
+            ocolor = NUKLEI_UNIQUE_PTR<Color>(new HSVColor(icolor));
             break;
           case Color::HSVCONE:
-            ocolor =  NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor(icolor));
+            ocolor = NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor(icolor));
             break;
           default:
             NUKLEI_ASSERT(false);

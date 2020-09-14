@@ -23,10 +23,10 @@
 #include <nuklei/LinearAlgebraTypes.h>
 
 // NUKLEI_UNIQUE_PTR_IMPL==0:
-//   use  NUKLEI_UNIQUE_PTR if BOOST_NO_CXX11_SMART_PTR is defined
+//   use NUKLEI_UNIQUE_PTR if BOOST_NO_CXX11_SMART_PTR is defined
 //   use std::unique_ptr if BOOST_NO_CXX11_SMART_PTR is not defined
 // NUKLEI_UNIQUE_PTR_IMPL==1:
-//   use  NUKLEI_UNIQUE_PTR
+//   use NUKLEI_UNIQUE_PTR
 // NUKLEI_UNIQUE_PTR_IMPL==2:
 //   use std::unique_ptr
 
@@ -39,7 +39,7 @@
 // can happen (eg the client will give an auto_ptr to a nuklei function
 // that has been compiled to receive an unique_ptr).
 #  ifdef BOOST_NO_CXX11_SMART_PTR
-#    define NUKLEI_UNIQUE_PTR  NUKLEI_UNIQUE_PTR
+#    define NUKLEI_UNIQUE_PTR NUKLEI_UNIQUE_PTR
 #    define NUKLEI_MOVE(PTR) (PTR)
 #    define NUKLEI_RELEASE(PTR) (PTR)
 #  else
@@ -48,7 +48,7 @@
 #    define NUKLEI_RELEASE(PTR) (PTR).release()
 #  endif
 #elif NUKLEI_UNIQUE_PTR_IMPL == 1
-#  define NUKLEI_UNIQUE_PTR  NUKLEI_UNIQUE_PTR
+#  define NUKLEI_UNIQUE_PTR NUKLEI_UNIQUE_PTR
 #  define NUKLEI_MOVE(PTR) (PTR)
 #  define NUKLEI_RELEASE(PTR) (PTR)
 #elif NUKLEI_UNIQUE_PTR_IMPL == 2

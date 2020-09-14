@@ -108,7 +108,7 @@ namespace nuklei {
   }
 
 
-   NUKLEI_UNIQUE_PTR<Observation> RIFReader::readObservation_()
+  NUKLEI_UNIQUE_PTR<Observation> RIFReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
     if (rows_ == 0 || columns_ == 0) NUKLEI_THROW("Reader does not seem inited.");
@@ -116,24 +116,24 @@ namespace nuklei {
     for (;;)
     {
       if (currentIndex_ >= rows_*columns_)
-        return  NUKLEI_UNIQUE_PTR<Observation>();
+        return NUKLEI_UNIQUE_PTR<Observation>();
       
       unsigned index = currentIndex_;
       currentIndex_++;
       
       if (flags_[index] == true) continue;
       
-       NUKLEI_UNIQUE_PTR<RIFObservation> observation(new RIFObservation);
+      NUKLEI_UNIQUE_PTR<RIFObservation> observation(new RIFObservation);
 
       Vector3 loc(x_[index], y_[index], z_[index]);
       observation->setLoc(loc);
       RGBColor c(rgb_[index]);
       observation->setColor(c);
             
-      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
+      return NUKLEI_UNIQUE_PTR<Observation>(NUKLEI_MOVE(observation));
     }
     
-    return  NUKLEI_UNIQUE_PTR<Observation>();
+    return NUKLEI_UNIQUE_PTR<Observation>();
     NUKLEI_TRACE_END();
   }
 

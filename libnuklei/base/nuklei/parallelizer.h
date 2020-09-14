@@ -64,8 +64,8 @@ namespace nuklei {
         {
           stream_protocol::endpoint ep(endpoint_name.native());
           stream_protocol::iostream stream(ep);
-          boost::archive::binary_oarchive oa(stream);
-          oa & i & BOOST_SERIALIZATION_NVP(tmp);
+          NUKLEI_SERIALIZATION_BINARY_OARCHIVE oa(stream);
+          oa & i & NUKLEI_SERIALIZATION_NVP(tmp);
         }
         
         _exit(0);
@@ -88,8 +88,8 @@ namespace nuklei {
       {
         stream_protocol::iostream stream;
         acceptor.accept(*stream.rdbuf());
-        boost::archive::binary_iarchive ia(stream);
-        ia & fork_i & BOOST_SERIALIZATION_NVP(tmp);
+        NUKLEI_SERIALIZATION_BINARY_IARCHIVE ia(stream);
+        ia & fork_i & NUKLEI_SERIALIZATION_NVP(tmp);
       }
       retv.push_back(tmp);
       

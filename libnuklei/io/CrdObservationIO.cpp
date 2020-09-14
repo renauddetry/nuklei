@@ -88,11 +88,11 @@ namespace nuklei {
   }
 
 
-   NUKLEI_UNIQUE_PTR<Observation> CrdReader::readObservation_()
+  NUKLEI_UNIQUE_PTR<Observation> CrdReader::readObservation_()
   {
     if (!in_.is_open()) NUKLEI_THROW("Reader does not seem inited.");
 
-    if (!in_.good()) return  NUKLEI_UNIQUE_PTR<Observation>();
+    if (!in_.good()) return NUKLEI_UNIQUE_PTR<Observation>();
     
     std::string line;
     
@@ -101,10 +101,10 @@ namespace nuklei {
       cleanLine(line);
       std::istringstream iss(line);
       
-       NUKLEI_UNIQUE_PTR<CrdObservation> observation(new CrdObservation);
+      NUKLEI_UNIQUE_PTR<CrdObservation> observation(new CrdObservation);
       
       Vector3 loc;
-      if ( ! (iss >> loc[0] >> loc[1] >> loc[2]) ) return  NUKLEI_UNIQUE_PTR<Observation>();
+      if ( ! (iss >> loc[0] >> loc[1] >> loc[2]) ) return NUKLEI_UNIQUE_PTR<Observation>();
       observation->setLoc(loc);
       
       Vector3 rgbColor(.5,.5,.5);
@@ -120,11 +120,11 @@ namespace nuklei {
         observation->setColor(c);
       }
       
-      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
+      return NUKLEI_UNIQUE_PTR<Observation>(NUKLEI_MOVE(observation));
     }
     
     // End of file reached.
-    return  NUKLEI_UNIQUE_PTR<Observation>();
+    return NUKLEI_UNIQUE_PTR<Observation>();
   }
 
   

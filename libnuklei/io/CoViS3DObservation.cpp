@@ -24,7 +24,7 @@ namespace nuklei {
     k_(k)
   {}
 
-   NUKLEI_UNIQUE_PTR<kernel::base> CoViS3DObservation::getKernel() const
+  NUKLEI_UNIQUE_PTR<kernel::base> CoViS3DObservation::getKernel() const
   {
     return k_.clone();
   }

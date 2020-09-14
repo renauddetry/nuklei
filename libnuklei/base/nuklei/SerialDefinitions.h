@@ -17,7 +17,7 @@
 
 namespace nuklei {
   
-  const unsigned int bsFlags = 0;
+  //const unsigned int bsFlags = 0;
   //static const unsigned int bsFlags = numify<unsigned int>(getenv("BSFLAGS"));
   
   // To compile a serialization stub, `serialize' methods have to be
@@ -33,14 +33,22 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     Type type = typeFromName<Serial>(typeName);
     
-     NUKLEI_UNIQUE_PTR<std::istream> ifs;
+    NUKLEI_UNIQUE_PTR<std::istream> ifs;
     if (type == BOOSTXML_COMPRESSED || type == BOOSTBIN_COMPRESSED)
     {
-       NUKLEI_UNIQUE_PTR<boost::iostreams::filtering_istream>
+      {
+        std::ifstream testIfs(filename.c_str());
+        uint8_t byte1, byte2;
+        testIfs.read((char*)(&byte1), 1);
+        testIfs.read((char*)(&byte2), 1);
+        if ((byte1) != 0x1f || (byte2) != 0x8b)
+          throw SerialError("File does note appear to be GZIP");
+      }
+      NUKLEI_UNIQUE_PTR<boost::iostreams::filtering_istream>
       decompressingIfs(new boost::iostreams::filtering_istream);
       decompressingIfs->push(boost::iostreams::gzip_decompressor());
       decompressingIfs->push(boost::iostreams::file_source(filename));
-      ifs = decompressingIfs;
+      ifs = NUKLEI_MOVE(decompressingIfs);
     }
     else if (type == BOOSTXML || type == BOOSTBIN)
     {
@@ -55,8 +63,8 @@ namespace nuklei {
       case BOOSTXML:
       case BOOSTXML_COMPRESSED:
       {
-        boost::archive::xml_iarchive ia(*ifs, bsFlags);
-        ia & BOOST_SERIALIZATION_NVP(object);
+        NUKLEI_SERIALIZATION_XML_IARCHIVE ia(*ifs);
+        ia & NUKLEI_SERIALIZATION_NVP(object);
         // This check always fails:
         //if (ifs->peek() != EOF) throw SerialError("EOF not reached");
         break;
@@ -64,8 +72,8 @@ namespace nuklei {
       case BOOSTBIN:
       case BOOSTBIN_COMPRESSED:
       {
-        boost::archive::binary_iarchive ia(*ifs, bsFlags);
-        ia & BOOST_SERIALIZATION_NVP(object);
+        NUKLEI_SERIALIZATION_BINARY_IARCHIVE ia(*ifs);
+        ia & NUKLEI_SERIALIZATION_NVP(object);
         if (ifs->peek() != EOF) throw SerialError("EOF not reached");
         break;
       }
@@ -86,14 +94,14 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     Type type = typeFromName<Serial>(typeName);
     
-     NUKLEI_UNIQUE_PTR<std::ostream> ofs;
+    NUKLEI_UNIQUE_PTR<std::ostream> ofs;
     if (type == BOOSTXML_COMPRESSED || type == BOOSTBIN_COMPRESSED)
     {
-       NUKLEI_UNIQUE_PTR<boost::iostreams::filtering_ostream>
+      NUKLEI_UNIQUE_PTR<boost::iostreams::filtering_ostream>
       decompressingOfs(new boost::iostreams::filtering_ostream);
       decompressingOfs->push(boost::iostreams::gzip_compressor());
       decompressingOfs->push(boost::iostreams::file_sink(filename));
-      ofs = decompressingOfs;
+      ofs = NUKLEI_MOVE(decompressingOfs);
     }
     else if (type == BOOSTXML || type == BOOSTBIN)
     {
@@ -109,15 +117,15 @@ namespace nuklei {
       case BOOSTXML:
       case BOOSTXML_COMPRESSED:
       {
-        boost::archive::xml_oarchive oa(*ofs, bsFlags);
-        oa & BOOST_SERIALIZATION_NVP(object);
+        NUKLEI_SERIALIZATION_XML_OARCHIVE oa(*ofs);
+        oa & NUKLEI_SERIALIZATION_NVP(object);
         break;
       }
       case BOOSTBIN:
       case BOOSTBIN_COMPRESSED:
       {
-        boost::archive::binary_oarchive oa(*ofs, bsFlags);
-        oa & BOOST_SERIALIZATION_NVP(object);
+        NUKLEI_SERIALIZATION_BINARY_OARCHIVE oa(*ofs);
+        oa & NUKLEI_SERIALIZATION_NVP(object);
         break;
       }
       default:

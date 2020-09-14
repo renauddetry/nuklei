@@ -281,9 +281,9 @@ BOOST_CLASS_EXPORT_GUID(nuklei::kernel::r3, "mdfh_kernel_r3")
 
 #else
 
-BOOST_CLASS_EXPORT_IMPLEMENT(nuklei::kernel::se3)
-BOOST_CLASS_EXPORT_IMPLEMENT(nuklei::kernel::r3xs2)
-BOOST_CLASS_EXPORT_IMPLEMENT(nuklei::kernel::r3xs2p)
-BOOST_CLASS_EXPORT_IMPLEMENT(nuklei::kernel::r3)
+NUKLEI_SERIALIZATION_REGISTER_TYPE(nuklei::kernel::se3)
+NUKLEI_SERIALIZATION_REGISTER_TYPE(nuklei::kernel::r3xs2)
+NUKLEI_SERIALIZATION_REGISTER_TYPE(nuklei::kernel::r3xs2p)
+NUKLEI_SERIALIZATION_REGISTER_TYPE(nuklei::kernel::r3)
 
 #endif // BOOST_VERSION

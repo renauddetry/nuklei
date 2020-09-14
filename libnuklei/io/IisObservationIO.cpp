@@ -64,7 +64,7 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
   
-   NUKLEI_UNIQUE_PTR<Observation> IisReader::readObservation_()
+  NUKLEI_UNIQUE_PTR<Observation> IisReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_TICPP
@@ -77,7 +77,7 @@ namespace nuklei {
       ElementIterator grasp = *e_;
       ++*e_;
       
-       NUKLEI_UNIQUE_PTR<IisObservation> observation(new IisObservation);
+      NUKLEI_UNIQUE_PTR<IisObservation> observation(new IisObservation);
       
       ElementIterator graspElement;
       graspElement = graspElement.begin(&*grasp);
@@ -142,11 +142,11 @@ namespace nuklei {
       
       oc.incLabel("input");
       
-      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
+      return NUKLEI_UNIQUE_PTR<Observation>(NUKLEI_MOVE(observation));
     }
     
     // End of file reached.
-    return  NUKLEI_UNIQUE_PTR<Observation>();
+    return NUKLEI_UNIQUE_PTR<Observation>();
 #else
     NUKLEI_THROW("This function requires TICPP.");
 #endif

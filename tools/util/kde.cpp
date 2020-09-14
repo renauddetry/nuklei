@@ -148,7 +148,7 @@ int resample(int argc, char ** argv)
 
   NUKLEI_ASSERT(nObsArg.getValue() >= 0);
 
-   NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+  NUKLEI_UNIQUE_PTR<ObservationReader> reader =
     ObservationReader::createReader(inFileArg.getValue());
 
   KernelCollection kc, sample;
@@ -258,12 +258,12 @@ int importance_sampling(int argc, char ** argv)
 
   KernelCollection importanceDistribution, weightedSamples, empiricalDensity;
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader =
       ObservationReader::createReader(importanceDistributionFileArg.getValue());
     readObservations(*reader, importanceDistribution);
   }
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader =
       ObservationReader::createReader(weightedSampleFileArg.getValue());
     readObservations(*reader, weightedSamples);
   }
@@ -352,12 +352,12 @@ int evaluate(int argc, char ** argv)
     
   KernelCollection density, points;
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader =
     ObservationReader::createReader(densityFileArg.getValue());
     readObservations(*reader, density);
   }
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader =
     ObservationReader::createReader(pointFileArg.getValue());
     readObservations(*reader, points);
   }

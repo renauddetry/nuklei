@@ -46,8 +46,8 @@ namespace nuklei {
     {
     public:
       
-      /** @brief  NUKLEI_UNIQUE_PTR for kernel::base. */
-      typedef  NUKLEI_UNIQUE_PTR< kernel::base > ptr;
+      /** @brief NUKLEI_UNIQUE_PTR for kernel::base. */
+      typedef NUKLEI_UNIQUE_PTR< kernel::base > ptr;
       
       /** @brief Explicit query of a kernel's type. See @ref type for more info. */
       typedef enum { R3 = 0, R3XS2, R3XS2P, SE3, UNKNOWN } Type;
@@ -142,7 +142,7 @@ namespace nuklei {
        * selecting random values from a uniform distribution for the
        * extra DOFs.
        */
-      virtual  NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Sample() const = 0;
+      virtual NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Sample() const = 0;
       /**
        * @brief Get an @f$ SE(3) @f$ version of the kernel.
        *
@@ -151,7 +151,7 @@ namespace nuklei {
        * selecting random values from a uniform distribution for the
        * extra DOFs.
        */
-      virtual  NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Proj() const = 0;
+      virtual NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Proj() const = 0;
       
       /**
        * @addtogroup matrix_transfo
@@ -256,14 +256,14 @@ namespace nuklei {
       int flag1_;
       bitfield_t bitfield_;
       
-       NUKLEI_UNIQUE_PTR<Descriptor> desc_;
+      NUKLEI_UNIQUE_PTR<Descriptor> desc_;
       
-      friend class boost::serialization::access;
+      friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
       template<class Archive>
       void serialize(Archive &ar, const unsigned int version)
       {
-        ar & BOOST_SERIALIZATION_NVP(w_);
-        ar & BOOST_SERIALIZATION_NVP(desc_);
+        ar & NUKLEI_SERIALIZATION_NVP(w_);
+        ar & NUKLEI_SERIALIZATION_NVP(desc_);
       }
       
     };
@@ -342,9 +342,9 @@ namespace nuklei {
         NUKLEI_TRACE_END();
       }
       
-       NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Sample() const;
+      NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Sample() const;
       
-       NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Proj() const;
+      NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Proj() const;
       
       base::ptr polyProjectedOn(const kernel::se3& k) const
       {
@@ -404,7 +404,7 @@ namespace nuklei {
     class se3 : public implementation_prototype<se3>
     {
     public:
-      typedef  NUKLEI_UNIQUE_PTR<kernel::se3> ptr;
+      typedef NUKLEI_UNIQUE_PTR<kernel::se3> ptr;
       
       typedef nuklei::unnormalized_shape_dist_kernel
       <groupS::r3, shapeS::triangle> PositionKernel;
@@ -486,17 +486,17 @@ namespace nuklei {
       coord_t ori_h_;
       
     private:
-      friend class boost::serialization::access;
+      friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
       template<class Archive>
       void serialize(Archive &ar, const unsigned int version)
       {
-        ar & boost::serialization::make_nvp
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP
         ( "base",  
-         boost::serialization::base_object<base>( *this ) );
-        ar & BOOST_SERIALIZATION_NVP(loc_)
-        & BOOST_SERIALIZATION_NVP(ori_)
-        & BOOST_SERIALIZATION_NVP(loc_h_)
-        & BOOST_SERIALIZATION_NVP(ori_h_);
+         NUKLEI_SERIALIZATION_BASE(base) );
+        ar & NUKLEI_SERIALIZATION_NVP(loc_)
+        & NUKLEI_SERIALIZATION_NVP(ori_)
+        & NUKLEI_SERIALIZATION_NVP(loc_h_)
+        & NUKLEI_SERIALIZATION_NVP(ori_h_);
       }
     };
     
@@ -505,7 +505,7 @@ namespace nuklei {
     class r3xs2_base : public implementation_prototype< r3xs2_base<OriGrp> >
     {
     public:
-      typedef  NUKLEI_UNIQUE_PTR< kernel::r3xs2_base<OriGrp> > ptr;
+      typedef NUKLEI_UNIQUE_PTR< kernel::r3xs2_base<OriGrp> > ptr;
       
       typedef implementation_prototype< r3xs2_base<OriGrp> > Super;
       using Super::getWeight;
@@ -597,17 +597,17 @@ namespace nuklei {
       coord_t dir_h_;
       
     private:
-      friend class boost::serialization::access;
+      friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
       template<class Archive>
       void serialize(Archive &ar, const unsigned int version)
       {
-        ar & boost::serialization::make_nvp
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP
         ( "base",  
-         boost::serialization::base_object<base>( *this ) );
-        ar & BOOST_SERIALIZATION_NVP(loc_)
-        & BOOST_SERIALIZATION_NVP(dir_)
-        & BOOST_SERIALIZATION_NVP(loc_h_)
-        & BOOST_SERIALIZATION_NVP(dir_h_);
+         NUKLEI_SERIALIZATION_BASE(base) );
+        ar & NUKLEI_SERIALIZATION_NVP(loc_)
+        & NUKLEI_SERIALIZATION_NVP(dir_)
+        & NUKLEI_SERIALIZATION_NVP(loc_h_)
+        & NUKLEI_SERIALIZATION_NVP(dir_h_);
       }
     };
     
@@ -626,7 +626,7 @@ namespace nuklei {
     class r3 : public implementation_prototype<r3>
     {
     public:
-      typedef  NUKLEI_UNIQUE_PTR<kernel::r3> ptr;
+      typedef NUKLEI_UNIQUE_PTR<kernel::r3> ptr;
       
       typedef nuklei::unnormalized_shape_dist_kernel
       <groupS::r3, shapeS::triangle> PositionKernel;
@@ -693,15 +693,15 @@ namespace nuklei {
       coord_t loc_h_;
       
     private:
-      friend class boost::serialization::access;
+      friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
       template<class Archive>
       void serialize(Archive &ar, const unsigned int version)
       {
-        ar & boost::serialization::make_nvp
+        ar & NUKLEI_SERIALIZATION_MAKE_NVP
         ( "base",  
-         boost::serialization::base_object<base>( *this ) );
-        ar & BOOST_SERIALIZATION_NVP(loc_)
-        & BOOST_SERIALIZATION_NVP(loc_h_);
+         NUKLEI_SERIALIZATION_BASE(base) );
+        ar & NUKLEI_SERIALIZATION_NVP(loc_)
+        & NUKLEI_SERIALIZATION_NVP(loc_h_);
       }
     };
     
@@ -937,21 +937,21 @@ namespace nuklei {
     
     
     template<class T>
-     NUKLEI_UNIQUE_PTR<kernel::se3>
+    NUKLEI_UNIQUE_PTR<kernel::se3>
     kernel::implementation_prototype<T>::polySe3Sample() const
     {
       NUKLEI_TRACE_BEGIN();
-       NUKLEI_UNIQUE_PTR<se3> p(  new se3(static_cast<const T*>(this)->se3Sample())  );
+      NUKLEI_UNIQUE_PTR<se3> p(  new se3(static_cast<const T*>(this)->se3Sample())  );
       return p;
       NUKLEI_TRACE_END();
     }
     
     template<class T>
-     NUKLEI_UNIQUE_PTR<kernel::se3>
+    NUKLEI_UNIQUE_PTR<kernel::se3>
     kernel::implementation_prototype<T>::polySe3Proj() const
     {
       NUKLEI_TRACE_BEGIN();
-       NUKLEI_UNIQUE_PTR<se3> p(  new se3(static_cast<const T*>(this)->se3Proj())  );
+      NUKLEI_UNIQUE_PTR<se3> p(  new se3(static_cast<const T*>(this)->se3Proj())  );
       return p;
       NUKLEI_TRACE_END();
     }
@@ -964,10 +964,10 @@ namespace nuklei {
 
 #else
 
-BOOST_CLASS_EXPORT_KEY2(nuklei::kernel::se3, "mdfh_kernel_se3")
-BOOST_CLASS_EXPORT_KEY2(nuklei::kernel::r3xs2, "mdfh_kernel_r3xs2")
-BOOST_CLASS_EXPORT_KEY2(nuklei::kernel::r3xs2p, "mdfh_kernel_r3xs2p")
-BOOST_CLASS_EXPORT_KEY2(nuklei::kernel::r3, "mdfh_kernel_r3")
+NUKLEI_SERIALIZATION_DECLARE_TYPE_WITH_NAME(nuklei::kernel::se3, "mdfh_kernel_se3")
+NUKLEI_SERIALIZATION_DECLARE_TYPE_WITH_NAME(nuklei::kernel::r3xs2, "mdfh_kernel_r3xs2")
+NUKLEI_SERIALIZATION_DECLARE_TYPE_WITH_NAME(nuklei::kernel::r3xs2p, "mdfh_kernel_r3xs2p")
+NUKLEI_SERIALIZATION_DECLARE_TYPE_WITH_NAME(nuklei::kernel::r3, "mdfh_kernel_r3")
 
 #endif // BOOST_VERSION
 

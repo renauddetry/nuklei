@@ -8,7 +8,15 @@
 #include <nuklei/Types.h>
 #include <nuklei/KernelCollection.h>
 #include <nuklei/SerialDefinitions.h>
+#include <type_traits>
 
+// Cereal signature:
+//   void serialize(Archive & ar, std::uint32_t const version)
+// Boost Serialization signature:
+//   void serialize(Archive &ar, const unsigned int version)
+// As long as this assertion holds, Boost Serialization and Cereal can easily
+// coexist.
+static_assert(std::is_same<std::uint32_t, unsigned int>::value, "Serialization may be compromised");
 
 namespace nuklei
 {

@@ -52,6 +52,7 @@ namespace nuklei {
   extern const int NICEINC;
 
   // For object IO.
+  extern const std::string SERIALIZATION_DEFAULT_OUTPUT_TYPE;
   extern const std::string SERIALIZATION_DEFAULT_BOOST_ARCHIVE;
 
   extern const unsigned IMAGE_PROJECTION_RADIUS;

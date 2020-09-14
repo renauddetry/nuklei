@@ -46,9 +46,13 @@ namespace nuklei {
       
       std::list<std::string> formats;
       
+      // Parsing a non-bbin(c) file with the bbin(c) readers now prints
+      // a malloc error.
+      // Disabling bbin in automatic parsing.
+      // bbin can still be read if specifically requested in method above.
       formats.push_back("bbinc");
       formats.push_back("bxmlc");
-      formats.push_back("bbin");
+      //formats.push_back("bbin");
       formats.push_back("bxml");
       
       for (std::list<std::string>::const_iterator i = formats.begin();

@@ -590,16 +590,54 @@ namespace nuklei {
                     const bool useViewcache,
                     const bool useRayToSurfacenormalAngle) const;
       
-      friend class boost::serialization::access;
+      friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
       template<class Archive>
         void serialize(Archive &ar, const unsigned int version)
         {
-          ar  & BOOST_SERIALIZATION_NVP(kernels_);
-          ar  & BOOST_SERIALIZATION_NVP(kernelType_);
+          ar  & NUKLEI_SERIALIZATION_NVP(kernels_);
+          ar  & NUKLEI_SERIALIZATION_NVP(kernelType_);
         }
 
     };
+  
+}
 
+namespace nuklei_cereal
+{
+  // External save function for boost::ptr_vector<T>.
+  template<class Archive>
+  void save(Archive& ar, const boost::ptr_vector<nuklei::kernel::base>& pv)
+  {
+    ar(pv.size());
+    for (const auto& element : pv)
+    {
+#ifdef NUKLEI_STUPID_AND_DANGEROUS
+      // In the case of binary archives, this is 30% faster than the safe
+      // approach below. With binary compressed, compression dominates cost.
+      std::unique_ptr<const nuklei::kernel::base> ptr;
+      ptr.reset(&element);
+      ar(ptr);
+      ptr.release();
+#else
+      ar(element.clone());
+#endif
+    }
+  }
+  
+  // External load function for boost::ptr_vector<T>.
+  template<class Archive>
+  void load(Archive& ar, boost::ptr_vector<nuklei::kernel::base>& pv)
+  {
+    size_t n;
+    ar(n);
+    
+    pv.reserve(n);
+    for (size_t i = 0; i < n; ++i) {
+      nuklei::kernel::base::ptr p;
+      ar(p);
+      pv.push_back(NUKLEI_RELEASE(p));
+    }
+  }
 }
 
 #endif

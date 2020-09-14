@@ -31,7 +31,7 @@ namespace nuklei {
 
       static const double TOL;
  
-       NUKLEI_UNIQUE_PTR<kernel::base> getKernel() const
+      NUKLEI_UNIQUE_PTR<kernel::base> getKernel() const
       {
         return k_.clone();
       }

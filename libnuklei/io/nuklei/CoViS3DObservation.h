@@ -31,7 +31,7 @@ namespace nuklei {
  
       Type type() const { return COVIS3D; }
  
-       NUKLEI_UNIQUE_PTR<kernel::base> getKernel() const;
+      NUKLEI_UNIQUE_PTR<kernel::base> getKernel() const;
       void setKernel(const kernel::base& k);
  
       CoViS3DObservation();

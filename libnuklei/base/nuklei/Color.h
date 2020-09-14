@@ -19,7 +19,7 @@ namespace nuklei {
   {
   public:
     
-    typedef  NUKLEI_UNIQUE_PTR< Color > ptr;
+    typedef NUKLEI_UNIQUE_PTR< Color > ptr;
     
     typedef enum { RGB = 0, HSV, HSVCONE, UNKNOWN } Type;
     static const Type defaultType = RGB;
@@ -29,8 +29,8 @@ namespace nuklei {
     
     virtual void assertConsistency() const = 0;
         
-    virtual  NUKLEI_UNIQUE_PTR<Color> clone() const = 0;
-    virtual  NUKLEI_UNIQUE_PTR<Color> create() const = 0;
+    virtual NUKLEI_UNIQUE_PTR<Color> clone() const = 0;
+    virtual NUKLEI_UNIQUE_PTR<Color> create() const = 0;
     
     virtual appear_t distanceTo(const Color& c) const = 0;
     virtual appear_t getMaxDist() const = 0;
@@ -41,7 +41,7 @@ namespace nuklei {
     virtual void setVector(const GVector &v) = 0;
     
   private:
-    friend class boost::serialization::access;
+    friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
     template<class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
@@ -56,7 +56,7 @@ namespace nuklei {
   class RGBColor : public Color
   {
   public:
-    typedef  NUKLEI_UNIQUE_PTR< RGBColor > ptr;
+    typedef NUKLEI_UNIQUE_PTR< RGBColor > ptr;
     
     RGBColor() : c_(0, 0, 0) {assertConsistency();}
     RGBColor(appear_t r, appear_t g, appear_t b) : c_(r, g, b) {assertConsistency();}
@@ -65,8 +65,8 @@ namespace nuklei {
     // I don't remember what that comment is about.. :-/
     explicit RGBColor(const Color& c);
     
-     NUKLEI_UNIQUE_PTR<Color> clone() const { return  NUKLEI_UNIQUE_PTR<Color>(new RGBColor(c_)); }
-     NUKLEI_UNIQUE_PTR<Color> create() const { return  NUKLEI_UNIQUE_PTR<Color>(new RGBColor); }
+    NUKLEI_UNIQUE_PTR<Color> clone() const { return NUKLEI_UNIQUE_PTR<Color>(new RGBColor(c_)); }
+    NUKLEI_UNIQUE_PTR<Color> create() const { return NUKLEI_UNIQUE_PTR<Color>(NUKLEI_MOVE(new RGBColor)); }
     
     void assertConsistency() const
     {
@@ -113,29 +113,29 @@ namespace nuklei {
     
   private:
     Vector3 c_;
-    friend class boost::serialization::access;
+    friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
     template<class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
-      ar & boost::serialization::make_nvp
+      ar & NUKLEI_SERIALIZATION_MAKE_NVP
       ( "base",  
-       boost::serialization::base_object<Color>( *this ) );
-      ar & BOOST_SERIALIZATION_NVP(c_);
+       NUKLEI_SERIALIZATION_BASE(Color) );
+      ar & NUKLEI_SERIALIZATION_NVP(c_);
     }
   };
   
   class HSVColor : public Color
   {
   public:
-    typedef  NUKLEI_UNIQUE_PTR< HSVColor > ptr;
+    typedef NUKLEI_UNIQUE_PTR< HSVColor > ptr;
     
     HSVColor() : c_(0, 0, 0) {assertConsistency();}
     HSVColor(appear_t h, appear_t s, appear_t v) : c_(h, s, v) {assertConsistency();}
     HSVColor(const Vector3 &hsv) : c_(hsv) {assertConsistency();}
     explicit HSVColor(const Color& c);
     
-     NUKLEI_UNIQUE_PTR<Color> clone() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVColor(c_)); }
-     NUKLEI_UNIQUE_PTR<Color> create() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVColor); }
+    NUKLEI_UNIQUE_PTR<Color> clone() const { return NUKLEI_UNIQUE_PTR<Color>(new HSVColor(c_)); }
+    NUKLEI_UNIQUE_PTR<Color> create() const { return NUKLEI_UNIQUE_PTR<Color>(NUKLEI_MOVE(new HSVColor)); }
     
     void assertConsistency() const
     {
@@ -176,21 +176,21 @@ namespace nuklei {
     
   private:
     Vector3 c_;
-    friend class boost::serialization::access;
+    friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
     template<class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
-      ar & boost::serialization::make_nvp
+      ar & NUKLEI_SERIALIZATION_MAKE_NVP
       ( "base",  
-       boost::serialization::base_object<Color>( *this ) );
-      ar & BOOST_SERIALIZATION_NVP(c_);
+       NUKLEI_SERIALIZATION_BASE(Color) );
+      ar & NUKLEI_SERIALIZATION_NVP(c_);
     }
   };
   
   class HSVConeColor : public Color
   {
   public:
-    typedef  NUKLEI_UNIQUE_PTR< HSVConeColor > ptr;
+    typedef NUKLEI_UNIQUE_PTR< HSVConeColor > ptr;
     
     HSVConeColor() : c_(0, 0, 0), valueWeight_(1) {assertConsistency();}
     HSVConeColor(appear_t sch, appear_t ssh, appear_t weightedValue, appear_t valueWeight = 1) :
@@ -198,8 +198,8 @@ namespace nuklei {
     HSVConeColor(const Vector3 &c, appear_t valueWeight = 1) : c_(c), valueWeight_(valueWeight) {assertConsistency();}
     explicit HSVConeColor(const Color& c);
     
-     NUKLEI_UNIQUE_PTR<Color> clone() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor(c_)); }
-     NUKLEI_UNIQUE_PTR<Color> create() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor); }
+    NUKLEI_UNIQUE_PTR<Color> clone() const { return NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor(c_)); }
+    NUKLEI_UNIQUE_PTR<Color> create() const { return NUKLEI_UNIQUE_PTR<Color>(NUKLEI_MOVE(new HSVConeColor)); }
     
     void assertConsistency() const
     {
@@ -251,14 +251,14 @@ namespace nuklei {
   private:
     Vector3 c_;
     appear_t valueWeight_;
-    friend class boost::serialization::access;
+    friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
     template<class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
-      ar & boost::serialization::make_nvp
+      ar & NUKLEI_SERIALIZATION_MAKE_NVP
       ( "base",  
-       boost::serialization::base_object<Color>( *this ) );
-      ar & BOOST_SERIALIZATION_NVP(c_) & BOOST_SERIALIZATION_NVP(valueWeight_);
+       NUKLEI_SERIALIZATION_BASE(Color) );
+      ar & NUKLEI_SERIALIZATION_NVP(c_) & NUKLEI_SERIALIZATION_NVP(valueWeight_);
     }
   };
   

@@ -27,12 +27,12 @@ namespace nuklei {
       NUKLEI_LOG("Input stats for reader `" << oc.type_ << "':\n  " << oc);
   }
 
-   NUKLEI_UNIQUE_PTR<Observation> ObservationReader::readObservation()
+  NUKLEI_UNIQUE_PTR<Observation> ObservationReader::readObservation()
   {
     NUKLEI_TRACE_BEGIN();
     for (;;)
     {
-       NUKLEI_UNIQUE_PTR<Observation> observation = readObservation_();
+      NUKLEI_UNIQUE_PTR<Observation> observation = readObservation_();
       if (observation.get() == NULL) return observation;
       oc.incLabel("input");
       if (roi_ && !roi_->contains(observation->getKernel()->getLoc()))
@@ -43,10 +43,10 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-   NUKLEI_UNIQUE_PTR<KernelCollection> ObservationReader::readObservations()
+  NUKLEI_UNIQUE_PTR<KernelCollection> ObservationReader::readObservations()
   {
     NUKLEI_TRACE_BEGIN();
-     NUKLEI_UNIQUE_PTR<KernelCollection> kcp(new KernelCollection);
+    NUKLEI_UNIQUE_PTR<KernelCollection> kcp(new KernelCollection);
     readObservations(*kcp);
     return kcp;
     NUKLEI_TRACE_END();
@@ -57,7 +57,7 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     kc.clear();
     
-     NUKLEI_UNIQUE_PTR<Observation> o;
+    NUKLEI_UNIQUE_PTR<Observation> o;
     while ( (o = readObservation()).get() != NULL )
     {
       kc.add(*o->getKernel());
@@ -111,11 +111,11 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-   NUKLEI_UNIQUE_PTR<ObservationReader>
+  NUKLEI_UNIQUE_PTR<ObservationReader>
   ObservationReader::createReader(const std::string& arg)
   {
     NUKLEI_TRACE_BEGIN();
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader;
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader;
 
     std::string errorsCat = std::string("Error in ObservationReader::createReader.") +
       "\nErrors at each format attempt were:";
@@ -216,11 +216,11 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-   NUKLEI_UNIQUE_PTR<ObservationReader>
+  NUKLEI_UNIQUE_PTR<ObservationReader>
   ObservationReader::createReader(const std::string& arg, const Observation::Type t)
   {
     NUKLEI_TRACE_BEGIN();
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader;
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader;
     switch (t)
     {
       case Observation::COVIS3D:
@@ -303,7 +303,7 @@ namespace nuklei {
   {
     NUKLEI_TRACE_BEGIN();
     
-     NUKLEI_UNIQUE_PTR<Observation> o = templateObservation();
+    NUKLEI_UNIQUE_PTR<Observation> o = templateObservation();
     for (KernelCollection::const_iterator i = kc.begin(); i != kc.end(); ++i)
     {
       o->setKernel(*i);
@@ -313,11 +313,11 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-   NUKLEI_UNIQUE_PTR<ObservationWriter>
+  NUKLEI_UNIQUE_PTR<ObservationWriter>
   ObservationWriter::createWriter(const std::string& arg, const Observation::Type t)
   {
     NUKLEI_TRACE_BEGIN();
-     NUKLEI_UNIQUE_PTR<ObservationWriter> writer;
+    NUKLEI_UNIQUE_PTR<ObservationWriter> writer;
     switch (t)
     {
       case Observation::COVIS3D:
@@ -408,7 +408,7 @@ namespace nuklei {
   void readObservations(const std::string &s, KernelCollection &kc,
                         Observation::Type& t)
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader =
       ObservationReader::createReader(s);
     t = reader->type();
     readObservations(*reader, kc);
@@ -418,7 +418,7 @@ namespace nuklei {
                                           KernelCollection &kc,
                                           const Observation::Type& t)
   {
-     NUKLEI_UNIQUE_PTR<ObservationReader> reader =
+    NUKLEI_UNIQUE_PTR<ObservationReader> reader =
     ObservationReader::createReader(s, t);
     readObservations(*reader, kc);
   }
@@ -459,7 +459,7 @@ namespace nuklei {
   void writeObservations(const std::string &s, const KernelCollection &kc,
                          const Observation::Type &t)
   {
-     NUKLEI_UNIQUE_PTR<ObservationWriter> writer =
+    NUKLEI_UNIQUE_PTR<ObservationWriter> writer =
       ObservationWriter::createWriter(s, t);
     nuklei::writeObservations(*writer, kc);
     writer->writeBuffer();

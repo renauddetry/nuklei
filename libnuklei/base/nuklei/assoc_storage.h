@@ -76,12 +76,12 @@ namespace nuklei {
     id_t counter_;
     static const id_t minKey_ = 1000;
     
-    friend class boost::serialization::access;
+    friend class NUKLEI_SERIALIZATION_FRIEND_CLASSNAME;
     template<class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
-      ar & BOOST_SERIALIZATION_NVP(map_)
-      & BOOST_SERIALIZATION_NVP(counter_);
+      ar & NUKLEI_SERIALIZATION_NVP(map_)
+      & NUKLEI_SERIALIZATION_NVP(counter_);
     }
   };
   
