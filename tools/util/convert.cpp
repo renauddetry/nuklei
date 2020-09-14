@@ -50,7 +50,7 @@ void convert(const std::vector<std::string>& files,
     makeR3xS2P || removeNormals ||
     !filterRGB.empty() || !setRGB.empty() || colorToLoc != Color::UNKNOWN;
 
-  std::auto_ptr<ObservationWriter> writer;
+   NUKLEI_UNIQUE_PTR<ObservationWriter> writer;
   Observation::Type writerType = outType;
   Observation::Type readerType = Observation::UNKNOWN;
   std::vector< boost::shared_ptr<Observation> > observations;
@@ -58,7 +58,7 @@ void convert(const std::vector<std::string>& files,
   for (std::vector<std::string>::const_iterator i = files.begin();
        i != --files.end(); ++i)
   {
-    std::auto_ptr<ObservationReader> reader;
+     NUKLEI_UNIQUE_PTR<ObservationReader> reader;
     if (inType == Observation::UNKNOWN)
       reader = ObservationReader::createReader(*i);
     else
@@ -84,7 +84,7 @@ void convert(const std::vector<std::string>& files,
 //                  nameFromType<Observation>(reader->type()) << "'.");
     }
     
-    std::auto_ptr<Observation> o;
+     NUKLEI_UNIQUE_PTR<Observation> o;
     while ( (o = reader->readObservation()).get() != NULL )
     {
       if (transfo != NULL || scale > 0)
@@ -353,17 +353,17 @@ void convert(const std::vector<std::string>& files,
         NUKLEI_ASSERT(k->hasDescriptor());
 
         Color &icolor = dynamic_cast<ColorDescriptor&>(k->getDescriptor()).getColor();
-        std::auto_ptr<Color> ocolor;
+         NUKLEI_UNIQUE_PTR<Color> ocolor;
         switch (colorToLoc)
         {
           case Color::RGB:
-            ocolor = std::auto_ptr<Color>(new RGBColor(icolor));
+            ocolor =  NUKLEI_UNIQUE_PTR<Color>(new RGBColor(icolor));
             break;
           case Color::HSV:
-            ocolor = std::auto_ptr<Color>(new HSVColor(icolor));
+            ocolor =  NUKLEI_UNIQUE_PTR<Color>(new HSVColor(icolor));
             break;
           case Color::HSVCONE:
-            ocolor = std::auto_ptr<Color>(new HSVConeColor(icolor));
+            ocolor =  NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor(icolor));
             break;
           default:
             NUKLEI_ASSERT(false);

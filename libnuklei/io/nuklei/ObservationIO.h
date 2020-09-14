@@ -36,8 +36,8 @@ namespace nuklei {
     public:
       virtual ~ObservationReader();
       
-      std::auto_ptr<Observation> readObservation();
-      std::auto_ptr<KernelCollection> readObservations();
+       NUKLEI_UNIQUE_PTR<Observation> readObservation();
+       NUKLEI_UNIQUE_PTR<KernelCollection> readObservations();
       void readObservations(KernelCollection &kc);
   
       virtual Observation::Type type() const = 0;
@@ -78,12 +78,12 @@ namespace nuklei {
           list_t labels_;
         };
 
-      static std::auto_ptr<ObservationReader>
+      static  NUKLEI_UNIQUE_PTR<ObservationReader>
       createReader(const std::string& arg);
-      static std::auto_ptr<ObservationReader>
+      static  NUKLEI_UNIQUE_PTR<ObservationReader>
       createReader(const std::string& arg, const Observation::Type t);
     protected:
-      virtual std::auto_ptr<Observation> readObservation_() = 0;
+      virtual  NUKLEI_UNIQUE_PTR<Observation> readObservation_() = 0;
       virtual void init_() = 0;
       Counter oc;
     private:
@@ -164,11 +164,11 @@ namespace nuklei {
       virtual void writeBuffer() = 0;
       virtual void init() = 0;
       virtual void reset() = 0;
-      virtual std::auto_ptr<Observation> templateObservation() const = 0;
+      virtual  NUKLEI_UNIQUE_PTR<Observation> templateObservation() const = 0;
 
       virtual Observation::Type type() const = 0;
 
-      static std::auto_ptr<ObservationWriter>
+      static  NUKLEI_UNIQUE_PTR<ObservationWriter>
       createWriter(const std::string& arg, const Observation::Type t);
 
     };

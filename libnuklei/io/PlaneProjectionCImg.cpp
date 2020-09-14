@@ -173,7 +173,7 @@ namespace nuklei
     NUKLEI_TRACE_BEGIN();
 #ifdef NUKLEI_USE_CIMG
     try {
-      image_ = std::auto_ptr<image_t>(new image_t(name.c_str()));
+      image_ =  NUKLEI_UNIQUE_PTR<image_t>(new image_t(name.c_str()));
     } catch (cimg_library::CImgException &e) {
       NUKLEI_THROW("CImg error: " << e.what());
     }

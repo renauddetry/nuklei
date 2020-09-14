@@ -108,7 +108,7 @@ namespace nuklei {
   }
 
 
-  std::auto_ptr<Observation> PLYReader::readObservation_()
+   NUKLEI_UNIQUE_PTR<Observation> PLYReader::readObservation_()
   {
     if (!in_.is_open()) NUKLEI_THROW("Reader does not seem inited.");
 
@@ -116,7 +116,7 @@ namespace nuklei {
     {
       // We don't check that we reached the EOF because
       // there may be more data following (e.g. triangles).
-      return std::auto_ptr<Observation>();
+      return  NUKLEI_UNIQUE_PTR<Observation>();
     }
     index_++;
     
@@ -127,7 +127,7 @@ namespace nuklei {
 
     std::istringstream iss(line);
     
-    std::auto_ptr<PLYObservation> observation(new PLYObservation);
+     NUKLEI_UNIQUE_PTR<PLYObservation> observation(new PLYObservation);
     
     Vector3 loc;
     NUKLEI_ASSERT(iss >> loc[0] >> loc[1] >> loc[2]);
@@ -136,7 +136,7 @@ namespace nuklei {
     RGBColor c(.5,.5,.5);
     observation->setColor(c);
     
-    return std::auto_ptr<Observation>(observation);
+    return  NUKLEI_UNIQUE_PTR<Observation>(observation);
   }
 
   

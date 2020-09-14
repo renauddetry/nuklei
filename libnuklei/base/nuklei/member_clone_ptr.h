@@ -54,7 +54,7 @@ namespace nuklei {
     void clear() { ptr_.reset(); }
 
   private:
-    std::auto_ptr<T> ptr_;
+     NUKLEI_UNIQUE_PTR<T> ptr_;
 
     friend class boost::serialization::access;
     template<class Archive>

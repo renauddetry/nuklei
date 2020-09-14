@@ -46,8 +46,8 @@ namespace nuklei {
     {
     public:
       
-      /** @brief std::auto_ptr for kernel::base. */
-      typedef std::auto_ptr< kernel::base > ptr;
+      /** @brief  NUKLEI_UNIQUE_PTR for kernel::base. */
+      typedef  NUKLEI_UNIQUE_PTR< kernel::base > ptr;
       
       /** @brief Explicit query of a kernel's type. See @ref type for more info. */
       typedef enum { R3 = 0, R3XS2, R3XS2P, SE3, UNKNOWN } Type;
@@ -142,7 +142,7 @@ namespace nuklei {
        * selecting random values from a uniform distribution for the
        * extra DOFs.
        */
-      virtual std::auto_ptr<kernel::se3> polySe3Sample() const = 0;
+      virtual  NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Sample() const = 0;
       /**
        * @brief Get an @f$ SE(3) @f$ version of the kernel.
        *
@@ -151,7 +151,7 @@ namespace nuklei {
        * selecting random values from a uniform distribution for the
        * extra DOFs.
        */
-      virtual std::auto_ptr<kernel::se3> polySe3Proj() const = 0;
+      virtual  NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Proj() const = 0;
       
       /**
        * @addtogroup matrix_transfo
@@ -256,7 +256,7 @@ namespace nuklei {
       int flag1_;
       bitfield_t bitfield_;
       
-      std::auto_ptr<Descriptor> desc_;
+       NUKLEI_UNIQUE_PTR<Descriptor> desc_;
       
       friend class boost::serialization::access;
       template<class Archive>
@@ -342,9 +342,9 @@ namespace nuklei {
         NUKLEI_TRACE_END();
       }
       
-      std::auto_ptr<kernel::se3> polySe3Sample() const;
+       NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Sample() const;
       
-      std::auto_ptr<kernel::se3> polySe3Proj() const;
+       NUKLEI_UNIQUE_PTR<kernel::se3> polySe3Proj() const;
       
       base::ptr polyProjectedOn(const kernel::se3& k) const
       {
@@ -404,7 +404,7 @@ namespace nuklei {
     class se3 : public implementation_prototype<se3>
     {
     public:
-      typedef std::auto_ptr<kernel::se3> ptr;
+      typedef  NUKLEI_UNIQUE_PTR<kernel::se3> ptr;
       
       typedef nuklei::unnormalized_shape_dist_kernel
       <groupS::r3, shapeS::triangle> PositionKernel;
@@ -505,7 +505,7 @@ namespace nuklei {
     class r3xs2_base : public implementation_prototype< r3xs2_base<OriGrp> >
     {
     public:
-      typedef std::auto_ptr< kernel::r3xs2_base<OriGrp> > ptr;
+      typedef  NUKLEI_UNIQUE_PTR< kernel::r3xs2_base<OriGrp> > ptr;
       
       typedef implementation_prototype< r3xs2_base<OriGrp> > Super;
       using Super::getWeight;
@@ -626,7 +626,7 @@ namespace nuklei {
     class r3 : public implementation_prototype<r3>
     {
     public:
-      typedef std::auto_ptr<kernel::r3> ptr;
+      typedef  NUKLEI_UNIQUE_PTR<kernel::r3> ptr;
       
       typedef nuklei::unnormalized_shape_dist_kernel
       <groupS::r3, shapeS::triangle> PositionKernel;
@@ -937,21 +937,21 @@ namespace nuklei {
     
     
     template<class T>
-    std::auto_ptr<kernel::se3>
+     NUKLEI_UNIQUE_PTR<kernel::se3>
     kernel::implementation_prototype<T>::polySe3Sample() const
     {
       NUKLEI_TRACE_BEGIN();
-      std::auto_ptr<se3> p(  new se3(static_cast<const T*>(this)->se3Sample())  );
+       NUKLEI_UNIQUE_PTR<se3> p(  new se3(static_cast<const T*>(this)->se3Sample())  );
       return p;
       NUKLEI_TRACE_END();
     }
     
     template<class T>
-    std::auto_ptr<kernel::se3>
+     NUKLEI_UNIQUE_PTR<kernel::se3>
     kernel::implementation_prototype<T>::polySe3Proj() const
     {
       NUKLEI_TRACE_BEGIN();
-      std::auto_ptr<se3> p(  new se3(static_cast<const T*>(this)->se3Proj())  );
+       NUKLEI_UNIQUE_PTR<se3> p(  new se3(static_cast<const T*>(this)->se3Proj())  );
       return p;
       NUKLEI_TRACE_END();
     }

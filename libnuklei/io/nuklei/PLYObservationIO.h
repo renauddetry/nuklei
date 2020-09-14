@@ -28,7 +28,7 @@ namespace nuklei {
   
     protected:
       void init_();
-      std::auto_ptr<Observation> readObservation_();
+       NUKLEI_UNIQUE_PTR<Observation> readObservation_();
     private:
       std::ifstream in_;
       int index_;
@@ -47,8 +47,8 @@ namespace nuklei {
     void init();
     void reset();
     
-    std::auto_ptr<Observation> templateObservation() const
-    { return std::auto_ptr<Observation>(new PLYObservation); }
+     NUKLEI_UNIQUE_PTR<Observation> templateObservation() const
+    { return  NUKLEI_UNIQUE_PTR<Observation>(new PLYObservation); }
     
     void writeObservation(const Observation &o);
     void writeBuffer();

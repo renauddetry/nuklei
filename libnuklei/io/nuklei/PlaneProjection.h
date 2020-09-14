@@ -48,7 +48,7 @@ namespace nuklei {
     void readImage(const std::string& name);
     void writeImage(const std::string& name) const;
     
-    const std::auto_ptr<Color> getColor() const;
+    const  NUKLEI_UNIQUE_PTR<Color> getColor() const;
     void setColor(const Color& c);
     
     weight_t getOpacity() const { return opacity_; }
@@ -72,7 +72,7 @@ namespace nuklei {
     pixel_t color_[3];
     float opacity_;
 #ifdef NUKLEI_USE_CIMG
-    std::auto_ptr<image_t> image_;
+     NUKLEI_UNIQUE_PTR<image_t> image_;
 #endif
   };
 
@@ -111,7 +111,7 @@ namespace nuklei {
     }
     void writeStereoImage(const std::string& name) const;
     
-    const std::auto_ptr<Color> getColor() const;
+    const  NUKLEI_UNIQUE_PTR<Color> getColor() const;
     void setColor(const Color& c);
     
     weight_t getOpacity() const { return opacity_; }

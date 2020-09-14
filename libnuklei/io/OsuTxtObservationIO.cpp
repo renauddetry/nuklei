@@ -143,7 +143,7 @@ namespace nuklei {
   }
 
 
-  std::auto_ptr<Observation> OsuTxtReader::readObservation_()
+   NUKLEI_UNIQUE_PTR<Observation> OsuTxtReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
     if (rows_ == 0 || columns_ == 0) NUKLEI_THROW("Reader does not seem inited.");
@@ -151,24 +151,24 @@ namespace nuklei {
     for (;;)
     {
       if (currentIndex_ >= rows_*columns_)
-        return std::auto_ptr<Observation>();
+        return  NUKLEI_UNIQUE_PTR<Observation>();
       
       unsigned index = currentIndex_;
       currentIndex_++;
       
       if (flags_[index] == false) continue;
       
-      std::auto_ptr<OsuTxtObservation> observation(new OsuTxtObservation);
+       NUKLEI_UNIQUE_PTR<OsuTxtObservation> observation(new OsuTxtObservation);
 
       Vector3 loc(x_[index], y_[index], z_[index]);
       observation->setLoc(loc);
       RGBColor c(rgb_[index]);
       observation->setColor(c);
             
-      return std::auto_ptr<Observation>(observation);
+      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
     }
     
-    return std::auto_ptr<Observation>();
+    return  NUKLEI_UNIQUE_PTR<Observation>();
     NUKLEI_TRACE_END();
   }
 

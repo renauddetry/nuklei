@@ -33,10 +33,10 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     Type type = typeFromName<Serial>(typeName);
     
-    std::auto_ptr<std::istream> ifs;
+     NUKLEI_UNIQUE_PTR<std::istream> ifs;
     if (type == BOOSTXML_COMPRESSED || type == BOOSTBIN_COMPRESSED)
     {
-      std::auto_ptr<boost::iostreams::filtering_istream>
+       NUKLEI_UNIQUE_PTR<boost::iostreams::filtering_istream>
       decompressingIfs(new boost::iostreams::filtering_istream);
       decompressingIfs->push(boost::iostreams::gzip_decompressor());
       decompressingIfs->push(boost::iostreams::file_source(filename));
@@ -86,10 +86,10 @@ namespace nuklei {
     NUKLEI_TRACE_BEGIN();
     Type type = typeFromName<Serial>(typeName);
     
-    std::auto_ptr<std::ostream> ofs;
+     NUKLEI_UNIQUE_PTR<std::ostream> ofs;
     if (type == BOOSTXML_COMPRESSED || type == BOOSTBIN_COMPRESSED)
     {
-      std::auto_ptr<boost::iostreams::filtering_ostream>
+       NUKLEI_UNIQUE_PTR<boost::iostreams::filtering_ostream>
       decompressingOfs(new boost::iostreams::filtering_ostream);
       decompressingOfs->push(boost::iostreams::gzip_compressor());
       decompressingOfs->push(boost::iostreams::file_sink(filename));

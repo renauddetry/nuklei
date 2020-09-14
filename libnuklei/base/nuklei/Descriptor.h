@@ -20,14 +20,14 @@ namespace nuklei {
   {
   public:
     
-    typedef std::auto_ptr< Descriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< Descriptor > ptr;
     
     virtual ~Descriptor() {}
     
     virtual void assertConsistency() const = 0;
     
-    virtual std::auto_ptr<Descriptor> clone() const = 0;
-    virtual std::auto_ptr<Descriptor> create() const = 0;
+    virtual  NUKLEI_UNIQUE_PTR<Descriptor> clone() const = 0;
+    virtual  NUKLEI_UNIQUE_PTR<Descriptor> create() const = 0;
     
     virtual double distanceTo(const Descriptor &d) const
     {
@@ -53,7 +53,7 @@ namespace nuklei {
   class VisualDescriptor : public Descriptor
   {
   public:
-    typedef std::auto_ptr< VisualDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< VisualDescriptor > ptr;
     
     virtual void setColor(const Color& c) = 0;
     
@@ -69,7 +69,7 @@ namespace nuklei {
   {
   public:
     
-    typedef std::auto_ptr< ColorDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< ColorDescriptor > ptr;
     
     ColorDescriptor() : color_(new RGBColor) {}
     
@@ -78,16 +78,16 @@ namespace nuklei {
       color_->assertConsistency();
     };
     
-    std::auto_ptr<Descriptor> clone() const
+     NUKLEI_UNIQUE_PTR<Descriptor> clone() const
     {
-      std::auto_ptr<ColorDescriptor> c(new ColorDescriptor);
+       NUKLEI_UNIQUE_PTR<ColorDescriptor> c(new ColorDescriptor);
       c->color_ = color_->clone();
-      return std::auto_ptr<Descriptor>(c);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(c);
     }
     
-    std::auto_ptr<Descriptor> create() const
+     NUKLEI_UNIQUE_PTR<Descriptor> create() const
     {
-      return std::auto_ptr<Descriptor>(new ColorDescriptor);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(new ColorDescriptor);
     }
     
     Color& getColor() { return *color_; }
@@ -97,7 +97,7 @@ namespace nuklei {
     double distanceTo(const Descriptor &d) const;
   protected:
     
-    std::auto_ptr<Color> color_;
+     NUKLEI_UNIQUE_PTR<Color> color_;
     
     friend class boost::serialization::access;
     template<class Archive>
@@ -116,7 +116,7 @@ namespace nuklei {
   {
   public:
     
-    typedef std::auto_ptr< ColorPairDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< ColorPairDescriptor > ptr;
     
     ColorPairDescriptor() : leftColor_(new RGBColor), rightColor_(new RGBColor) {}
     
@@ -126,17 +126,17 @@ namespace nuklei {
       rightColor_->assertConsistency();
     };
     
-    std::auto_ptr<Descriptor> clone() const
+     NUKLEI_UNIQUE_PTR<Descriptor> clone() const
     {
-      std::auto_ptr<ColorPairDescriptor> pair(new ColorPairDescriptor);
+       NUKLEI_UNIQUE_PTR<ColorPairDescriptor> pair(new ColorPairDescriptor);
       pair->leftColor_ = leftColor_->clone();
       pair->rightColor_ = rightColor_->clone();
-      return std::auto_ptr<Descriptor>(pair);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(pair);
     }
     
-    std::auto_ptr<Descriptor> create() const
+     NUKLEI_UNIQUE_PTR<Descriptor> create() const
     {
-      return std::auto_ptr<Descriptor>(new ColorPairDescriptor);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(new ColorPairDescriptor);
     }
     
     Color& getLeftColor() { return *leftColor_; }
@@ -152,8 +152,8 @@ namespace nuklei {
     double distanceTo(const Descriptor &d) const;
   private:
     
-    std::auto_ptr<Color> leftColor_;
-    std::auto_ptr<Color> rightColor_;
+     NUKLEI_UNIQUE_PTR<Color> leftColor_;
+     NUKLEI_UNIQUE_PTR<Color> rightColor_;
     
     friend class boost::serialization::access;
     template<class Archive>
@@ -172,7 +172,7 @@ namespace nuklei {
   class GraspDescriptor : public Descriptor
   {
   public:    
-    typedef std::auto_ptr< GraspDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< GraspDescriptor > ptr;
     typedef enum { PHYSICAL_SUCCESS = 0,
       PHYSICAL_FAILURE,
       PHYSICAL_UNSTABLE,
@@ -230,7 +230,7 @@ namespace nuklei {
   {
   public:
     
-    typedef std::auto_ptr< TwoFingerDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< TwoFingerDescriptor > ptr;
     
     TwoFingerDescriptor() : gap_(0), closeToGrasp_(true), covisEuler_(Vector3::ZERO) {}
     
@@ -241,19 +241,19 @@ namespace nuklei {
       NUKLEI_TRACE_END();
     };
     
-    std::auto_ptr<Descriptor> clone() const
+     NUKLEI_UNIQUE_PTR<Descriptor> clone() const
     {
-      std::auto_ptr<TwoFingerDescriptor> g(new TwoFingerDescriptor);
+       NUKLEI_UNIQUE_PTR<TwoFingerDescriptor> g(new TwoFingerDescriptor);
       g->gap_ = gap_;
       g->closeToGrasp_ = closeToGrasp_;
       g->setTrialOutcome(getTrialOutcome());
       g->setQuality(getQuality());
-      return std::auto_ptr<Descriptor>(g);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(g);
     }
     
-    std::auto_ptr<Descriptor> create() const
+     NUKLEI_UNIQUE_PTR<Descriptor> create() const
     {
-      return std::auto_ptr<Descriptor>(new TwoFingerDescriptor);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(new TwoFingerDescriptor);
     }
     
     coord_t getGap() const { return gap_; }
@@ -294,7 +294,7 @@ namespace nuklei {
   class GeometricDescriptor : public Descriptor
   {
   public:
-    typedef std::auto_ptr< GeometricDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< GeometricDescriptor > ptr;
     
   private:
     friend class boost::serialization::access;
@@ -307,7 +307,7 @@ namespace nuklei {
   class PlaneDescriptor : public GeometricDescriptor
   {
   public:
-    typedef std::auto_ptr< PlaneDescriptor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< PlaneDescriptor > ptr;
     
     PlaneDescriptor() {}
     
@@ -317,15 +317,15 @@ namespace nuklei {
       NUKLEI_TRACE_END();
     };
     
-    std::auto_ptr<Descriptor> clone() const
+     NUKLEI_UNIQUE_PTR<Descriptor> clone() const
     {
-      std::auto_ptr<PlaneDescriptor> g(new PlaneDescriptor);
-      return std::auto_ptr<Descriptor>(g);
+       NUKLEI_UNIQUE_PTR<PlaneDescriptor> g(new PlaneDescriptor);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(g);
     }
     
-    std::auto_ptr<Descriptor> create() const
+     NUKLEI_UNIQUE_PTR<Descriptor> create() const
     {
-      return std::auto_ptr<Descriptor>(new PlaneDescriptor);
+      return  NUKLEI_UNIQUE_PTR<Descriptor>(new PlaneDescriptor);
     }
   private:
     friend class boost::serialization::access;

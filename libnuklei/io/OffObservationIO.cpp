@@ -66,11 +66,11 @@ namespace nuklei {
   }
 
 
-  std::auto_ptr<Observation> OffReader::readObservation_()
+   NUKLEI_UNIQUE_PTR<Observation> OffReader::readObservation_()
   {
     if (!in_.is_open()) NUKLEI_THROW("Reader does not seem inited.");
 
-    if (!in_.good()) return std::auto_ptr<Observation>();
+    if (!in_.good()) return  NUKLEI_UNIQUE_PTR<Observation>();
     
     std::string line;
         
@@ -84,7 +84,7 @@ namespace nuklei {
 
       std::istringstream iss(line);
       
-      std::auto_ptr<OffObservation> observation(new OffObservation);
+       NUKLEI_UNIQUE_PTR<OffObservation> observation(new OffObservation);
       
       Vector3 loc;
       if ( ! (iss >> loc[0] >> loc[1] >> loc[2]) )
@@ -96,11 +96,11 @@ namespace nuklei {
       
       count_--;
       
-      return std::auto_ptr<Observation>(observation);
+      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
     }
     
     // End of file reached.
-    return std::auto_ptr<Observation>();
+    return  NUKLEI_UNIQUE_PTR<Observation>();
   }
 
   

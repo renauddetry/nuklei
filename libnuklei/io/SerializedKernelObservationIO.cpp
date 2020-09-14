@@ -50,12 +50,12 @@ namespace nuklei {
     NUKLEI_TRACE_END();
   }
 
-  std::auto_ptr<Observation> KernelReader::readObservation_()
+   NUKLEI_UNIQUE_PTR<Observation> KernelReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
     if (idx_ < 0) NUKLEI_THROW("Reader does not seem inited.");
-    if (idx_ >= int(kc_.size())) return std::auto_ptr<Observation>();
-    else return std::auto_ptr<Observation>(new SerializedKernelObservation(kc_.at(idx_++)));
+    if (idx_ >= int(kc_.size())) return  NUKLEI_UNIQUE_PTR<Observation>();
+    else return  NUKLEI_UNIQUE_PTR<Observation>(new SerializedKernelObservation(kc_.at(idx_++)));
     NUKLEI_TRACE_END();
   }
 

@@ -88,18 +88,18 @@ namespace nuklei {
   }
 
 
-  std::auto_ptr<Observation> TxtReader::readObservation_()
+   NUKLEI_UNIQUE_PTR<Observation> TxtReader::readObservation_()
   {
     if (!in_.is_open()) NUKLEI_THROW("Reader does not seem inited.");
 
-    if (!in_.good()) return std::auto_ptr<Observation>();
+    if (!in_.good()) return  NUKLEI_UNIQUE_PTR<Observation>();
     
     std::string line;
     
     while (std::getline(in_, line))
     {
       cleanLine(line);      
-      std::auto_ptr<TxtObservation> observation(new TxtObservation);
+       NUKLEI_UNIQUE_PTR<TxtObservation> observation(new TxtObservation);
 
       std::vector<std::string> tokens;
       boost::split(tokens, line, boost::is_any_of(" "), boost::token_compress_on);
@@ -144,11 +144,11 @@ namespace nuklei {
         NUKLEI_THROW("Wrong number of tokens on line (" << tokens.size() << ")");
       }
       
-      return std::auto_ptr<Observation>(observation);
+      return  NUKLEI_UNIQUE_PTR<Observation>(observation);
     }
     
     // End of file reached.
-    return std::auto_ptr<Observation>();
+    return  NUKLEI_UNIQUE_PTR<Observation>();
   }
 
   

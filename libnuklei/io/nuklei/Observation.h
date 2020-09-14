@@ -22,7 +22,7 @@ namespace nuklei {
       static const std::string TypeNames[];
 
       virtual ~Observation() {}
-      virtual std::auto_ptr<kernel::base> getKernel() const = 0;
+      virtual  NUKLEI_UNIQUE_PTR<kernel::base> getKernel() const = 0;
       virtual void setKernel(const kernel::base& k) = 0;
       virtual Type type() const = 0;
     };

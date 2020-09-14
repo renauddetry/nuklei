@@ -66,23 +66,23 @@ namespace nuklei {
   }
 
 
-  std::auto_ptr<Observation> BuiltinVTKReader::readObservation_()
+   NUKLEI_UNIQUE_PTR<Observation> BuiltinVTKReader::readObservation_()
   {
     NUKLEI_TRACE_BEGIN();
     if (idx_ < 0) NUKLEI_THROW("Reader does not seem inited.");
 
     if (idx_ >= n_)
-      return std::auto_ptr<Observation>();
+      return  NUKLEI_UNIQUE_PTR<Observation>();
     
     idx_++;
     
     Vector3 loc;
     NUKLEI_ASSERT(in_ >> loc[0] >> loc[1] >> loc[2]);
           
-    std::auto_ptr<BuiltinVTKObservation> observation(new BuiltinVTKObservation);
+     NUKLEI_UNIQUE_PTR<BuiltinVTKObservation> observation(new BuiltinVTKObservation);
     observation->setLoc(loc);
     
-    return std::auto_ptr<Observation>(observation);
+    return  NUKLEI_UNIQUE_PTR<Observation>(observation);
     
     NUKLEI_TRACE_END();
   }

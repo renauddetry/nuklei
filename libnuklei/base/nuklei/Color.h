@@ -19,7 +19,7 @@ namespace nuklei {
   {
   public:
     
-    typedef std::auto_ptr< Color > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< Color > ptr;
     
     typedef enum { RGB = 0, HSV, HSVCONE, UNKNOWN } Type;
     static const Type defaultType = RGB;
@@ -29,8 +29,8 @@ namespace nuklei {
     
     virtual void assertConsistency() const = 0;
         
-    virtual std::auto_ptr<Color> clone() const = 0;
-    virtual std::auto_ptr<Color> create() const = 0;
+    virtual  NUKLEI_UNIQUE_PTR<Color> clone() const = 0;
+    virtual  NUKLEI_UNIQUE_PTR<Color> create() const = 0;
     
     virtual appear_t distanceTo(const Color& c) const = 0;
     virtual appear_t getMaxDist() const = 0;
@@ -56,7 +56,7 @@ namespace nuklei {
   class RGBColor : public Color
   {
   public:
-    typedef std::auto_ptr< RGBColor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< RGBColor > ptr;
     
     RGBColor() : c_(0, 0, 0) {assertConsistency();}
     RGBColor(appear_t r, appear_t g, appear_t b) : c_(r, g, b) {assertConsistency();}
@@ -65,8 +65,8 @@ namespace nuklei {
     // I don't remember what that comment is about.. :-/
     explicit RGBColor(const Color& c);
     
-    std::auto_ptr<Color> clone() const { return std::auto_ptr<Color>(new RGBColor(c_)); }
-    std::auto_ptr<Color> create() const { return std::auto_ptr<Color>(new RGBColor); }
+     NUKLEI_UNIQUE_PTR<Color> clone() const { return  NUKLEI_UNIQUE_PTR<Color>(new RGBColor(c_)); }
+     NUKLEI_UNIQUE_PTR<Color> create() const { return  NUKLEI_UNIQUE_PTR<Color>(new RGBColor); }
     
     void assertConsistency() const
     {
@@ -127,15 +127,15 @@ namespace nuklei {
   class HSVColor : public Color
   {
   public:
-    typedef std::auto_ptr< HSVColor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< HSVColor > ptr;
     
     HSVColor() : c_(0, 0, 0) {assertConsistency();}
     HSVColor(appear_t h, appear_t s, appear_t v) : c_(h, s, v) {assertConsistency();}
     HSVColor(const Vector3 &hsv) : c_(hsv) {assertConsistency();}
     explicit HSVColor(const Color& c);
     
-    std::auto_ptr<Color> clone() const { return std::auto_ptr<Color>(new HSVColor(c_)); }
-    std::auto_ptr<Color> create() const { return std::auto_ptr<Color>(new HSVColor); }
+     NUKLEI_UNIQUE_PTR<Color> clone() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVColor(c_)); }
+     NUKLEI_UNIQUE_PTR<Color> create() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVColor); }
     
     void assertConsistency() const
     {
@@ -190,7 +190,7 @@ namespace nuklei {
   class HSVConeColor : public Color
   {
   public:
-    typedef std::auto_ptr< HSVConeColor > ptr;
+    typedef  NUKLEI_UNIQUE_PTR< HSVConeColor > ptr;
     
     HSVConeColor() : c_(0, 0, 0), valueWeight_(1) {assertConsistency();}
     HSVConeColor(appear_t sch, appear_t ssh, appear_t weightedValue, appear_t valueWeight = 1) :
@@ -198,8 +198,8 @@ namespace nuklei {
     HSVConeColor(const Vector3 &c, appear_t valueWeight = 1) : c_(c), valueWeight_(valueWeight) {assertConsistency();}
     explicit HSVConeColor(const Color& c);
     
-    std::auto_ptr<Color> clone() const { return std::auto_ptr<Color>(new HSVConeColor(c_)); }
-    std::auto_ptr<Color> create() const { return std::auto_ptr<Color>(new HSVConeColor); }
+     NUKLEI_UNIQUE_PTR<Color> clone() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor(c_)); }
+     NUKLEI_UNIQUE_PTR<Color> create() const { return  NUKLEI_UNIQUE_PTR<Color>(new HSVConeColor); }
     
     void assertConsistency() const
     {

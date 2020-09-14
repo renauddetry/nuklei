@@ -31,7 +31,7 @@ namespace nuklei {
   
     protected:
       void init_();
-      std::auto_ptr<Observation> readObservation_();
+       NUKLEI_UNIQUE_PTR<Observation> readObservation_();
       std::string observationFileName_;
       int idx_;
       KernelCollection kc_;
@@ -48,8 +48,8 @@ namespace nuklei {
       void init();
       void reset();
       
-      std::auto_ptr<Observation> templateObservation() const
-      { return std::auto_ptr<Observation>(new SerializedKernelObservation); }
+       NUKLEI_UNIQUE_PTR<Observation> templateObservation() const
+      { return  NUKLEI_UNIQUE_PTR<Observation>(new SerializedKernelObservation); }
 
       void writeObservation(const Observation &o);
       void writeBuffer();

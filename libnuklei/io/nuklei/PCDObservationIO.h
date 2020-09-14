@@ -26,7 +26,7 @@ namespace nuklei {
       Observation::Type type() const { return Observation::PCD; }
     protected:
       void init_();
-      std::auto_ptr<Observation> readObservation_();
+       NUKLEI_UNIQUE_PTR<Observation> readObservation_();
     };
 
   class PCDWriter : public KernelWriter
@@ -37,8 +37,8 @@ namespace nuklei {
     
     Observation::Type type() const { return Observation::PCD; }
     
-    std::auto_ptr<Observation> templateObservation() const
-    { return std::auto_ptr<Observation>(new PCDObservation); }
+     NUKLEI_UNIQUE_PTR<Observation> templateObservation() const
+    { return  NUKLEI_UNIQUE_PTR<Observation>(new PCDObservation); }
 
     void writeBuffer();
 
